@@ -1,0 +1,38 @@
+#summary Tutorial.
+
+= Dependencies =
+
+  * jquery.core 
+  * jquery.ui.core.js
+  * jquery.ui.widget.js
+
+
+= Overview =
+
+Make the selected element a Google map.
+
+{{{
+$(document).ready(function() {				
+    $('#map_canvas').map();
+});
+}}}
+
+= Options =
+see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions
+
+= Methods =
+
+===addMarker(latitude, longitude, options)===
+Adds a marker to the map. 
+
+===loadJSON(url, data)===
+Loads markers by a JSON request
+
+===loadHTML(cssClass, semanticType)===
+Loads markers by HTML. The HTML must be sprinkled with RDFa, Microformats or Microdata to render accurately.
+
+===loadDirections(origin, destination, travelMode, panel)===
+Displays directions on map and in panel
+
+===clearMarkers()===
+Clears all markers

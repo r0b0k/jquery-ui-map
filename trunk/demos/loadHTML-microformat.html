@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head profile="http://microformats.org/profile/hcalendar">
+    
+        <title>Jquery.ui.map load microformats</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+
+        <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" rel="stylesheet" />
+		 
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&amp;language=sv&amp;region=SE"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="jquery-ui-map.googlecode.com/svn/trunk/ui/jquery.ui.map.js"></script>
+        
+        <script type="text/javascript">
+			
+            $(document).ready(function() {
+                
+				var opts = { 
+						fallbackInitialLatLon: new google.maps.LatLng(57.7973333, 12.0502107), zoom: 8, 
+						mapTypeId: google.maps.MapTypeId.ROADMAP, autoDetectGeoLocation: true, 
+						language: 'sv', region: 'se'
+                    };
+				
+				$('#map_canvas').map(opts);
+				$('#map_canvas').map('loadHTML', 'microformat', 'microformat', true);
+                $('#map_canvas').map('addSidebar', 'sidebar', 'bl');
+
+            });
+        
+        </script>
+		<style>
+			body { font: 75%/1.5 "Arial"; margin:0; padding:0; }
+			p { margin: 0 0 1em 0; }
+			.hidden { display:none; }
+			#sidebar { background:#f4f4f4; height:200px; /*100% to fill entire map*/ z-index:99999; width:200px; padding:1em; }
+			#sidebar a { cursor:pointer; }
+		</style>
+    </head>
+    <body>
+        
+        <div id="sidebar">
+        	<h3>Sidebar</h3>
+            <!-- Start Test with hcalendar -->
+            <p class="vevent microformat">
+                <a class="url" href="http://conferences.oreillynet.com/pub/w/40/program.html">Web 2.0 Conference</a>
+                <span class="summary hidden">Web 2.0 Conference</span> 
+                <abbr class="dtstart hidden" title="2005-10-05">October 5</abbr>
+                <abbr class="dtend hidden" title="2005-10-07">7</abbr>
+                <span class="location hidden">Argent Hotel, San Francisco, CA</span>
+                <span class="geo hidden">
+            		<abbr class="latitude" title="37.7749295">&nbsp;</abbr> 
+            		<abbr class="longitude" title="-122.4194155">&nbsp;</abbr>
+                </span>
+            </p>
+            <!-- End Test with hcalendar -->
+            <p class="microformat">
+            	<a href="http://www.goteborg.com">Gothenburg</a>
+            	<span class="geo hidden">
+            		<abbr class="latitude" title="57.6969943">&nbsp;</abbr> 
+            		<abbr class="longitude" title="11.9865">&nbsp;</abbr>
+                </span>
+            </p>
+            <p class="microformat">
+            	<a href="http://www.malmo.se/">Malm&ouml;</a>
+            	<span class="geo hidden">
+            		<abbr class="latitude" title="55.6033306">&nbsp;</abbr> 
+            		<abbr class="longitude" title="13.0013029">&nbsp;</abbr>
+                </span>
+            </p>
+            <p class="microformat">
+            	<a href="http://www.stockholm.se/">Stockholm</a>
+            	<span class="geo hidden">
+            		<abbr class="latitude" title="59.3327881">&nbsp;</abbr> 
+            		<abbr class="longitude" title="18.0644881">&nbsp;</abbr>
+                </span>
+            </p>
+        </div>
+        
+        <!-- Map loaded here -->
+        <div id="map_canvas" style="width:100%; height:690px;"></div>
+
+    </body>
+</html>

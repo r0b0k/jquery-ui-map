@@ -1,4 +1,4 @@
-#summary Overview.
+#summary Tutorial.
 
 = Dependencies =
 
@@ -27,7 +27,7 @@ $(document).ready(function() {
 ==Methods==
 
 || *Methods* || *Return Value* || *Description* ||
-|| getCurrentPosition(successCallback?:function(position), errorCallback?:function(error), notSupportedCallback?:function, opts?:[#GeoLocationOptions] || none || Obtain the current location of the device and invoke the appropriate callback. ||
+|| getCurrentPosition(successCallback?:function(position), errorCallback?:function(error), notSupportedCallback?:function, opts?:[Overview#GeoLocationOptions] || none || Obtain the current location of the device and invoke the appropriate callback. ||
 || watchPosition(successCallback?:function, errorCallback?:function, notSupportedCallback?:function, opts?:[Overview#GeoLocationOptions] || none || Monitor the position of the device and invoke the appropriate callback every time this position changes. The monitoring will continue until the clearWatches method is called. ||
 || sidebar(panel:string, position:ControlPosition) || none || Creates a control from the given div panel on the map. See [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition] for control positions. ||
 || addMarker(opts?:[Overview#MarkerOptions], callback?:function(map, marker)) || none || Creates a marker on the map. ||
@@ -41,7 +41,7 @@ $(document).ready(function() {
 || clearWatches() || none || Clears all monitoring positions. ||
 || destroy() || none || Removes the map functionality. ||
 
-===MapOptions===
+==MapOptions==
 ====Properties====
 
 Supports all Google Maps [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] properties
@@ -58,32 +58,32 @@ var language = $('#map_canvas').gmap('option', 'language');
 $('#map_canvas').gmap('option', 'language', 'sv');
 }}}
 
-===GeoLocationOptions===
+==GeoLocationOptions==
 ====Properties====
 
 see [http://dev.w3.org/geo/api/spec-source.html#position_options_interface GeoLocationOptions].
 
-===MarkerOptions===
+==MarkerOptions==
 ====Properties====
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions]
 
-===InfoWindowOptions===
+==InfoWindowOptions==
 ====Properties====
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions] 
 
-===TravelMode===
+==TravelMode==
 ====Constants====
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsTravelMode TravelMode]
 
-===StreetViewPanoramaOptions===
+==StreetViewPanoramaOptions==
 ====Properties====
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]
 
-===GeocoderRequest===
+==GeocoderRequest==
 ====Properties====
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest]

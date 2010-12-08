@@ -41,7 +41,7 @@ $(document).ready(function() {
 || clearWatches() || none || Clears all monitoring positions. ||
 || destroy() || none || Removes the map functionality. ||
 
-== MapOptions ==
+== Mapoptions ==
 
 Supports all Google Maps [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] properties
 

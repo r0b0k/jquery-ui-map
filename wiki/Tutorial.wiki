@@ -36,7 +36,7 @@ $(document).ready(function() {
 || loadHTML(type:string, class:string, callback?:function(markerOpts, node)) || none || Adds markers to the map by looking for sementic attributes in the selected classes. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
 || loadDirections(panel:string, origin:string(or LatLng), destination:string(or LatLng), travelMode:TravelMode) || none || Displays directions on the map and/or in a div panel. ||
 || loadStreetViewPanorama(panel:string, opts?:StreetViewPanoramaOptions) || none || Displays the panorama for a given LatLng or panorama ID. ||
-|| search(request:GeocoderRequest, callbackSuccess:function(Array.<GeocoderResult>), callbackError:function(GeocoderStatus)) || none || Search addresses and latitude/longitude. ||
+|| search(request:GeocoderRequest, successCallback:function(Array.GeocoderResult), errorCallback:function(GeocoderStatus)) || none || Search addresses and latitude/longitude. ||
 || clearMarkers() || none || Clears all markers on the map. ||
 || clearWatches() || none || Clears all monitoring positions. ||
 || destroy() || none || Removes the map functionality. ||
@@ -44,7 +44,7 @@ $(document).ready(function() {
 ===MapOptions===
 ====Properties====
 
-Supports all Google Maps MapOptions properties, see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions Google Maps MapOption properties]
+Supports all Google Maps MapOptions properties, see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption]
 
 || *Properties* || *Type* || *Description* ||
 || callback || function || A callback routine invoked after the map has been loaded. Optional. ||

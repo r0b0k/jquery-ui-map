@@ -19,12 +19,12 @@ $(document).ready(function() {
 
 = API =
 
-==Constructor==
+== Constructor ==
 
 || *Constructor* || *Description* || 
 || gmap(panel:string, opts?:[Overview#MapOptions]) || Creates a new map inside of the given div panel. || 
 
-==Methods==
+== Methods ==
 
 || *Methods* || *Return Value* || *Description* ||
 || getCurrentPosition(successCallback?:function(position), errorCallback?:function(error), notSupportedCallback?:function, opts?:[Overview#GeoLocationOptions] || none || Obtain the current location of the device and invoke the appropriate callback. ||
@@ -41,7 +41,7 @@ $(document).ready(function() {
 || clearWatches() || none || Clears all monitoring positions. ||
 || destroy() || none || Removes the map functionality. ||
 
-===MapOptions===
+== MapOptions ==
 
 Supports all Google Maps [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] properties
 

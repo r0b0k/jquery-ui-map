@@ -41,8 +41,7 @@ $(document).ready(function() {
 || clearWatches() || none || Clears all monitoring positions. ||
 || destroy() || none || Removes the map functionality. ||
 
-==MapOptions==
-====Properties====
+===MapOptions===
 
 Supports all Google Maps [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] properties
 
@@ -58,32 +57,26 @@ var language = $('#map_canvas').gmap('option', 'language');
 $('#map_canvas').gmap('option', 'language', 'sv');
 }}}
 
-==GeoLocationOptions==
-====Properties====
+===GeoLocationOptions===
 
 see [http://dev.w3.org/geo/api/spec-source.html#position_options_interface GeoLocationOptions].
 
-==MarkerOptions==
-====Properties====
+===MarkerOptions===
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions]
 
-==InfoWindowOptions==
-====Properties====
+===InfoWindowOptions===
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions] 
 
 ==TravelMode==
-====Constants====
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsTravelMode TravelMode]
 
 ==StreetViewPanoramaOptions==
-====Properties====
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]
 
-==GeocoderRequest==
-====Properties====
+===GeocoderRequest===
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest]

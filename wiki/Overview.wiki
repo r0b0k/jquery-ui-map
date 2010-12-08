@@ -52,9 +52,9 @@ All properties in the [http://code.google.com/intl/sv-SE/apis/maps/documentation
 
 {{{
 //getter
-var language = $('#map_canvas').gmap('option', 'language');
+var zoom= $('#map_canvas').gmap('option', 'zoom');
 //setter
-$('#map_canvas').gmap('option', 'language', 'sv');
+$('#map_canvas').gmap('option', 'zoom', 7);
 }}}
 
 ===!GeoLocationOptions===

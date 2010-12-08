@@ -17,56 +17,73 @@ $(document).ready(function() {
 });
 }}}
 
+= API =
 
-= Options =
-see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions
+==Constructor==
 
+|| *Constructor* || *Description* || 
+|| gmap(panel:string, opts?:MapOptions) || Creates a new map inside of the given div panel. || 
 
-= Methods =
+==Methods==
 
-===addMarker(latitude, longitude, options)===
-Adds a marker to the map. 
+|| *Methods* || *Return Value* || *Description* ||
+|| getCurrentPosition(successCallback?:function(position), errorCallback?:function(error), notSupportedCallback?:function, opts?:GeoLocationOptions || none || Obtain the current location of the device and invoke the appropriate callback. ||
+|| watchPosition(successCallback?:function, errorCallback?:function, notSupportedCallback?:function, opts?:GeoLocationOptions || none || Monitor the position of the device and invoke the appropriate callback every time this position changes. The monitoring will continue until the clearWatches method is called. ||
+|| sidebar(panel:string, position:ControlPosition) || none || Creates a control from the given div panel on the map. See [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition] for control positions. ||
+|| addMarker(opts?:MarkerOptions, callback?:function(map, marker)) || none || Creates a marker on the map. ||
+|| addInfoWindow(marker:Marker, opts?:InfoWindowOptions) || none || Creates an info window bound to the marker on the map. ||
+|| loadJSON(url:string, data?:string, callback?:function(iterator, marker)) || none || Adds markers to the map through a JSON request. The JSON format must be (["markers":[]]). ||
+|| loadHTML(type:string, class:string, callback?:function(markerOpts, node)) || none || Adds markers to the map by looking for sementic attributes in the selected classes. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+|| loadDirections(panel:string, origin:string(or LatLng), destination:string(or LatLng), travelMode:TravelMode) || none || Displays directions on the map and/or in a div panel. ||
+|| loadStreetViewPanorama(panel:string, opts?:StreetViewPanoramaOptions) || none || Displays the panorama for a given LatLng or panorama ID. ||
+|| search(request:GeocoderRequest, callbackSuccess:function(Array.<GeocoderResult>), callbackError:function(GeocoderStatus)) || none || Search addresses and latitude/longitude. ||
+|| clearMarkers() || none || Clears all markers on the map. ||
+|| clearWatches() || none || Clears all monitoring positions. ||
+|| destroy() || none || Removes the map functionality. ||
 
-===loadJSON(url, data)===
-Loads markers by a JSON request
+===MapOptions===
+====Properties====
 
-===loadHTML(cssClass, semanticType)===
-Loads markers by HTML. The HTML must be sprinkled with RDFa, Microformats or Microdata to render accurately.
+Supports all Google Maps MapOptions properties, see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions Google Maps MapOption properties]
 
-===loadDirections(origin, destination, travelMode, panel)===
-Displays directions on map and in panel
+|| *Properties* || *Type* || *Description* ||
+|| callback || function || A callback routine invoked after the map has been loaded. Optional. ||
 
-===clearMarkers()===
-Clears all markers
-
-
-= Example =
+All options in the MapOptions can be set and retrieved by
 
 {{{
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&amp;language=sv&amp;region=SE"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
-        <script type="text/javascript">
-			
-            $(document).ready(function() {
-                
-		var opts = { fallbackInitialLatLon: new google.maps.LatLng(57.7973333, 12.0502107), zoom: 8, mapTypeId: google.maps.MapTypeId.ROADMAP, autoDetectGeoLocation: true, language: 'sv', region: 'se'};
-				
-		$('#map_canvas').map(opts);
-		$('#map_canvas').map('addMarker', 57.7973333, 12.0502107 );
-
-            });
-        
-        </script>
-    </head>
-    <body>
-    
-        <div id="map_canvas" style="width:100%; height:690px;"></div> 
-
-    </body>
-</html>
+//getter
+var language = $('#map_canvas').gmap('option', 'language');
+//setter
+$('#map_canvas').gmap('option', 'language', 'sv');
 }}}
+
+===GeoLocationOptions===
+====Properties====
+
+see [http://dev.w3.org/geo/api/spec-source.html#position_options_interface GeoLocationOptions].
+
+===MarkerOptions===
+====Properties====
+
+see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions]
+
+===InfoWindowOptions===
+====Properties====
+
+see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions] 
+
+===TravelMode===
+====Constants====
+
+see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsTravelMode TravelMode]
+
+===StreetViewPanoramaOptions===
+====Properties====
+
+see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]
+
+===GeocoderRequest===
+====Properties====
+
+see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest]

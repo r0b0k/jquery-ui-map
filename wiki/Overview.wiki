@@ -19,17 +19,17 @@ $(document).ready(function() {
 
 = API =
 
-== Constructor ==
+==Constructor==
 
 || *Constructor* || *Description* || 
 || gmap(panel:string, opts?:[Overview#MapOptions]) || Creates a new map inside of the given div panel. || 
 
-== Methods ==
+==Methods==
 
 || *Methods* || *Return Value* || *Description* ||
 || getCurrentPosition(successCallback?:function(position), errorCallback?:function(error), notSupportedCallback?:function, opts?:[Overview#GeoLocationOptions] || none || Obtain the current location of the device and invoke the appropriate callback. ||
 || watchPosition(successCallback?:function, errorCallback?:function, notSupportedCallback?:function, opts?:[Overview#GeoLocationOptions] || none || Monitor the position of the device and invoke the appropriate callback every time this position changes. The monitoring will continue until the clearWatches method is called. ||
-|| sidebar(panel:string, position:ControlPosition) || none || Creates a control from the given div panel on the map. See [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition] for control positions. ||
+|| sidebar(panel:string, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
 || addMarker(opts?:[Overview#MarkerOptions], callback?:function(map, marker)) || none || Creates a marker on the map. ||
 || addInfoWindow(marker:Marker, opts?:[Overview#InfoWindowOptions]) || none || Creates an info window bound to the marker on the map. ||
 || loadJSON(url:string, data?:string, callback?:function(iterator, marker)) || none || Adds markers to the map through a JSON request. The JSON format must be (["markers":[]]). ||
@@ -41,7 +41,7 @@ $(document).ready(function() {
 || clearWatches() || none || Clears all monitoring positions. ||
 || destroy() || none || Removes the map functionality. ||
 
-== Mapoptions ==
+===!MapOptions===
 
 Supports all Google Maps [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] properties
 

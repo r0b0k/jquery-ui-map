@@ -1,4 +1,4 @@
-#summary Tutorial.
+#summary Overview.
 
 = Dependencies =
 
@@ -31,10 +31,10 @@ $(document).ready(function() {
 || watchPosition(successCallback?:function, errorCallback?:function, notSupportedCallback?:function, opts?:[Overview#GeoLocationOptions GeoLocationOptions] || none || Monitor the position of the device and invoke the appropriate callback every time this position changes. The monitoring will continue until the clearWatches method is called. ||
 || sidebar(panel:string, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
 || addMarker(opts?:[Overview#MarkerOptions MarkerOptions], callback?:function(map, marker)) || none || Creates a marker on the map. ||
-|| addInfoWindow(marker:Marker, opts?:[Overview#InfoWindowOptions InfoWindowOptions]) || none || Creates an info window bound to the marker on the map. ||
+|| addInfoWindow(marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker], opts?:[Overview#InfoWindowOptions InfoWindowOptions]) || none || Creates an info window bound to the marker on the map. ||
 || loadJSON(url:string, data?:string, callback?:function(iterator, marker)) || none || Adds markers to the map through a JSON request. The JSON format must be (["markers":[]]). ||
 || loadHTML(type:string, class:string, callback?:function(markerOpts, node)) || none || Adds markers to the map by looking for sementic attributes in the selected classes. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
-|| loadDirections(panel:string, origin:string(or LatLng), destination:string(or LatLng), travelMode:[Overview#TravelMode TravelMode]) || none || Displays directions on the map and/or in a div panel. ||
+|| loadDirections(panel:string, origin:string(or [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]), destination:string(or [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]), travelMode:[Overview#TravelMode TravelMode]) || none || Displays directions on the map and/or in a div panel. ||
 || loadStreetViewPanorama(panel:string, opts?:[Overview#StreetViewPanoramaOptions StreetViewPanoramaOptions]) || none || Displays the panorama for a given LatLng or panorama ID. ||
 || search(request:[Overview#GeocoderRequest GeocoderRequest], successCallback:function(Array.GeocoderResult), errorCallback:function(GeocoderStatus)) || none || Search addresses and latitude/longitude. ||
 || clearMarkers() || none || Clears all markers on the map. ||

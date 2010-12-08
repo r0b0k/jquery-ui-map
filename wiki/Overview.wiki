@@ -13,7 +13,7 @@ Make the selected element a Google map.
 
 {{{
 $(document).ready(function() {				
-    $('#map_canvas').map();
+    $('#map_canvas').gmap();
 });
 }}}
 

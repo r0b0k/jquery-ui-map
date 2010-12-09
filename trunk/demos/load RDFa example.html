@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.1//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-2.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+    xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+    xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.w3.org/1999/xhtml
+                        http://www.w3.org/MarkUp/SCHEMA/xhtml-rdfa-2.xsd"
+    xml:lang="en">
+    <head>
+        
+        <title>Jquery.ui.map - load RDFa example</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+		
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssbase/base-min.css" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssfonts/fonts-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" />	 
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        
+        <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+		//<![CDATA[
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.4");
+			google.load("jqueryui", "1.8");
+		//]]>
+		</script>
+        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+        <script type="text/javascript">
+		//<![CDATA[
+			$(document).ready(function() {
+				$('#sidebar-wrap').hide();
+				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude), 'navigationControl': false, 'streetViewControl': false, 'callback': init });
+				function init() {
+					$('#map_canvas').gmap('sidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+					$('#map_canvas').gmap('loadHTML', 'rdfa', 'vevent');
+				}
+            });
+		//]]>
+		</script>
+
+    </head>
+    <body>
+        <h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
+        <div id="sidebar-wrap">
+            <div id="sidebar">
+                <h3>Sidebar</h3>
+                <div class="vevent" typeof="vcard:Vevent">
+                    <span class="datetime">
+                        <abbr class="dtstart" property="vcard:dtstart" content="20101214" title="20101214">Tuesday December 14, 2010</abbr>
+                    </span>
+                    <span class="summary" property="vcard:summary">Robyn - Stockholm</span> at
+                    <span class="venue location vcard" about="#venue">  
+                        <span class="fn org"><a rel="vcard:urlofvenue" href="/venue/8473/STHLM/Stockholm/Berns-Salonger/">Berns Salonger</a></span>
+                        <span class="address adr" property="vcard:adr">
+                            <span typeof="vcard:address"> 
+                                <span class="street-address" property="vcard:street-address">Berzelii Park</span>
+                                <span class="locality" property="vcard:locality">Stockholm</span>, <span class="region" property="vcard:region">Stockholm</span>
+                                <span class="geo hidden">
+                                    <span property="geo:lat_long" content="59.3426606750, 18.0736160278">
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                    <div class="website">Website: <a rel="nofollow" href="http://concertful.com/concert/robyn/" class="url">http://concertful.com/concert/robyn/</a></div>
+                </div>
+            </div>
+        </div>
+        <div id="map_canvas"></div>
+    </body>
+</html>

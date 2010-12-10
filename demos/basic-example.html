@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    	
+        <title>Jquery.ui.map - basic example</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+		
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssbase/base-min.css" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssfonts/fonts-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" />	 
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        
+        <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+		//<![CDATA[
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.4");
+			google.load("jqueryui", "1.8");
+		//]]>
+		</script>
+        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+        <script type="text/javascript">
+			//<![CDATA[
+            $(document).ready(function() {
+				var latlng = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
+				$('#map_canvas').gmap({'center': latlng, 'callback': init});
+				function init() {
+					$('#map_canvas').gmap('addMarker', {'position': latlng, 'title': 'This is my position according to Google...('+google.loader.ClientLocation.address.city+')'});
+				}
+            });
+			//]]>
+        </script>
+        
+    </head>
+    <body>
+    	<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
+        <div id="map_canvas"></div>
+    </body>
+</html>

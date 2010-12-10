@@ -1,6 +1,6 @@
 #summary Examples.
 
-= Example constructor call =
+== Example constructor call ==
 
 Make the selected element a Google map.
 
@@ -18,28 +18,28 @@ var callback = function() {
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': callback });
 }}}
 
-= Example getCurrentPosition =
+== Example getCurrentPosition ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
 $('#map_canvas').gmap('getCurrentPosition');
 }}}
 
-= Example watchPosition =
+== Example watchPosition ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
 $('#map_canvas').gmap('watchPosition');
 }}}
 
-= Example sidebar =
+== Example sidebar ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
 $('#map_canvas').gmap('sidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
 }}}
 
-= Example addMarker =
+== Example addMarker ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
@@ -57,7 +57,7 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) }
 $('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573,-71.098326) }, callback );
 }}}
 
-= Example addInfoWindow =
+== Example addInfoWindow ==
 
 {{{
 var callback = function(map, marker) {
@@ -69,7 +69,7 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) }
 $('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573,-71.098326) }, callback );
 }}}
 
-= Example loadJSON =
+== Example loadJSON ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
@@ -88,7 +88,7 @@ $('#map_canvas').gmap('loadJSON', 'http://localhost/json.php', { 'type': 'activi
 });
 }}}
 
-= Example loadHTML =
+== Example loadHTML ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
@@ -100,10 +100,8 @@ The HTML
 
 {{{
 <p class="vevent">
-    <!-- The link class will be bound to a click event -->
-    <a class="link" href="http://conferences.oreillynet.com/pub/w/40/program.html">Web 2.0 Conference</a>
     <a class="url hidden" href="http://conferences.oreillynet.com/pub/w/40/program.html">http://conferences.oreillynet.com/pub/w/40/program.html</a>
-    <span class="summary hidden">Web 2.0 Conference</span> 
+    <span class="summary">Web 2.0 Conference</span> 
     <abbr class="dtstart hidden" title="2005-10-05">October 5</abbr>
     <abbr class="dtend hidden" title="2005-10-07">7</abbr>
     <span class="location hidden">Argent Hotel, San Francisco, CA</span>
@@ -122,7 +120,7 @@ $('#map_canvas').gmap('loadHTML', 'microformat', 'vevent', function(markerOpts, 
     // We have to add a callback in the addmarker method so we can access the marker just added
     $('#map_canvas').gmap('addMarker', markerOpts, function(map, marker) {
         // Find all a elements in this element with the class link 
-        $(node).find('a.link').click( function() {
+        $(node).find('.summary').click( function() {
             alert('The a element with class link was clicked!');
             // Trigger a click on the marker
             google.maps.event.trigger(marker, 'click');
@@ -135,14 +133,14 @@ $('#map_canvas').gmap('loadHTML', 'microformat', 'vevent', function(markerOpts, 
 });
 }}}
 
-= Example loadDirections =
+== Example loadDirections ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
 $('#map_canvas').gmap('loadDirections', 'panel', new google.maps.LatLng(42.345573,-71.098326), new google.maps.LatLng(42.345573,-72.098326), google.maps.DirectionsTravelMode.DRIVING);
 }}}
 
-= Example loadStreetViewPanorama =
+== Example loadStreetViewPanorama ==
 
 {{{
 var latlng = new google.maps.LatLng(42.345573,-71.098326);
@@ -151,7 +149,7 @@ var panoramaOptions = { 'position': latlng, 'pov': {'heading': 34, 'pitch': 10, 
 $('#map_canvas').gmap('loadStreetViewPanorama', 'panel', panoramaOptions);
 }}}
 
-= Example search =
+== Example search ==
 
 {{{
 var latlng = new google.maps.LatLng(42.345573,-71.098326);
@@ -165,7 +163,7 @@ $('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(results) {
 });
 }}}
 
-= Example clearMarkers =
+== Example clearMarkers ==
 
 {{{
 var latlng = new google.maps.LatLng(42.345573,-71.098326);
@@ -174,7 +172,7 @@ $('#map_canvas').gmap('addMarker', { 'position': latlng });
 $('#map_canvas').gmap('clearMarkers');
 }}}
 
-= Example clearWatches =
+== Example clearWatches ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
@@ -182,7 +180,7 @@ $('#map_canvas').gmap('watchPosition');
 $('#map_canvas').gmap('clearWatches');
 }}}
 
-= Example destroy =
+== Example destroy ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });

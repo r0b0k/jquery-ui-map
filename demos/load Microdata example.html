@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+    <head>
+    	
+        <title>Jquery.ui.map - load Microdata example</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+		
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssbase/base-min.css" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssfonts/fonts-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" />	 
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        
+        <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+		//<![CDATA[
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.4");
+			google.load("jqueryui", "1.8");
+		//]]>
+		</script>
+        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+        <script type="text/javascript">
+		//<![CDATA[
+			$(document).ready(function() {
+				$('#sidebar-wrap').hide();
+				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude), 'navigationControl': false, 'streetViewControl': false, 'callback': init });
+				function init() {
+					$('#map_canvas').gmap('sidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+					$('#map_canvas').gmap('loadHTML', 'microdata', 'vevent');
+				}
+            });
+		//]]>
+		</script>
+
+    </head>
+    <body>
+        <h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
+        <div id="sidebar">
+        	<h3>Sidebar</h3>
+            <p class="vevent">
+            	<a class="summary" href="http://www.goteborg.com/">Gothenburg</a>
+            	<span class="hidden" itemprop="geo">57.6969943;11.9865</span>
+            </p>
+            <p class="vevent">
+            	<a class="summary" href="http://www.malmo.se/">Malm&ouml;</a>
+            	<span class="hidden" itemprop="geo">55.6033306;13.0013029</span>
+            </p>
+            <p class="vevent">
+            	<a class="summary" href="http://www.stockholm.se/">Stockholm</a>
+            	<span class="hidden" itemprop="geo">59.3327881;18.0644881</span>
+            </p>
+        </div>
+        <div id="map_canvas"></div>
+    </body>
+</html>

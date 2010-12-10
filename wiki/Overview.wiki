@@ -22,7 +22,7 @@ $(document).ready(function() {
 ==Constructor==
 
 || *Constructor* || *Description* || 
-|| gmap(panel:string, opts?:[Overview#MapOptions MapOptions]) || Creates a new map inside of the given div panel. || 
+|| gmap(opts?:[Overview#MapOptions MapOptions]) || Creates a new map. || 
 
 ==Methods==
 

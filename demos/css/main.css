@@ -13,5 +13,5 @@ a, a:active, a:hover, a:focus { color: #008595; text-decoration: none; outline: 
 .ui-dialog-vevent .dtstart { display:none; }
 .ui-dialog-vevent .website { margin:0 0 1em; }
 abbr { border:none; }
-
+#sidebar a.url { word-wrap: break-word; }
 #sidebar { height:250px; width:200px; background:#f4f4f4; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; display:block; padding:1em; margin:1em; }

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head profile="http://microformats.org/profile/hcalendar">
+        
+        <title>Jquery.ui.map - load Microformat example</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+		
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssbase/base-min.css" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssfonts/fonts-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" />	 
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        
+        <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+		//<![CDATA[
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.4");
+			google.load("jqueryui", "1.8");
+		//]]>
+		</script>
+        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+        <script type="text/javascript">
+		//<![CDATA[
+			$(document).ready(function() {
+				$('#sidebar-wrap').hide();
+				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude), 'navigationControl': false, 'streetViewControl': false, 'callback': init });
+				function init() {
+					$('#map_canvas').gmap('sidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+					$('#map_canvas').gmap('loadHTML', 'microformat', 'vevent');
+				}
+            });
+		//]]>
+		</script>
+
+    </head>
+    <body>
+        <h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
+        <div id="sidebar-wrap">
+            <div id="sidebar">
+                <h3>Sidebar</h3>
+                <div class="vevent">
+                    <span class="datetime">
+                        <abbr title="20101214" class="dtstart">Tuesday December 14, 2010</abbr>
+                    </span>
+                    <span class="summary">Robyn - Stockholm</span> at
+                    <span class="location vcard">  
+                        <span class="fn org"><a href="/venue/8473/STHLM/Stockholm/Berns-Salonger/">Berns Salonger</a></span>
+                        <span class="address adr">
+                            <span class="street-address">Berzelii Park</span>
+                            <span class="locality">Stockholm</span>, <span class="region">Stockholm</span>
+                            <span class="geo hidden">
+                                <abbr title="59.3426606750" class="latitude">59.3426606750</abbr> 
+                                <abbr title="18.0736160278" class="longitude">18.0736160278</abbr>
+                            </span>
+                        </span>
+                    </span>
+                    <div class="website">Website: <a class="url" href="http://concertful.com/concert/robyn/" rel="nofollow">http://concertful.com/concert/robyn/</a></div>
+                </div>
+            </div>
+        </div>
+        <div id="map_canvas"></div>
+    </body>
+</html>

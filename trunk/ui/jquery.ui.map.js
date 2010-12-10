@@ -191,12 +191,15 @@
 										self.addMarker( 
 											markerOpts, 
 											function(map, marker) {
-												self.addInfoWindow(marker, { 'content': $(object).get(0) });
-												object.find('a.link').click( function() {
-													google.maps.event.trigger(marker, 'click');
-													map.panTo(marker.position);
-													return false;
-												});
+												var summary = object.find('.summary');
+												if ( summary != null ) {
+													self.addInfoWindow(marker, { 'content': summary.html() });
+													summary.click( function() {
+														google.maps.event.trigger(marker, 'click');
+														map.panTo(marker.position);
+														return false;
+													});
+												}
 											} 
 										);
 									}

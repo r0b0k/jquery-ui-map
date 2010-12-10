@@ -1,0 +1,17 @@
+html, boxy { margin:0; padding: 0; }
+body { margin: auto; width: 960px; font-family: "Lucida Grande", Verdana, Corbel, "Bitstream Vera Sans", "DejaVu Sans", sans-serif; color: #2A3333; }
+a, a:active, a:hover, a:focus { color: #008595; text-decoration: none; outline: none; }
+.hidden { display:none; }
+#events { margin: 0 0 1em; }
+#events h2 { margin-top:0; }
+#events li { background:#f4f4f4; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; display:block; padding:1em; list-style:none inside none; }
+#events ul { margin-left:0; }
+#map_canvas { width: 100%; height:400px; }
+.streetview { width:500px; height:300px; }
+.summary { font-size:1.3em; cursor:pointer; color: #EE2C74; }
+.ui-dialog-vevent .summary { margin:0.5em 0 0 0; display:block; }
+.ui-dialog-vevent .dtstart { display:none; }
+.ui-dialog-vevent .website { margin:0 0 1em; }
+abbr { border:none; }
+
+#sidebar { height:250px; width:200px; background:#f4f4f4; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; display:block; padding:1em; margin:1em; }

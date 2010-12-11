@@ -1,5 +1,6 @@
  /*!
  * jQuery UI Map 0.1.2
+ * http://code.google.com/p/jquery-ui-map/
  *
  * Copyright (c) 2010 Johan Säll Larsson
  *

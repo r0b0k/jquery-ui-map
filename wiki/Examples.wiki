@@ -157,7 +157,7 @@ $('#map_canvas').gmap({ 'center': latlng });
 $('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(results) {
     alert('Found it!');
     // Get the map
-    var map = $('#map_canvas').gmap('option', 'map');
+    var map = $('#map_canvas').gmap('getMap');
     // Pan to first result
     map.panTo(results[0].geometry.location);
 });

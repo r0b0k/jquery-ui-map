@@ -1,5 +1,5 @@
 /*
- * jQuery UI Map 0.1.1
+ * jQuery UI Map 0.1.2
  *
  * Author: Johan Säll Larsson
  *
@@ -10,7 +10,7 @@
 
 ( function($) {
 	
-	var maps = [], markers = [], watchIds = [], id;
+	var maps = [], markers = [], watchIds = [];
 	
 	$.widget( "ui.gmap", {
 			
@@ -32,7 +32,6 @@
 				scaleControl: false,
 				scaleControlOptions: null,
 				scrollwheel: false,
-				//streetView: new google.maps.StreetViewPanorama(),
 				streetViewControl: true,
 				streetViewControlOptions: null,
 				zoom: 5,
@@ -41,21 +40,23 @@
 			},
 			
 			_create: function() {
-				id = this.element.attr('id');
+				
 			},
 			
 			_init: function() {
 					var o = this.options;
+					var id = this.element.attr('id');
 					o.map = maps[id] = new google.maps.Map( document.getElementById(id), o );
 					markers[id] = new Array;
 					watchIds[id] = new Array;
 					if ( $.isFunction(o.callback) ) {
-						o.callback.call(this);	
+						o.callback.call(this, maps[id]);	
 					}
 			},
 			
 			getCurrentPosition: function(successCallback, errorCallback, notSupportedCallback, opts) {
 				var self = this;
+				var id = this.element.attr('id');
 				if ( navigator.geolocation ) {
 					if ( $.isFunction(successCallback) && $.isFunction(errorCallback) ) {
 						navigator.geolocation.getCurrentPosition ( successCallback, errorCallback, opts );
@@ -73,6 +74,7 @@
 			
 			watchPosition: function(successCallback, errorCallback, notSupportedCallback, opts) {
 				var self = this;
+				var id = this.element.attr('id');
 				if ( navigator.geolocation ) {
 					if ( $.isFunction(successCallback) && $.isFunction(errorCallback) ) {
 						watchIds[id].push(navigator.geolocation.watchPosition ( successCallback, errorCallback, opts ));
@@ -87,10 +89,12 @@
 			},
 			
 			sidebar: function(panel, position) {
+				var id = this.element.attr('id');
 				maps[id].controls[position].push(document.getElementById(panel));
 			},
 			
 			addMarker: function( markerOptions, callback ) {
+				var id = this.element.attr('id');
 				var marker = new google.maps.Marker( jQuery.extend( { 'map': maps[id] }, markerOptions) );
 				if ( $.isFunction(callback) ) {
 					callback.call(this, maps[id], marker);
@@ -101,6 +105,7 @@
 			
 			addInfoWindow: function (marker, infoWindowOptions) {
 				var self = this;
+				var id = this.element.attr('id');
 				var infowindow = new google.maps.InfoWindow(infoWindowOptions);
 				google.maps.event.addListener(marker, 'click', function() { 
     				infowindow.open(maps[id], marker);
@@ -110,6 +115,7 @@
 			
 			loadJSON: function( url, data, callback ) {
 				var self = this;
+				var id = this.element.attr('id');
 				$.getJSON( url, data, function(data) { 
 					$.each( data.markers, function(i, m) {
 						if ( $.isFunction(callback) ) {
@@ -124,6 +130,7 @@
 			
 			loadHTML: function ( type, clazz, callback ) {
 				var self = this;
+				var id = this.element.attr('id');
 				switch ( type ) {
 					case 'rdfa':
 						var geoPoints = [];
@@ -134,7 +141,7 @@
 							var object = $(this);
 							var markerOpts = { 'map': maps[id], 'position': new google.maps.LatLng(geoPoints[index][0], geoPoints[index][1]) };
 							if ( $.isFunction(callback) ) {
-								callback.call(this, markerOpts, object, index);
+								callback.call(this, markerOpts, object.get(0), index);
 							} else {
 								self.addMarker( 
 									markerOpts, 
@@ -158,7 +165,7 @@
 							var object = $(this);
 							var markerOpts = { 'map': maps[id], 'position': new google.maps.LatLng(object.find('.latitude').attr('title'), object.find('.longitude').attr('title')) };
 							if ( $.isFunction(callback) ) {
-								callback.call(this, markerOpts, object, index);
+								callback.call(this, markerOpts, object.get(0), index);
 							} else {
 								self.addMarker( 
 									markerOpts, 
@@ -186,7 +193,7 @@
 									var latlng = $(this).html().split(';');
 									var markerOpts = { 'map': maps[id], 'position': new google.maps.LatLng(latlng[0], latlng[1]) };
 									if ( $.isFunction(callback) ) {
-										callback.call(this, markerOpts, object, index);
+										callback.call(this, markerOpts, object.get(0), index);
 									} else {
 										self.addMarker( 
 											markerOpts, 
@@ -214,6 +221,7 @@
 			
 			//FIXME: Should be diff. params
 			loadDirections: function(panel, origin, destination, travelMode) { 
+				var id = this.element.attr('id');
 				var directionsDisplay = new google.maps.DirectionsRenderer({ 'map': maps[id], 'panel': document.getElementById(panel)});
 				var directionsService = new google.maps.DirectionsService();
 				directionsService.route( { 'origin':origin, 'destination':destination, 'travelMode': travelMode, 'provideRouteAlternatives' : true }, 
@@ -228,11 +236,13 @@
 			},
 			
 			loadStreetViewPanorama: function(panel, streetViewPanoramaOptions) {
+				var id = this.element.attr('id');
 				var panorama = new google.maps.StreetViewPanorama(document.getElementById(panel), streetViewPanoramaOptions);
 				maps[id].setStreetView(panorama);
 			},
 			
 			search: function(request, successCallback, errorCallback) {
+				var id = this.element.attr('id');
 				var geocoder = new google.maps.Geocoder();
 				geocoder.geocode( request, function(results, status) {
 					if ( status == google.maps.GeocoderStatus.OK ) {
@@ -250,6 +260,7 @@
 			},
 			
 			clearMarkers: function() {
+				var id = this.element.attr('id');
 				for ( var i = 0; i < markers[id].length; i++ ) {
 					markers[id][i].setMap( null );
 				}
@@ -257,6 +268,7 @@
 			},
 			
 			clearWatches: function() {
+				var id = this.element.attr('id');
 				if ( navigator.geolocation ) {
 					for ( var i = 0; i < watchIds[id].length; i++ ) {
 						navigator.geolocation.clearWatch([id][i]);
@@ -265,9 +277,77 @@
 				}
 			},
 			
-			//TODO: Add the rest of the options
 			_setOption: function(key, value) {
+				var id = this.element.attr('id');
 				switch (key) {
+					case "backgroundColor":
+						this.options.backgroundColor = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "disableDefaultUI":
+						this.options.disableDefaultUI = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "disableDoubleClickZoom":
+						this.options.disableDoubleClickZoom = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "draggable":
+						this.options.draggable = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "draggableCursor":
+						this.options.draggableCursor = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "draggingCursor":
+						this.options.draggingCursor = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "keyboardShortcuts":
+						this.options.keyboardShortcuts = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "mapTypeControl":
+						this.options.mapTypeControl = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "mapTypeControlOptions":
+						this.options.mapTypeControlOptions = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "navigationControl":
+						this.options.navigationControl = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "navigationControlOptions":
+						this.options.navigationControlOptions = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "noClear":
+						this.options.noClear = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "scaleControl":
+						this.options.scaleControl = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "scaleControlOptions":
+						this.options.scaleControlOptions = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "scrollwheel":
+						this.options.scrollwheel = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "streetViewControl":
+						this.options.streetViewControl = value;
+                    	maps[id].setOptions(this.options);
+					break;
+					case "streetViewControlOptions":
+						this.options.streetViewControlOptions = value;
+                    	maps[id].setOptions(this.options);
+					break;
 					case "center":
 						this.options.center = value;
                     	maps[id].setCenter(value);
@@ -286,6 +366,7 @@
 			
 			//FIXME: Google Map won't go away
 			destroy: function() {
+				var id = this.element.attr('id');
 				this.clearWatches();
 				this.clearMarkers();
 				maps[id] = null;

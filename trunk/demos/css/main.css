@@ -14,4 +14,11 @@ a, a:active, a:hover, a:focus { color: #008595; text-decoration: none; outline: 
 .ui-dialog-vevent .website { margin:0 0 1em; }
 abbr { border:none; }
 #sidebar a.url { word-wrap: break-word; }
-#sidebar { height:250px; width:200px; background:#f4f4f4; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; display:block; padding:1em; margin:1em; }
+#sidebar { height:250px; width:200px; background:#f4f4f4; -moz-border-radius:5px; -webkit-border-radius:5px; border-radius:5px; -moz-box-shadow: 0 0 20px #777; -webkit-box-shadow: 0 0 20px #777; border: 5px solid #fff; display:block; padding:1em; margin:1em; }
+.multi-map-wrap { float:left; margin:0 0 0 10px; }
+.multi-map { width:232px; height: 232px; margin: 0 0 10px; }
+div.first {margin:0; }
+
+a.buttonize{ background: #008595; display: inline-block; padding: 5px 10px 6px; color: #fff; text-decoration: none; font-weight: bold; line-height: 1; -moz-border-radius: 5px; -webkit-border-radius: 5px; -moz-box-shadow: 2px 2px 5px #ccc; -webkit-box-shadow: 2px 2px 5px #ccc; text-shadow: 0 1px 1px #2A3333; position: relative; cursor: pointer; }
+a.buttonize:hover	{ background-color: #2A3333; color: #fff; }
+a.buttonize:active	{ top: 1px; }

@@ -26,10 +26,16 @@
 		//<![CDATA[
 			$(document).ready(function() {
 				$('#sidebar-wrap').hide();
-				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude), 'navigationControl': false, 'streetViewControl': false, 'callback': init });
+				$('#map_canvas').gmap({ 'center': getLatLng(), 'navigationControl': false, 'streetViewControl': false, 'callback': init });
 				function init() {
 					$('#map_canvas').gmap('sidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
 					$('#map_canvas').gmap('loadHTML', 'microdata', 'vevent');
+				}
+				function getLatLng() {
+					if ( google.loader.ClientLocation != null ) {
+						return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+					}
+					return new google.maps.LatLng(59.3426606750, 18.0736160278);
 				}
             });
 		//]]>
@@ -38,20 +44,22 @@
     </head>
     <body>
         <h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
-        <div id="sidebar">
-        	<h3>Sidebar</h3>
-            <p class="vevent">
-            	<a class="summary" href="http://www.goteborg.com/">Gothenburg</a>
-            	<span class="hidden" itemprop="geo">57.6969943;11.9865</span>
-            </p>
-            <p class="vevent">
-            	<a class="summary" href="http://www.malmo.se/">Malm&ouml;</a>
-            	<span class="hidden" itemprop="geo">55.6033306;13.0013029</span>
-            </p>
-            <p class="vevent">
-            	<a class="summary" href="http://www.stockholm.se/">Stockholm</a>
-            	<span class="hidden" itemprop="geo">59.3327881;18.0644881</span>
-            </p>
+        <div id="sidebar-wrap">
+            <div id="sidebar">
+                <h3>Sidebar</h3>
+                <p class="vevent">
+                    <a class="summary" href="http://www.goteborg.com/">Gothenburg</a>
+                    <span class="hidden" itemprop="geo">57.6969943;11.9865</span>
+                </p>
+                <p class="vevent">
+                    <a class="summary" href="http://www.malmo.se/">Malm&ouml;</a>
+                    <span class="hidden" itemprop="geo">55.6033306;13.0013029</span>
+                </p>
+                <p class="vevent">
+                    <a class="summary" href="http://www.stockholm.se/">Stockholm</a>
+                    <span class="hidden" itemprop="geo">59.3327881;18.0644881</span>
+                </p>
+            </div>
         </div>
         <div id="map_canvas"></div>
     </body>

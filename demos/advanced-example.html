@@ -26,18 +26,16 @@
         <script type="text/javascript">
 		//<![CDATA[
 			$(document).ready(function() {
-				var latlng = new google.maps.LatLng(59.3426606750, 18.0736160278);
-				if ( google.loader.ClientLocation != null) {
-					latlng = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude)
-				}
-				$('#map_canvas').gmap({ 'center': latlng, 'streetViewControl': false, 'callback': init });
+				
+				$('#map_canvas').gmap({ 'center': getLatLng(), 'streetViewControl': false, 'callback': init });
+				
 				function init() {
 					$('#map_canvas').gmap('watchPosition', function(position) {
 						$('#map_canvas').gmap('option', 'map').setCenter( new google.maps.LatLng(position.coords.latitude, position.coords.longitude) );							   
 				    });
 					$('#map_canvas').gmap('loadHTML', 'microformat', 'vevent', 
 						function(markeropts, node, index) {
-							var clone = node.clone().addClass('ui-dialog-vevent').append('<div id="streetview'+index+'" class="streetview"></div>');
+							var clone = $(node).clone().addClass('ui-dialog-vevent').append('<div id="streetview'+index+'" class="streetview"></div>');
 							var summary = $(node).find('.summary');
 							markeropts.title = summary.html();
 							$('#map_canvas').gmap('addMarker', markeropts, function(map, marker) {
@@ -56,6 +54,14 @@
 						}
 					);
 				}
+				
+				function getLatLng() {
+					if ( google.loader.ClientLocation != null ) {
+						return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+					}
+					return new google.maps.LatLng(59.3426606750, 18.0736160278);
+				}
+				
             });
 		//]]>
 		</script>

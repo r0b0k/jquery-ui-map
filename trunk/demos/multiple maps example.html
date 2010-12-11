@@ -40,9 +40,9 @@
 					$('#m'+i).gmap({ 'center': latlngs[i], 'streetViewControl': false, 'mapTypeControl': false, 'navigationControl': false, 'callback': 
 						function() {
 							$('#m'+i).gmap('addMarker', {'position':latlngs[i]});
-							var map = $('#m'+i);
+							var self = $('#m'+i);
 							$('#c'+i).click(function() {
-								map.gmap('clearMarkers');	
+								self.gmap('clearMarkers');
 							});
 						} 
 					});

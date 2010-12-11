@@ -38,6 +38,7 @@
 							var clone = $(node).clone().addClass('ui-dialog-vevent').append('<div id="streetview'+index+'" class="streetview"></div>');
 							var summary = $(node).find('.summary');
 							markeropts.title = summary.html();
+							markeropts.icon = new google.maps.MarkerImage('http://google-maps-icons.googlecode.com/files/music-rock.png'), new google.maps.Size(32, 37), new google.maps.Point(0,0), new google.maps.Point(0, 37);							
 							$('#map_canvas').gmap('addMarker', markeropts, function(map, marker) {
 								var onclickevent = function() {
 									map.panTo(marker.position);

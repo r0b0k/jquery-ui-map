@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        
+        <title>Jquery.ui.map - advanced example</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+		
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssbase/base-min.css" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssfonts/fonts-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" />	 
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        
+        <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+		//<![CDATA[
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.4");
+			google.load("jqueryui", "1.8");
+		//]]>
+		</script>
+        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>        
+        <script type="text/javascript">
+		//<![CDATA[
+			$(document).ready(function() {
+				
+				var latlngs = [];
+				latlngs.push(new google.maps.LatLng(59.3426606750, 18.0736160278));
+				latlngs.push(new google.maps.LatLng(37.7749295, -122.4194155));
+				latlngs.push(new google.maps.LatLng(37.4441580000, -122.1572520000));
+				latlngs.push(new google.maps.LatLng(40.7231000000, -73.9836000000));
+				latlngs = shuffle(latlngs);
+				
+				for ( var i = 0; i < latlngs.length; i++ ) {
+					var cssclass = ( i == 0 ) ? 'first' : '';
+					$('#multiple-maps').append('<div class="multi-map-wrap '+cssclass+'"><div id="m'+i+'" class="multi-map"></div><p><a class="buttonize" id="c'+i+'" href="#">Clear markers</a></p></div>');
+					$('#m'+i).gmap({ 'center': latlngs[i], 'streetViewControl': false, 'mapTypeControl': false, 'navigationControl': false, 'callback': 
+						function() {
+							$('#m'+i).gmap('addMarker', {'position':latlngs[i]});
+							var map = $('#m'+i);
+							$('#c'+i).click(function() {
+								map.gmap('clearMarkers');	
+							});
+						} 
+					});
+				}
+				
+				function shuffle(array) {
+					var tmp, current, top = array.length;
+					if(top) while(--top) {
+						current = Math.floor(Math.random() * (top + 1));
+						tmp = array[current];
+						array[current] = array[top];
+						array[top] = tmp;
+					}
+					return array;
+				}
+				
+            });
+		//]]>
+		</script>
+        
+	</head>
+    <body>
+        <h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
+        <h2>Multiple maps example</h2>
+        
+        <div id="multiple-maps"></div>
+        <div class="clear"></div>
+                
+        <div id="ft" class="hidden">
+        	Author: 
+            <div id="hcard-Johan-Säll-Larsson" class="vcard">
+                <span class="fn n">
+                    <span class="given-name">Johan</span> 
+                    <span class="family-name">Säll Larsson</span>
+                </span>
+                <span class="adr">
+                    <span class="locality">Göteborg</span>,
+                    <span class="country-name">Sweden</span>
+            	</span>
+            </div>
+        </div>
+        
+    </body>
+</html>

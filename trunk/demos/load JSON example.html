@@ -18,24 +18,43 @@
         <script type="text/javascript">
 		//<![CDATA[
 			google.load("maps", "3", {'other_params':'sensor=true'});
-			google.load("jquery", "1.4");
-			google.load("jqueryui", "1.8");
+			google.load("jquery", "1.5");
+			google.load("jqueryui", "1.8.9");
 		//]]>
 		</script>        
         <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
         <script type="text/javascript">
 		//<![CDATA[
-			$(document).ready(function() {
-				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude), 'streetViewControl': false, 'callback': init });
-				function init() {
-					$('#map_canvas').gmap('loadJSON', 'http://localhost/json.php' );
-				}
+			$(function() {
+				$('#map_canvas').gmap({ 'center':getLatLng(), 'streetViewControl': false, 'callback': function() {
+						$('#map_canvas').gmap('loadJSON', 'http://localhost/json.php' );
+					}
+				});
             });
+			function getLatLng() {
+				if ( google.loader.ClientLocation != null ) {
+					return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+				}
+				return new google.maps.LatLng(59.3426606750, 18.0736160278);
+			}
 		//]]>
 		</script>
     </head>
     <body>
         <h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> load JSON demo</h1>
         <div id="map_canvas"></div>
+        <div id="ft" class="hidden">
+        	Author: 
+            <div id="hcard-Johan-Säll-Larsson" class="vcard">
+                <span class="fn n">
+                    <span class="given-name">Johan</span> 
+                    <span class="family-name">Säll Larsson</span>
+                </span>
+                <span class="adr">
+                    <span class="locality">Göteborg</span>,
+                    <span class="country-name">Sweden</span>
+            	</span>
+            </div>
+        </div>
     </body>
 </html>

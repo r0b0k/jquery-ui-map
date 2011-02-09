@@ -18,18 +18,18 @@
         <script type="text/javascript">
 		//<![CDATA[
 			google.load("maps", "3", {'other_params':'sensor=true'});
-			google.load("jquery", "1.4");
-			google.load("jqueryui", "1.8");
+			google.load("jquery", "1.5");
+			google.load("jqueryui", "1.8.9");
 		//]]>
 		</script>
         <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
         <script type="text/javascript">
 		//<![CDATA[
-			$(document).ready(function() {
-				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(41.850033, -87.6500523), 'zoom': 10, 'callback': init });
-				function init() {
-					$('#map_canvas').gmap('loadFusion', 139529);
-				}
+			$(function() {
+				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(41.850033, -87.6500523), 'zoom': 10, 'callback': function() {
+						$('#map_canvas').gmap('loadFusion', 139529);
+					}
+				});
             });
 		//]]>
 		</script>

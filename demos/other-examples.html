@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+    	
+        <title>Jquery.ui.map - basic example</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+		
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssbase/base-min.css" />
+		<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.2.0/build/cssfonts/fonts-min.css" />
+        <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css" />	 
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        
+        <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+		//<![CDATA[
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.4");
+			google.load("jqueryui", "1.8");
+		//]]>
+		</script>
+        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+        <script type="text/javascript">
+			//<![CDATA[
+            $(function() {
+				
+				$('#map_canvas').gmap( {'center': new google.maps.LatLng(55.3426606750, 18.0736160278), 'callback': function(map) {
+					$(map).click( function(event) {
+						$('#map_canvas').gmap('addMarker', {'position': event.latLng, 'title': '', 'draggable': true, 'bound': false}, function(map, marker) {
+							$('#dialog').append('<form id="dialog'+marker.__gm_id+'" method="get" action="/"><p><label for="address">Address</label><input id="address'+marker.__gm_id+'" class="txt" name="address" value=""/></p><p><label for="comment">Comment</label><textarea id="comment" class="txt" name="comment" cols="40" rows="5"></textarea></p></form>');
+							findLocation(marker.getPosition(), marker);
+						}).dragend( function(event) {
+							var self = this;
+							findLocation(event.latLng, this);
+						}).click( function() {
+							openDialog(this);
+						})
+					});
+				}});
+				
+				function findLocation(location, marker) {
+					$('#map_canvas').gmap('search', {'location': location}, function(results) {
+						marker.setTitle(results[0].formatted_address);
+						$('#address'+marker.__gm_id).val(results[0].formatted_address);
+						openDialog(marker);
+					});
+				}
+				
+				function openDialog(el) {
+					$('#dialog'+el.__gm_id).dialog({'modal':true, 'title': 'Edit and save point', 'buttons': { 
+						"Remove": function() {
+							$(this).dialog( "close" );
+							el.setMap(null);
+						},
+						"Save": function() {
+							$(this).dialog( "close" );
+						}
+					}});
+				}
+				
+            });
+			//]]>
+        </script>
+        <style type="text/css">
+			label { display:block; font-weight:bold; margin: 0 0 0.25em; }
+			.txt { width: 99%; }
+		</style>
+    </head>
+    <body style="width:100%">
+    	<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
+        <div id="map_canvas" style="width:100%; height:700px;"></div>
+        <div id="dialog"></div>
+
+    </body>
+</html>

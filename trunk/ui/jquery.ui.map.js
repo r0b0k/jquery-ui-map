@@ -1,4 +1,4 @@
-/*!
+ /*!
  * jQuery UI Map 0.1.2
  * http://code.google.com/p/jquery-ui-map/
  *
@@ -29,7 +29,86 @@
 
 ( function($) {
 	
-	var maps = [], markers = [], layers = [], watches = [];
+	jQuery.fn.extend( {
+		
+		click: function(callback) { 
+			return this.addEventListener('click', callback);
+		},
+		
+		rightclick: function(callback) {
+			return this.addEventListener('rightclick', callback);
+		},
+		
+		dblclick: function(callback) {
+			return this.addEventListener('dblclick', callback);
+		},
+		
+		mouseover: function(callback) {
+			return this.addEventListener('mouseover', callback);
+		},
+		
+		mouseout: function(callback) {
+			return this.addEventListener('mouseout', callback);
+		},
+		
+		drag: function(callback) {
+			return this.addEventListener('drag', callback );
+		},
+		
+		dragend: function(callback) {
+			return this.addEventListener('dragend', callback );
+		},
+		/*
+		hide: function() {
+			if ( this.get(0) instanceof google.maps.MVCObject ) {
+				this.get(0).setVisible(false);
+			} else {
+				this.css('display', 'none')
+			}
+		},
+		
+		show: function() {
+			if ( this.get(0) instanceof google.maps.MVCObject ) {
+				this.get(0).setVisible(true);
+			} else {
+				this.css('display', 'block')
+			}	
+		},*/
+		
+		triggerEvent: function(type) {
+			google.maps.event.trigger(this.get(0), type);		
+		},
+		
+		addEventListener: function(type, callback) {
+			if ( this.get(0) instanceof google.maps.MVCObject ) {
+				google.maps.event.addListener(this.get(0), type, callback );
+			} else {
+				this.bind(type, callback);	
+			}
+			return this;
+		}
+		
+	});
+
+	var maps = [], markers = [], layers = [], bounds = [];
+	
+	function unwrap(el) {
+		if ( el instanceof jQuery ) {
+			return el.get(0);
+		} else if ( el instanceof Object ) {
+			return el;
+		}
+		return document.getElementById(el);
+	}
+	
+	function invoke( callback ) {
+		if ( $.isFunction(callback) ) {
+			callback.apply(this, Array.prototype.slice.call(arguments, 1));
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	$.widget( "ui.gmap", {
 			
@@ -54,96 +133,43 @@
 				streetViewControl: true,
 				streetViewControlOptions: null,
 				zoom: 5,
-				callback: null,
-				debug: true
+				callback: null
 			},
 			
 			_create: function() {
 				var id = this.element.attr('id');
-				maps[id] = new google.maps.Map( document.getElementById(id), this.options );
+				maps[id] = new google.maps.Map( this.element.get(0), this.options );
 				markers[id] = new Array;
-				watches[id] = new Array;
+				bounds[id] = new google.maps.LatLngBounds();
+				return $(maps[id]);
 			},
 			
 			_init: function() {
-				if ( $.isFunction(this.options.callback) ) {
-					this.options.callback.call(this, this.getMap());	
-				}
+				invoke(this.options.callback, this.getMap() );
 			},
 			
-			detectBrowser: function() {
-				if ( navigator.userAgent.indexOf('iPhone') != -1 || navigator.userAgent.indexOf('Android') != -1 ) {
-					this.element.width("100%");
-					this.element.height("100%");
-				}
-			},
-			
-			getCurrentPosition: function(successCallback, errorCallback, notSupportedCallback, opts) {
-				var self = this;
-				if ( navigator.geolocation ) {
-					if ( $.isFunction(successCallback) && $.isFunction(errorCallback) ) {
-						navigator.geolocation.getCurrentPosition ( successCallback, errorCallback, opts );
-					} else {
-						navigator.geolocation.getCurrentPosition ( function(position) {
-							self.getMap().setCenter( new google.maps.LatLng(position.coords.latitude, position.coords.longitude) );								
-						});
-					}
-				} else {
-					if ( $.isFunction(notSupportedCallback) ) {
-						notSupportedCallback.call(this);
-					}
-				}
-			},
-			
-			watchPosition: function(successCallback, errorCallback, notSupportedCallback, opts) {
-				var self = this;
-				if ( navigator.geolocation ) {
-					if ( $.isFunction(successCallback) && $.isFunction(errorCallback) ) {
-						self._getWatches().push(navigator.geolocation.watchPosition ( successCallback, errorCallback, opts ));
-					} else {
-						self._getWatches().push(navigator.geolocation.watchPosition ( function(position) { 
-							self.getMap().setCenter( new google.maps.LatLng(position.coords.latitude, position.coords.longitude) ); })
-						);
-					}
-				} else {
-					if ( $.isFunction(notSupportedCallback) ) {
-						notSupportedCallback.call(this);
-					}
-				}
-			},
-			
-			sidebar: function(panel, position) {
-				this.getMap().controls[position].push(document.getElementById(panel));
+			addSidebar: function(panel, position) {
+				this.getMap().controls[position].push(unwrap(panel));
 			},
 			
 			addMarker: function( markerOptions, callback ) {
-				var marker = new google.maps.Marker( jQuery.extend( { 'map': this.getMap() }, markerOptions) );
-				if ( $.isFunction(callback) ) {
-					callback.call(this, this.getMap(), marker);
+				var marker = new google.maps.Marker( jQuery.extend( { 'map': this.getMap(), 'bound':false }, markerOptions) );
+				invoke(callback, this.getMap(), marker );
+				this.getMarkers().push( marker );
+				if ( marker.bound ) {
+					this.addBound(marker.getPosition());
 				}
-				this._getMarkers().push( marker );
-				return marker;
+				return $(marker);
 			},
 			
 			addInfoWindow: function (marker, infoWindowOptions) {
-				var self = this;
-				var infowindow = new google.maps.InfoWindow(infoWindowOptions);
-				google.maps.event.addListener(marker, 'click', function() { 
-    				infowindow.open(self.getMap(), marker);
-					self.getMap().panTo(marker.position);
-				});
+				return $(new google.maps.InfoWindow(infoWindowOptions));
 			},
 			
 			loadJSON: function( url, data, callback ) {
-				var self = this;
 				$.getJSON( url, data, function(data) { 
 					$.each( data.markers, function(i, m) {
-						if ( $.isFunction(callback) ) {
-							callback.call(this, i, m);
-						} else {
-							var markerOpts = { 'position': new google.maps.LatLng(m.lat, m.lng) };
-							self.addMarker(markerOpts);
-						}
+						invoke(callback, i, m );
 					});
 				});
 			},
@@ -151,6 +177,7 @@
 			loadHTML: function ( type, clazz, callback ) {
 				var self = this;
 				switch ( type ) {
+					//FIXME error in rdfa
 					case 'rdfa':
 						var geoPoints = [];
 						$('.'+clazz+' [property="geo:lat_long"]').each( function() {
@@ -159,9 +186,7 @@
 						$('.'+clazz).each( function(index) {
 							var object = $(this);
 							var markerOpts = { 'position': new google.maps.LatLng(geoPoints[index][0], geoPoints[index][1]) };
-							if ( $.isFunction(callback) ) {
-								callback.call(this, markerOpts, object.get(0), index);
-							} else {
+							if ( !invoke(callback, markerOpts, object.get(0), index) ) {
 								var marker = self.addMarker( markerOpts );
 								var summary = object.find('.summary');
 								if ( summary != null ) {
@@ -179,16 +204,14 @@
 						$('.'+clazz).each( function(index) {
 							var object = $(this);
 							var markerOpts = { 'position': new google.maps.LatLng(object.find('.latitude').attr('title'), object.find('.longitude').attr('title')) };
-							if ( $.isFunction(callback) ) {
-								callback.call(this, markerOpts, object.get(0), index);
-							} else {
+							if ( !invoke(callback, markerOpts, object.get(0), index) ) {
 								var marker = self.addMarker( markerOpts );
 								var summary = object.find('.summary');
 								if ( summary != null ) {
 									self.addInfoWindow(marker, { 'content': summary.html() });
 									summary.click( function() {
-										google.maps.event.trigger(marker, 'click');
-										self.getMap().panTo(marker.position);
+										google.maps.event.trigger(marker.get(0), 'click');
+										self.getMap().panTo(marker.get(0).position);
 										return false;
 									});
 								}
@@ -203,9 +226,7 @@
 								if ( $(this).attr('itemprop') == 'geo' ) {
 									var latlng = $(this).html().split(';');
 									var markerOpts = { 'position': new google.maps.LatLng(latlng[0], latlng[1]) };
-									if ( $.isFunction(callback) ) {
-										callback.call(this, markerOpts, object.get(0), index);
-									} else {
+									if ( !invoke(callback, markerOpts, object.get(0), index) ) {
 										var marker = self.addMarker( markerOpts );
 										var summary = object.find('.summary');
 										if ( summary != null ) {
@@ -232,95 +253,62 @@
 			},
 			
 			//FIXME: Should be diff. params
-			loadDirections: function(panel, origin, destination, travelMode) { 
-				var directionsDisplay = new google.maps.DirectionsRenderer({ 'map': this.getMap(), 'panel': document.getElementById(panel)});
+			loadDirections: function(panel, directionsOpts, successCallback, errorCallback) { 
+				var directionsDisplay = new google.maps.DirectionsRenderer({ 'map': this.getMap(), 'panel': unwrap(panel)});
 				var directionsService = new google.maps.DirectionsService();
-				directionsService.route( { 'origin':origin, 'destination':destination, 'travelMode': travelMode, 'provideRouteAlternatives' : true }, 
-					function(response, status) {
-						if ( status == google.maps.DirectionsStatus.OK ) {
-							directionsDisplay.setDirections(response);
-						} else {
-							// Shouldnt be here
-							alert('Couldnt find directions, ' + status );
-						}
+				directionsService.route( directionsOpts, function(response, status) {
+					if ( status == google.maps.DirectionsStatus.OK ) {
+						invoke(successCallback, response);
+						directionsDisplay.setDirections(response);
+					} else {
+						invoke(errorCallback, response);
 					}
-				);
+				});
 			},
 			
 			loadStreetViewPanorama: function(panel, streetViewPanoramaOptions) {
-				var panorama = new google.maps.StreetViewPanorama(document.getElementById(panel), streetViewPanoramaOptions);
+				var panorama = new google.maps.StreetViewPanorama(unwrap(panel), streetViewPanoramaOptions);
 				this.getMap().setStreetView(panorama);
 			},
 			
 			search: function(request, successCallback, errorCallback) {
-				var self = this;
 				var geocoder = new google.maps.Geocoder();
 				geocoder.geocode( request, function(results, status) {
 					if ( status == google.maps.GeocoderStatus.OK ) {
-						if ( $.isFunction(successCallback) ) {
-							successCallback.call(this, results);
-						} else {
-							self.getMap().setCenter(results[0].geometry.location);
-						}
+						invoke(successCallback, results);
 					} else {
-						if ( $.isFunction(errorCallback) ) {
-							errorCallback.call(this, status);
-						}
+						invoke(errorCallback, status);
 					}
 				});
 			},
 			
 			clearMarkers: function() {
-				var markers = this._getMarkers();
-				for ( var i = 0; i < markers.length; i++ ) {
+				var markers = this.getMarkers();
+				$.each( markers, function(i, v) { 
 					google.maps.event.clearInstanceListeners(markers[i]);
 					markers[i].setMap( null );
-				}
+				});
 				markers = new Array();
-			},
-			
-			clearWatches: function() {
-				if ( navigator.geolocation ) {
-					var watches = this._getWatches();
-					for ( var i = 0; i < watches.length; i++ ) {
-						navigator.geolocation.clearWatch([id][i]);
-					}
-					watches = new Array();
-				}
-			},
-			
-			//FIXME: Google Map won't go away
-			destroy: function() {
-				this.clearWatches();
-				this.clearMarkers();
-				var map = this.getMap();
-				map = null;
-				// Fastest way to remove the map, however probably memory leak
-				this.element.removeAttr('style');
-				this.element.html('');
-				this.options.map = null;
-				$.Widget.prototype.destroy.call( this );
 			},
 			
 			getMap: function() {
 				return maps[this.element.attr('id')];
 			},
 			
-			_getMarkers: function() {
+			getMarkers: function() {
 				return markers[this.element.attr('id')];
 			},
 			
-			_getWatches: function() {
-				return watches[this.element.attr('id')];
+			addBound: function(latLng) {
+				var bound = bounds[this.element.attr('id')];
+				bound.extend(latLng);
+				this.getMap().fitBounds(bound);
 			},
-			
-			/*option: function(key, value) {
-				switch (key) {
-					case "map":
-						return this.getMap();
-					break;
-				}
-			},*/
+						
+			destroy: function() {
+				this.clearMarkers();
+				$.Widget.prototype.destroy.call( this );
+			},
 			
 			_setOption: function(key, value) {
 				switch (key) {
@@ -394,15 +382,15 @@
 					break;
 					case "center":
 						this.options.center = value;
-                    	this.getMap().setCenter(value);
+                    	this.getMap().setOptions(this.options);
 					break;
 					case 'mapTypeId':
 						this.options.mapTypeId = value;
-						this.getMap().setMapTypeId(value);
+						this.getMap().setOptions(this.options);
 					break;
 					case 'zoom':
 						this.options.zoom = value;
-                    	this.getMap().setZoom(value);
+                    	this.getMap().setOptions(this.options);
 					break;
 				}
 				$.Widget.prototype._setOption.apply(this, arguments);

@@ -18,8 +18,8 @@
         <script type="text/javascript">
 		//<![CDATA[
 			google.load("maps", "3", {'other_params':'sensor=true'});
-			google.load("jquery", "1.4");
-			google.load("jqueryui", "1.8");
+			google.load("jquery", "1.5");
+			google.load("jqueryui", "1.8.9");
 		//]]>
 		</script>
         <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
@@ -30,7 +30,7 @@
 				$('#map_canvas').gmap( {'center': new google.maps.LatLng(55.3426606750, 18.0736160278), 'callback': function(map) {
 					$(map).click( function(event) {
 						$('#map_canvas').gmap('addMarker', {'position': event.latLng, 'title': '', 'draggable': true, 'bound': false}, function(map, marker) {
-							$('#dialog').append('<form id="dialog'+marker.__gm_id+'" method="get" action="/"><p><label for="address">Address</label><input id="address'+marker.__gm_id+'" class="txt" name="address" value=""/></p><p><label for="comment">Comment</label><textarea id="comment" class="txt" name="comment" cols="40" rows="5"></textarea></p></form>');
+							$('#dialog').append('<form id="dialog'+marker.__gm_id+'" method="get" action="/" style="display:none;"><p><label for="country">Country</label><input id="country'+marker.__gm_id+'" class="txt" name="country" value=""/></p><p><label for="state">State</label><input id="state'+marker.__gm_id+'" class="txt" name="state" value=""/></p><p><label for="address">Address</label><input id="address'+marker.__gm_id+'" class="txt" name="address" value=""/></p><p><label for="comment">Comment</label><textarea id="comment" class="txt" name="comment" cols="40" rows="5"></textarea></p></form>');
 							findLocation(marker.getPosition(), marker);
 						}).dragend( function(event) {
 							var self = this;
@@ -43,6 +43,13 @@
 				
 				function findLocation(location, marker) {
 					$('#map_canvas').gmap('search', {'location': location}, function(results) {
+						$.each(results[0].address_components, function(i,v) {
+							if ( v.types[0] == "administrative_area_level_1" || v.types[0] == "administrative_area_level_2" ) {
+								$('#state'+marker.__gm_id).val(v.long_name);
+							} else if ( v.types[0] == "country") {
+								$('#country'+marker.__gm_id).val(v.long_name);
+							}
+						});
 						marker.setTitle(results[0].formatted_address);
 						$('#address'+marker.__gm_id).val(results[0].formatted_address);
 						openDialog(marker);
@@ -69,9 +76,12 @@
 			.txt { width: 99%; }
 		</style>
     </head>
-    <body style="width:100%">
+    <body>
     	<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery.ui.map plugin</a> demo</h1>
-        <div id="map_canvas" style="width:100%; height:700px;"></div>
+        <p>This example is inspired by <a href="http://webbfunktion.com/?id=7458" alt="webbfunktion.com map example">webbfunktion.com example</a>(<a href="http://translate.google.com/translate?hl=sv&sl=sv&tl=en&u=http%3A%2F%2Fwebbfunktion.com%2F%3Fid%3D7458">translated</a>)</p>
+        <div id="map_canvas"></div>
+        <h3>Howto</h3>
+        <p>This example shows how to add markers to a map. Left click to add a marker. Left click on the marker to edit.</p>
         <div id="dialog"></div>
 
     </body>

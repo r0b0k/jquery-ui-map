@@ -18,19 +18,19 @@
         <script type="text/javascript">
 		//<![CDATA[
 			google.load("maps", "3", {'other_params':'sensor=true'});
-			google.load("jquery", "1.4");
-			google.load("jqueryui", "1.8");
+			google.load("jquery", "1.5");
+			google.load("jqueryui", "1.8.9");
 		//]]>
 		</script>
         <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>        
         <script type="text/javascript">
 		//<![CDATA[
-			$(document).ready(function() {
+			$(function() {
 				
 				var latlngs = [];
 				latlngs.push(new google.maps.LatLng(59.3426606750, 18.0736160278));
 				latlngs.push(new google.maps.LatLng(37.7749295, -122.4194155));
-				latlngs.push(new google.maps.LatLng(37.4441580000, -122.1572520000));
+				latlngs.push(new google.maps.LatLng(34.4441580000, -102.1572520000));
 				latlngs.push(new google.maps.LatLng(40.7231000000, -73.9836000000));
 				latlngs = shuffle(latlngs);
 				
@@ -39,10 +39,11 @@
 					$('#multiple-maps').append('<div class="multi-map-wrap '+cssclass+'"><div id="m'+i+'" class="multi-map"></div><p><a class="buttonize" id="c'+i+'" href="#">Clear markers</a></p></div>');
 					$('#m'+i).gmap({ 'center': latlngs[i], 'streetViewControl': false, 'mapTypeControl': false, 'navigationControl': false, 'callback': 
 						function() {
-							$('#m'+i).gmap('addMarker', {'position':latlngs[i]});
 							var self = $('#m'+i);
+							self.gmap('addMarker', {'position':latlngs[i]});
 							$('#c'+i).click(function() {
 								self.gmap('clearMarkers');
+								return false;
 							});
 						} 
 					});

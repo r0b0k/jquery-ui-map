@@ -162,7 +162,7 @@
 				return $(marker);
 			},
 			
-			addInfoWindow: function (marker, infoWindowOptions) {
+			addInfoWindow: function (infoWindowOptions) {
 				return $(new google.maps.InfoWindow(infoWindowOptions));
 			},
 			
@@ -178,65 +178,72 @@
 				var self = this;
 				switch ( type ) {
 					//FIXME error in rdfa
+					//http://www.google.com/support/webmasters/bin/answer.py?hl=sv&answer=146861
 					case 'rdfa':
 						var geoPoints = [];
-						$('.'+clazz+' [property="geo:lat_long"]').each( function() {
+						$(clazz+' [property="geo:lat_long"]').each( function() {
 							geoPoints.push(($(this).attr('content')).split(','));												
 						});
-						$('.'+clazz).each( function(index) {
-							var object = $(this);
-							var markerOpts = { 'position': new google.maps.LatLng(geoPoints[index][0], geoPoints[index][1]) };
-							if ( !invoke(callback, markerOpts, object.get(0), index) ) {
-								var marker = self.addMarker( markerOpts );
-								var summary = object.find('.summary');
-								if ( summary != null ) {
-									self.addInfoWindow(marker, { 'content': summary.html() });
+						$(clazz).each( function(index) {
+							var node = $(this);
+							var markerOptions = { 'position': new google.maps.LatLng(geoPoints[index][0], geoPoints[index][1]) };
+							if ( !invoke(callback, markerOptions, node, index) ) {
+								var summary = node.find('.summary');
+								self.addMarker( markerOptions, function(map, marker) {
+									var iw = self.addInfoWindow({ 'position':marker.getPosition(), 'content': summary.html() });
+									$(marker).click(function() {
+										iw.get(0).open(self.getMap(), marker);
+										map.panTo(marker.getPosition());
+									});
 									summary.click( function() {
-										google.maps.event.trigger(marker, 'click');
-										self.getMap().panTo(marker.position);
+										$(marker).triggerEvent('click');
 										return false;
 									});
-								}
+								});
 							}
 						});
 					break;
 					case 'microformat':
-						$('.'+clazz).each( function(index) {
-							var object = $(this);
-							var markerOpts = { 'position': new google.maps.LatLng(object.find('.latitude').attr('title'), object.find('.longitude').attr('title')) };
-							if ( !invoke(callback, markerOpts, object.get(0), index) ) {
-								var marker = self.addMarker( markerOpts );
-								var summary = object.find('.summary');
-								if ( summary != null ) {
-									self.addInfoWindow(marker, { 'content': summary.html() });
+						$(clazz).each( function(index) {
+							var node = $(this);
+							var markerOptions = { 'position': new google.maps.LatLng(node.find('.latitude').attr('title'), node.find('.longitude').attr('title')) };
+							if ( !invoke(callback, markerOptions, node, index) ) {
+								var summary = node.find('.summary');
+								self.addMarker( markerOptions, function(map, marker) {
+									var iw = self.addInfoWindow({ 'position':marker.getPosition(), 'content': summary.html() });
+									$(marker).click(function() {
+										iw.get(0).open(self.getMap(), marker);
+										map.panTo(marker.getPosition());
+									});
 									summary.click( function() {
-										google.maps.event.trigger(marker.get(0), 'click');
-										self.getMap().panTo(marker.get(0).position);
+										$(marker).triggerEvent('click');
 										return false;
 									});
-								}
+								});
 							}
 						});
 					break;
 					//FIXME: Seriously fix this
 					case 'microdata':
-						$('.'+clazz).each( function() {
-							var object = $(this);
-							$(object).children().each( function(index) {
+						$(clazz).each( function() {
+							var node = $(this);
+							$(node).children().each( function(index) {
 								if ( $(this).attr('itemprop') == 'geo' ) {
 									var latlng = $(this).html().split(';');
-									var markerOpts = { 'position': new google.maps.LatLng(latlng[0], latlng[1]) };
-									if ( !invoke(callback, markerOpts, object.get(0), index) ) {
-										var marker = self.addMarker( markerOpts );
-										var summary = object.find('.summary');
-										if ( summary != null ) {
-											self.addInfoWindow(marker, { 'content': summary.html() });
+									var markerOptions = { 'position': new google.maps.LatLng(latlng[0], latlng[1]) };
+									if ( !invoke(callback, markerOptions, node, index) ) {
+										var summary = node.find('.summary');
+										self.addMarker( markerOptions, function(map, marker) {
+											var iw = self.addInfoWindow({ 'position':marker.getPosition(), 'content': summary.html() });
+											$(marker).click(function() {
+												iw.get(0).open(map, marker);
+												map.panTo(marker.getPosition());
+											});
 											summary.click( function() {
-												google.maps.event.trigger(marker, 'click');
-												self.getMap().panTo(marker.position);
+												$(marker).triggerEvent('click');
 												return false;
 											});
-										}
+										});
 									}
 									
 								}

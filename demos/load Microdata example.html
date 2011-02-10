@@ -28,7 +28,7 @@
 				$('#sidebar-wrap').hide();
 				$('#map_canvas').gmap({ 'center': getLatLng(), 'navigationControl': false, 'streetViewControl': false, 'callback': function () {
 						$('#map_canvas').gmap('addSidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
-						$('#map_canvas').gmap('loadHTML', 'microdata', 'vevent');
+						$('#map_canvas').gmap('loadHTML', 'microdata', '.vevent');
 					}
 				});
 				function getLatLng() {

@@ -18,14 +18,14 @@ var callback = function() {
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': callback });
 }}}
 
-== Example getCurrentPosition ==
+== Example getCurrentPosition (@Deprecated) ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
 $('#map_canvas').gmap('getCurrentPosition');
 }}}
 
-== Example watchPosition ==
+== Example watchPosition (@Deprecated) ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
@@ -36,7 +36,7 @@ $('#map_canvas').gmap('watchPosition');
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
-$('#map_canvas').gmap('sidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+$('#map_canvas').gmap('addSidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
 }}}
 
 == Example addMarker ==
@@ -62,7 +62,8 @@ $('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.34557
 {{{
 var callback = function(map, marker) {
     // To use the gmap method addInfoWindow we need a marker, therefore we call this method in the addMarker callback
-    $('#map_canvas').gmap('addInfoWindow', marker, { 'content': 'My Marker' } );
+    $('#map_canvas').gmap('addInfoWindow', { 'position': marker.getPosition(), 'content': 'My Marker' } );
+   // Add click event e.g $(marker).click(function() { ... });
 };
 
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
@@ -93,7 +94,7 @@ $('#map_canvas').gmap('loadJSON', 'http://localhost/json.php', { 'type': 'activi
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
 // Load all elements with the classname "vevent"
-$('#map_canvas').gmap('loadHTML', 'microformat', 'vevent');
+$('#map_canvas').gmap('loadHTML', 'microformat', '.vevent');
 }}}
 
 The HTML
@@ -123,10 +124,10 @@ $('#map_canvas').gmap('loadHTML', 'microformat', 'vevent', function(markerOpts, 
         $(node).find('.summary').click( function() {
             alert('The a element with class link was clicked!');
             // Trigger a click on the marker
-            google.maps.event.trigger(marker, 'click');
+            $(marker).triggerEvent('click');
             // Pan to the position
             map.panTo(marker.position);
-            // Return false so that we wont accidentally go to the URL
+            // Return false so that we won't accidentally go to the URL
             return false;
         });					
     });
@@ -172,7 +173,7 @@ $('#map_canvas').gmap('addMarker', { 'position': latlng });
 $('#map_canvas').gmap('clearMarkers');
 }}}
 
-== Example clearWatches ==
+== Example clearWatches (@Deprecated) ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });

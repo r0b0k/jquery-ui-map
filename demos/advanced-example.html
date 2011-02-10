@@ -29,7 +29,7 @@
 				
 				$('#map_canvas').gmap({ 'center': getLatLng(), 'streetViewControl': false, 'callback': 
 					function() {
-						$('#map_canvas').gmap('loadHTML', 'microformat', 'vevent', 
+						$('#map_canvas').gmap('loadHTML', 'microformat', '.vevent', 
 							function(markeropts, node, index) {
 								var clone = $(node).clone().addClass('ui-dialog-vevent').append('<div id="streetview{0}" class="streetview"></div>'.replace('{0}', index));
 								var summary = $(node).find('.summary');							

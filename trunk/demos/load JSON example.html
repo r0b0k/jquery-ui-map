@@ -28,6 +28,11 @@
 			$(function() {
 				$('#map_canvas').gmap({ 'center':getLatLng(), 'streetViewControl': false, 'callback': function() {
 						$('#map_canvas').gmap('loadJSON', 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', function(i, m) {
+							console.log(i.lat);
+							console.log(i.lng);
+							console.log(i);
+							console.log('r');
+							console.log(m);
 							$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(i.lat, i.lng) } );
 						});
 					}

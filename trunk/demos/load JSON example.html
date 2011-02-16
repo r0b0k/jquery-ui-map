@@ -28,7 +28,7 @@
 			$(function() {
 				$('#map_canvas').gmap({ 'center':getLatLng(), 'streetViewControl': false, 'callback': function() {
 						$('#map_canvas').gmap('loadJSON', 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', function(i, m) {
-							$('#map_canvas').gmap('addMarker', m );
+							$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(m.lat, m.lng) } );
 						});
 					}
 				});

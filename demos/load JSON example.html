@@ -27,7 +27,9 @@
 		//<![CDATA[
 			$(function() {
 				$('#map_canvas').gmap({ 'center':getLatLng(), 'streetViewControl': false, 'callback': function() {
-						$('#map_canvas').gmap('loadJSON', 'http://localhost/json.php' );
+						$('#map_canvas').gmap('loadJSON', 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', function(i, m) {
+							$('#map_canvas').gmap('addMarker', m );
+						});
 					}
 				});
             });

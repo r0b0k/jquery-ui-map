@@ -1,0 +1,6 @@
+#summary The following websites is in one way or the other using this plugin.
+
+= Mapusers.com =
+Mapusers is a geolocation service currently under construction to socialize and share your favourite locations all across the globe.
+<br>
+[http://mapusers.com Mapusers - a site to explore and discover places all around the world]

@@ -1,0 +1,77 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		<title>Start - jQuery mobile with jQuery UI Google maps v3 plugin</title> 
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
+		<style rel="stylesheet">
+			body {  background: #ddd; }
+			.ui-body-c a.ui-link { color: #008595; font-weight: bold; text-decoration: none; }
+			.hidden { display:none; }
+		</style>
+		<script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.5");
+		</script>
+		<script type="text/javascript">
+			// Demonstration purpose only...
+			$(document).bind("mobileinit", function () {
+				$.mobile.ajaxEnabled  = true;
+			});
+		</script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+	</head> 
+
+	<body> 
+
+		<div data-role="page">
+
+			<div data-role="header">
+				<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery mobile with Google maps v3</a> demo</h1>
+			</div>
+
+			<div data-role="content">	
+				<p>This is an example using the 
+					<a href="http://code.google.com/p/jquery-ui-map/" alt="Google map jQuery plugin">Google map version 3 jQuery UI plugin</a> 
+					together with <a href="http://jquerymobile.com" alt="jQuery mobile framework">jQuery mobile framework</a>. Since jquery mobile framework
+					loads links through Ajax you either need to disable the jQuery Mobile's Ajax behavior or load the Google maps javascript in the 'real' first page.
+					<em>This example use ajax in navigation.</em>
+				</p>
+				
+				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a"> 
+					<li data-role="list-divider">Examples</li> 
+					<li><a href="jquery-mobile-example-2.html">Basic map example</a></li> 
+				</ul>
+				
+				<p>
+					To disable pages loading through Ajax bind 'mobileinit' and override $.mobile.ajaxEnabled. You need to bind 'mobileinit' 
+					before referencing the jQuery mobile script.
+					<pre>
+						<code>
+							&lt;script type="text/javascript"&gt;
+								$(document).bind("mobileinit", function () {
+									$.mobile.ajaxEnabled  = false;
+								});
+							&lt;/script&gt;
+							&lt;script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"&gt;&lt;/script&gt;
+						<code>
+					</pre>
+				</p>
+				
+			</div>
+
+			<div id="ft" class="hidden" itemscope itemtype="http://data-vocabulary.org/Person">
+				Author: 
+				<span itemprop="name">Johan Säll Larsson</span>  
+				<span itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">
+					<span itemprop="locality">Göteborg</span>, 
+					<span itemprop="country-name">Sweden</span> 
+				</span>
+			</div>
+			
+		</div>
+
+	</body>
+	
+</html>

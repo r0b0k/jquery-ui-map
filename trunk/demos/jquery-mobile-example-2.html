@@ -1,0 +1,70 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		<title>Google maps - jQuery mobile with jQuery UI Google maps v3 plugin</title>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
+		<style rel="stylesheet">
+			body {  background: #ddd; }
+			.ui-body-c a.ui-link { color: #008595; font-weight: bold; text-decoration: none; }
+			.hidden { display:none; }
+		</style>
+		<script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.5");
+		</script>
+		<script type="text/javascript">
+			// Demonstration purpose only...
+			$(document).bind("mobileinit", function () {
+				$.mobile.ajaxEnabled  = true;
+			});
+		</script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+	</head> 
+
+	<body> 
+
+		<div id="gmap" data-role="page">
+
+			<div data-role="header">
+				<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery mobile with Google maps v3</a> demo</h1>
+			</div>
+
+			<script type="text/javascript">
+				//<![CDATA[
+				$('#gmap').live("pagecreate", function() {
+					
+					$('#map_canvas').gmap({'center': getLatLng(), 'callback': function() {
+							$('#map_canvas').gmap('addMarker', {'position': getLatLng(), 'title': 'A title'});
+						}
+					});
+					
+					function getLatLng() {
+						if ( google.loader.ClientLocation != null ) {
+							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+						}
+						return new google.maps.LatLng(59.3426606750, 18.0736160278);
+					}
+					
+				});
+				//]]>
+			</script>
+			<div data-role="content"> 
+                <div id="map_canvas" style="height:300px;"></div>
+            </div>
+
+			<div id="ft" class="hidden" itemscope itemtype="http://data-vocabulary.org/Person">
+				Author: 
+				<span itemprop="name">Johan Säll Larsson</span>  
+				<span itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">
+					<span itemprop="locality">Göteborg</span>, 
+					<span itemprop="country-name">Sweden</span> 
+				</span>
+			</div>
+			
+		</div>
+
+	</body>
+	
+</html>

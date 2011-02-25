@@ -35,10 +35,12 @@
 				//<![CDATA[
 				$('#gmap').live("pagecreate", function() {
 					
-					$('#map_canvas').gmap({'center': getLatLng(), 'callback': function() {
+					var map = $('#map_canvas').gmap({'center': getLatLng(), 'callback': function() {
 							$('#map_canvas').gmap('addMarker', {'position': getLatLng(), 'title': 'A title'});
 						}
 					});
+					
+					$(map).triggerEvent('resize');
 					
 					function getLatLng() {
 						if ( google.loader.ClientLocation != null ) {

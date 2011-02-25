@@ -51,7 +51,8 @@
 						return false;
 					});
 					
-					$('#map_canvas_1').gmap({'center': getLatLng()});
+					var map = $('#map_canvas_1').gmap({'center': getLatLng()});
+					$(map).triggerEvent('resize');
 					
 					function getLatLng() {
 						if ( google.loader.ClientLocation != null ) {

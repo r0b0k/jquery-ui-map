@@ -1,0 +1,102 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		<title>Google maps - jQuery mobile with jQuery UI Google maps v3 plugin</title>
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
+		<style rel="stylesheet">
+			body {  background: #ddd; }
+			#map_canvas { border: 5px solid #ddd; }
+			.ui-body-c a.ui-link { color: #008595; font-weight: bold; text-decoration: none; }
+			.hidden { display:none; }
+			.min-width-480px label.ui-input-text { font-weight:bold; display: block; }
+			.adp-directions { width:100%; }
+			.adp-placemark, .adp-summary, .adp-legal { display:none; margin: 0; }
+			.adp-placemark, .adp-step, .adp-stepicon, .adp-substep{ border-top: none;text-align:center; vertical-align: middle; padding: 0.8em 0; background:#e9eaeb;color:#3e3e3e;text-shadow:0 1px 1px #fff;background-image:-moz-linear-gradient(top,#f0f0f0,#e9eaeb);background-image:-webkit-gradient(linear,left top,left bottom,color-stop(0,#f0f0f0),color-stop(1,#e9eaeb));-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorStr='#f0f0f0', EndColorStr='#e9eaeb')"}
+			.adp-directions tr { border:1px solid #b3b3b3; }
+		</style>
+		<script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.5");
+		</script>
+		<script type="text/javascript">
+			// Demonstration purpose only...
+			$(document).bind("mobileinit", function () {
+				$.mobile.ajaxEnabled  = true;
+			});
+		</script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+	</head> 
+
+	<body> 
+
+		<div id="gmap" data-role="page">
+
+			<div data-role="header">
+				<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery mobile with Google maps v3</a> demo</h1>
+			</div>
+
+			<script type="text/javascript">
+				//<![CDATA[
+				$('#gmap').live("pagecreate", function() {
+					
+					$('#submit').click(function() {
+						$('#map_canvas').gmap('loadDirections', 'directions', { 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, function() {
+							$('#results').show();
+						}, function() {
+							$('#results').hide();
+							alert('No results found');
+						});
+						return false;
+					});
+					
+					$('#map_canvas').gmap({'center': getLatLng()});
+					
+					function getLatLng() {
+						if ( google.loader.ClientLocation != null ) {
+							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+						}
+						return new google.maps.LatLng(59.3426606750, 18.0736160278);
+					}
+					
+				});
+				//]]>
+			</script>
+			<div data-role="content">
+				
+				<div id="map_canvas" style="height:300px;"></div>
+				
+				<p>
+					<label for="from">From</label>
+					<input id="from" value="Göteborg, Sweden" />
+				</p>
+				<p>
+					<label for="to">To</label>
+					<input id="to" value="Stockholm, Sweden" />
+				</p>
+				
+				<a id="submit" href="#" data-role="button" data-icon="search">Get directions</a>
+				
+				<div id="results" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" style="display:none;">
+					<div class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">Results</div>
+					<div id="directions"></div>
+					<div class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-bottom ui-btn-up-undefined"></div>
+				</div>
+				
+            </div>
+
+			<div id="ft" class="hidden" itemscope itemtype="http://data-vocabulary.org/Person">
+				Author: 
+				<span itemprop="name">Johan Säll Larsson</span>  
+				<span itemprop="address" itemscope itemtype="http://data-vocabulary.org/Address">
+					<span itemprop="locality">Göteborg</span>, 
+					<span itemprop="country-name">Sweden</span> 
+				</span>
+			</div>
+			
+		</div>
+
+	</body>
+	
+</html>

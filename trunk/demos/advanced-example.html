@@ -39,7 +39,10 @@
 										return false;
 									}); 
 								}).click(function() {
-									$(this).get(0).map.panTo($(this).get(0).position);
+									var self = $(this).get(0);
+									self.map.panTo(self.position);
+									// Demonstration purpose only...
+									setTimeout(function() { self.map.setZoom(15) }, 2000);
 									$(clone).dialog({ 'modal': true, 'width': 530, 'title': summary.html(), 'resizable': false, 'draggable': false });
 									$('#map_canvas').gmap('loadStreetViewPanorama', 'streetview{0}'.replace('{0}', index), { 'position': $(this).get(0).position });
 								});

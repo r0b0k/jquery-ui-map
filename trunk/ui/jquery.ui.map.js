@@ -90,7 +90,7 @@
 		
 	});
 
-	var maps = [], markers = [], layers = [], bounds = [];
+	var maps = [], markers = [], layers = [], bounds = [], directions = [];
 	
 	function unwrap(el) {
 		if ( el instanceof jQuery ) {
@@ -141,6 +141,7 @@
 				maps[id] = new google.maps.Map( this.element.get(0), this.options );
 				markers[id] = new Array;
 				bounds[id] = new google.maps.LatLngBounds();
+				directions[id] = new google.maps.DirectionsRenderer();
 				return $(maps[id]);
 			},
 			
@@ -261,13 +262,17 @@
 			
 			//FIXME: Should be diff. params
 			loadDirections: function(panel, directionsOpts, successCallback, errorCallback) { 
-				var directionsDisplay = new google.maps.DirectionsRenderer({ 'map': this.getMap(), 'panel': unwrap(panel)});
+				var self = this;
+				var directionsDisplay = directions[this.element.attr('id')];
 				var directionsService = new google.maps.DirectionsService();
 				directionsService.route( directionsOpts, function(response, status) {
 					if ( status == google.maps.DirectionsStatus.OK ) {
-						invoke(successCallback, response);
+						directionsDisplay.setMap(self.getMap());
+						directionsDisplay.setPanel(unwrap(panel));
 						directionsDisplay.setDirections(response);
+						invoke(successCallback, response);
 					} else {
+						directionsDisplay.setMap(null);
 						invoke(errorCallback, response);
 					}
 				});

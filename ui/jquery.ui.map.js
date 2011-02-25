@@ -90,7 +90,7 @@
 		
 	});
 
-	var maps = [], markers = [], layers = [], bounds = [], directions = [];
+	var maps = [], markers = [], layers = [], bounds = [], directions = [], dservices = [];
 	
 	function unwrap(el) {
 		if ( el instanceof jQuery ) {
@@ -142,6 +142,7 @@
 				markers[id] = new Array;
 				bounds[id] = new google.maps.LatLngBounds();
 				directions[id] = new google.maps.DirectionsRenderer();
+				dservices[id] = new google.maps.DirectionsService();
 				return $(maps[id]);
 			},
 			
@@ -264,7 +265,7 @@
 			loadDirections: function(panel, directionsOpts, successCallback, errorCallback) { 
 				var self = this;
 				var directionsDisplay = directions[this.element.attr('id')];
-				var directionsService = new google.maps.DirectionsService();
+				var directionsService = dservices[this.element.attr('id')];
 				directionsService.route( directionsOpts, function(response, status) {
 					if ( status == google.maps.DirectionsStatus.OK ) {
 						directionsDisplay.setMap(self.getMap());
@@ -273,7 +274,7 @@
 						invoke(successCallback, response);
 					} else {
 						directionsDisplay.setMap(null);
-						invoke(errorCallback, response);
+						invoke(errorCallback, status);
 					}
 				});
 			},

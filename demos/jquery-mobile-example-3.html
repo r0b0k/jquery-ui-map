@@ -38,9 +38,17 @@
 			</div>
 
 			<script type="text/javascript">
-				//<![CDATA[
 				$('#gmap-3').live("pageshow", function() {
-					
+					$('#map_canvas_1').gmap({'center': getLatLng(), 'callback': function() {alert('run');}});
+					function getLatLng() {
+						if ( google.loader.ClientLocation != null ) {
+							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+						}
+						return new google.maps.LatLng(59.3426606750, 18.0736160278);
+					}
+				});
+				// To stop the click from looping into nonsense
+				$('#gmap-3').live("pagecreate", function() {
 					$('#submit').click(function() {
 						$('#map_canvas_1').gmap('loadDirections', 'directions', { 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, function() {
 							$('#results').show();
@@ -50,18 +58,7 @@
 						});
 						return false;
 					});
-					
-					$('#map_canvas_1').gmap({'center': getLatLng()});
-					
-					function getLatLng() {
-						if ( google.loader.ClientLocation != null ) {
-							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
-						}
-						return new google.maps.LatLng(59.3426606750, 18.0736160278);
-					}
-					
 				});
-				//]]>
 			</script>
 			<div data-role="content">
 				

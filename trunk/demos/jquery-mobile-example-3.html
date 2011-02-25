@@ -39,7 +39,7 @@
 
 			<script type="text/javascript">
 				$('#gmap-3').live("pageshow", function() {
-					$('#map_canvas_1').gmap({'center': getLatLng(), 'callback': function() {alert('run');}});
+					$('#map_canvas_1').gmap({'center': getLatLng()});
 					function getLatLng() {
 						if ( google.loader.ClientLocation != null ) {
 							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	

@@ -32,23 +32,18 @@
 			</div>
 
 			<script type="text/javascript">
-				//<![CDATA[
 				$('#gmap-2').live("pageshow", function() {
-					
-					var map = $('#map_canvas').gmap({'center': getLatLng(), 'callback': function() {
+					$('#map_canvas').gmap({'center': getLatLng(), 'callback': function() {
 							$('#map_canvas').gmap('addMarker', {'position': getLatLng(), 'title': 'A title'});
 						}
 					});
-					
 					function getLatLng() {
 						if ( google.loader.ClientLocation != null ) {
 							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
 						}
 						return new google.maps.LatLng(59.3426606750, 18.0736160278);
 					}
-					
 				});
-				//]]>
 			</script>
 			<div data-role="content"> 
                 <div id="map_canvas" style="height:300px;"></div>

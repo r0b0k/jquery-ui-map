@@ -39,7 +39,7 @@ $(document).ready(function() {
 || clearMarkers() || none || Clears all markers on the map. ||
 || getMap() || map || Returns the map. ||
 || getMarkers() || Array:marker || Returns an array of markers. ||
-|| addBound([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng) || none || Adds a bound. ||
+|| addBound([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound. ||
 || destroy() || none || Removes the map functionality. ||
 
 ===!MapOptions===
@@ -69,10 +69,6 @@ see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/refere
 ===!InfoWindowOptions===
 
 see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions] 
-
-==!TravelMode==
-
-see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsTravelMode TravelMode]
 
 ==!StreetViewPanoramaOptions==
 

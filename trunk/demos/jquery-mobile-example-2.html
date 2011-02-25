@@ -25,7 +25,7 @@
 
 	<body> 
 
-		<div id="gmap" data-role="page">
+		<div id="gmap-2" data-role="page">
 
 			<div data-role="header">
 				<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery mobile with Google maps v3</a> demo</h1>
@@ -33,14 +33,12 @@
 
 			<script type="text/javascript">
 				//<![CDATA[
-				$('#gmap').live("pagecreate", function() {
+				$('#gmap-2').live("pageshow", function() {
 					
 					var map = $('#map_canvas').gmap({'center': getLatLng(), 'callback': function() {
 							$('#map_canvas').gmap('addMarker', {'position': getLatLng(), 'title': 'A title'});
 						}
 					});
-					
-					$(map).triggerEvent('resize');
 					
 					function getLatLng() {
 						if ( google.loader.ClientLocation != null ) {

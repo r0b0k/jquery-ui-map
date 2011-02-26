@@ -29,7 +29,7 @@ $(document).ready(function() {
 || *Methods* || *Return Value* || *Description* ||
 || addSidebar(panel:string/element, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
 || addMarker(markerOptions:[Overview#MarkerOptions MarkerOptions], callback?:function(map, marker)) || jQuery object || Creates a marker on the map. ||
-|| addInfoWindow(infoWindowOptions:[Overview#InfoWindowOptions InfoWindowOptions]) || jQuery object || Creates an info window bound to the marker on the map. ||
+|| addInfoWindow(infoWindowOptions:[Overview#InfoWindowOptions InfoWindowOptions], callback?:function(infowindow)) || jQuery object || Creates an info window bound to the marker on the map. ||
 || loadJSON(url:string, data?:string, callback?:function(iterator, marker)) || none || Adds markers to the map through a JSON request. The JSON format must be (["markers":[]]). ||
 || loadHTML(type:string, class:string, callback?:function(markerOpts, node)) || none || Adds markers to the map by looking for sementic attributes in the selected classes. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
 || loadDirections(panel:string/element, directionsOpts:[Overview#DirectionsRequest DirectionsRequest], successCallback:function(response), errorCallback:function(status)) || none || Displays directions on the map and/or in a div panel. ||

@@ -18,21 +18,8 @@ var callback = function() {
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': callback });
 }}}
 
-== Example getCurrentPosition (@Deprecated) ==
 
-{{{
-$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
-$('#map_canvas').gmap('getCurrentPosition');
-}}}
-
-== Example watchPosition (@Deprecated) ==
-
-{{{
-$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
-$('#map_canvas').gmap('watchPosition');
-}}}
-
-== Example sidebar ==
+== Example addSidebar ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
@@ -138,7 +125,7 @@ $('#map_canvas').gmap('loadHTML', 'microformat', 'vevent', function(markerOpts, 
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
-$('#map_canvas').gmap('loadDirections', 'panel', new google.maps.LatLng(42.345573,-71.098326), new google.maps.LatLng(42.345573,-72.098326), google.maps.DirectionsTravelMode.DRIVING);
+$('#map_canvas').gmap('loadDirections', 'panel', { 'origin': new google.maps.LatLng(42.345573,-71.098326), 'destination': new google.maps.LatLng(42.345573,-72.098326), 'travelMode': google.maps.DirectionsTravelMode.DRIVING} );
 }}}
 
 == Example loadStreetViewPanorama ==
@@ -171,14 +158,6 @@ var latlng = new google.maps.LatLng(42.345573,-71.098326);
 $('#map_canvas').gmap({ 'center': latlng });
 $('#map_canvas').gmap('addMarker', { 'position': latlng });
 $('#map_canvas').gmap('clearMarkers');
-}}}
-
-== Example clearWatches (@Deprecated) ==
-
-{{{
-$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
-$('#map_canvas').gmap('watchPosition');
-$('#map_canvas').gmap('clearWatches');
 }}}
 
 == Example destroy ==

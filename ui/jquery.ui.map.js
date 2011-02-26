@@ -164,8 +164,10 @@
 				return $(marker);
 			},
 			
-			addInfoWindow: function (infoWindowOptions) {
-				return $(new google.maps.InfoWindow(infoWindowOptions));
+			addInfoWindow: function (infoWindowOptions, callback) {
+				var iw = new google.maps.InfoWindow(infoWindowOptions);
+				invoke(callback, iw);
+				return $(iw);
 			},
 			
 			loadJSON: function( url, data, callback ) {

@@ -22,3 +22,9 @@ div.first {margin:0; }
 a.buttonize{ background: #008595; display: inline-block; padding: 5px 10px 6px; color: #fff; text-decoration: none; font-weight: bold; line-height: 1; -moz-border-radius: 5px; -webkit-border-radius: 5px; -moz-box-shadow: 2px 2px 5px #ccc; -webkit-box-shadow: 2px 2px 5px #ccc; text-shadow: 0 1px 1px #2A3333; position: relative; cursor: pointer; }
 a.buttonize:hover	{ background-color: #2A3333; color: #fff; }
 a.buttonize:active	{ top: 1px; }
+
+.prettyprint { background:#f7f7f7; padding:1em; margin:0 0 1em; }
+.syntaxhighlighter .gutter .line { border-right: 5px solid #dedede !important; }
+.syntaxhighlighter .toolbar { background: #dedede !important; }
+.syntaxhighlighter .line.alt2 { background-color: #f7f7f7 !important; }
+.syntaxhighlighter .line.alt1 { background-color: #f7f7f7 !important; }

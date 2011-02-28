@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head profile="http://dublincore.org/documents/dcq-html/">
         
-        <title>Example with Google Streetview with microformats - Google maps jQuery plugin</title>
+        <title>Google Streetview with microformats - Google maps jQuery plugin</title>
         <meta name="keywords" content="Google maps, jQuery, plugin, Google Streetview, Geo search" />
 		<meta name="description" content="An example with jQuery, Google Streetview, Google Geo search and microformats using Google maps jQuery plugin" />
 		
@@ -48,7 +48,7 @@
 							function(markeropts, node, index) {
 								var clone = $(node).clone().addClass('ui-dialog-vevent').append('<div id="streetview{0}" class="streetview"></div>'.replace('{0}', index));
 								var summary = $(node).find('.summary');							
-								$('#map_canvas').gmap('addMarker', jQuery.extend( { 'title': summary.html(), 'icon':new google.maps.MarkerImage('http://google-maps-icons.googlecode.com/files/music-rock.png') }, markeropts), function(map, marker) {
+								$('#map_canvas').gmap('addMarker', jQuery.extend( { 'bound':true, 'title': summary.html(), 'icon':new google.maps.MarkerImage('http://google-maps-icons.googlecode.com/files/music-rock.png') }, markeropts), function(map, marker) {
 									$(summary).click( function() {
 										$(marker).triggerEvent('click');
 										return false;
@@ -57,7 +57,7 @@
 									var self = $(this).get(0);
 									self.map.panTo(self.position);
 									// Demonstration purpose only...
-									setTimeout(function() { self.map.setZoom(15) }, 2000);
+									setTimeout(function() { self.map.setCenter(self.position); self.map.setZoom(15); }, 2000);
 									$(clone).dialog({ 'modal': true, 'width': 530, 'title': summary.html(), 'resizable': false, 'draggable': false });
 									$('#map_canvas').gmap('loadStreetViewPanorama', 'streetview{0}'.replace('{0}', index), { 'position': $(this).get(0).position });
 								});
@@ -159,7 +159,7 @@
 					function(markeropts, node, index) {
 						var clone = $(node).clone().addClass('ui-dialog-vevent').append('&lt;div id="streetview{0}" class="streetview"&gt;&lt;/div&gt;'.replace('{0}', index));
 						var summary = $(node).find('.summary');							
-						$('#map_canvas').gmap('addMarker', jQuery.extend( { 'title': summary.html(), 'icon':new google.maps.MarkerImage('http://google-maps-icons.googlecode.com/files/music-rock.png') }, markeropts), function(map, marker) {
+						$('#map_canvas').gmap('addMarker', jQuery.extend( { 'bound':true, 'title': summary.html(), 'icon':new google.maps.MarkerImage('http://google-maps-icons.googlecode.com/files/music-rock.png') }, markeropts), function(map, marker) {
 							$(summary).click( function() {
 								$(marker).triggerEvent('click');
 								return false;
@@ -168,7 +168,7 @@
 							var self = $(this).get(0);
 							self.map.panTo(self.position);
 							// Demonstration purpose only...
-							setTimeout(function() { self.map.setZoom(15) }, 2000);
+							setTimeout(function() { self.map.setCenter(self.position); self.map.setZoom(15); }, 2000);
 							$(clone).dialog({ 'modal': true, 'width': 530, 'title': summary.html(), 'resizable': false, 'draggable': false });
 							$('#map_canvas').gmap('loadStreetViewPanorama', 'streetview{0}'.replace('{0}', index), { 'position': $(this).get(0).position });
 						});

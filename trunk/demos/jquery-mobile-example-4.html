@@ -1,13 +1,21 @@
 <!DOCTYPE html> 
 <html> 
 	<head> 
-		<title>Google maps - jQuery mobile with jQuery UI Google maps v3 plugin</title>
+		<title>jQuery mobile with Google maps geo search example</title>
+		<meta name="keywords" content="Google maps, jQuery, plugin, mobile, iphone, ipad, android, HTML5, Geo search" />
+		<meta name="description" content="Geo search example with jQuery mobile, Google maps and HTML5" />
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+		<meta name="DC.title" content="jQuery mobile with Google maps geo search example" />
+		<meta name="DC.subject" content="Google maps;jQuery;plugin;mobile;iphone;ipad;android;HTML5;Geo search" />
+		<meta name="DC.description" content="Geo search example with jQuery mobile, Google maps and HTML5" />
+		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
 		<style rel="stylesheet">
 			body {  background: #ddd; }
-			body, #gmap-4, .page, #map_canvas_2 { height:100%; }
-			.ui-content { padding:0; }
+			.ui-body-c a.ui-link { color: #008595; font-weight: bold; text-decoration: none; }
 			.hidden { display:none; }
+			h2 { font-size: 16px; overflow: hidden; white-space: nowrap; display: block; }
+			.more { text-align: center; }
 		</style>
 		<script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
         <script type="text/javascript">
@@ -29,7 +37,7 @@
 		<div id="gmap-4" class="" data-role="page">
 
 			<div data-role="header">
-				<h1><a href="http://code.google.com/p/jquery-ui-map/">jQuery mobile with Google maps v3</a> demo</h1>
+				<h1><a data-ajax="false" href="/">jQuery mobile with Google maps</a> geo search</h1>
 			</div>
 
 			<script type="text/javascript">
@@ -77,9 +85,30 @@
 			</script>
 			<div class="page" data-role="content">
 				
-				<div id="map_canvas_2"></div>
-								
-            </div>
+				<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
+					<div id="map_canvas_2" style="height:300px;"></div>
+				</div>
+				
+				<h2>More Google maps and jQuery examples</h2>
+				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a"> 
+					<li data-role="list-divider">More examples</li> 
+					<li><a data-ajax="false" href="advanced-example.html">Microformats, Google streetview and jQuery dialog example</a></li>
+					<li><a data-ajax="false" href="other-examples.html">Click and drag events with Google geo search example</a></li>
+					<li><a data-ajax="false" href="load JSON example.html">Import markers with JSON example</a></li>
+					<li><a data-ajax="false" href="load Microformat example.html">Import markers with microformats example</a></li>
+					<li><a data-ajax="false" href="load RDFa example.html">Import markers with RDFa example</a></li>
+					<li><a data-ajax="false" href="load Microdata example.html">Import markers with microdata example</a></li>
+					<li><a data-ajax="false" href="load Fusion.html">Import markers with Google Fusion tables</a></li>
+					<li><a data-ajax="false" href="multiple maps example.html">Multiple maps on a single page example</a></li>
+					<li><a data-ajax="false" href="basic-example.html">Google maps and jQuery example</a></li> 
+				</ul>
+
+			</div>
+			
+			<div data-role="footer" data-theme="a">
+				<h3>Need help?</h3>
+				<p class="more">Please feel free to ask for help in the <a data-ajax="false" href="http://groups.google.com/group/jquery-ui-map-discuss">forum</a></p>
+			</div>
 
 			<div id="ft" class="hidden" itemscope itemtype="http://data-vocabulary.org/Person">
 				Author: 

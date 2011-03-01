@@ -1,14 +1,18 @@
 <!DOCTYPE html> 
 <html> 
-	<head>
+	<head profile="http://dublincore.org/documents/dcq-html/">
+	
 		<title>jQuery mobile with Google maps - Google maps jQuery plugin</title>
 		<meta name="keywords" content="Google maps, jQuery, plugin, mobile, iphone, ipad, android, HTML5" />
 		<meta name="description" content="Examples with jQuery mobile, Google maps and HTML5" />
+		<meta http-equiv="content-language" content="en">
+		
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
 		<meta name="DC.title" content="jQuery mobile with Google maps - Google maps jQuery plugin" />
 		<meta name="DC.subject" content="Google maps;jQuery;plugin;mobile;iphone;ipad;android;HTML5" />
 		<meta name="DC.description" content="Examples with jQuery mobile, Google maps and HTML5" />
 		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
+		<meta name="DC.language" content="en">
 		
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a3/jquery.mobile-1.0a3.min.css" />
 		<style rel="stylesheet">
@@ -57,7 +61,7 @@
 				
 				<p>
 					To disable pages loading through Ajax bind 'mobileinit' and override $.mobile.ajaxEnabled (You need to bind 'mobileinit' 
-					before referencing the jQuery mobile script) or add <strong>data-ajax="false"</strong> to the link element. 
+					before referencing the jQuery mobile script) or add <strong>data-ajax="false"</strong> or <strong>rel="external"</strong> to the link element. 
 				</p>
 				
 				<ul data-role="listview" data-inset="true" data-theme="c" data-dividertheme="a"> 

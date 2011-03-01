@@ -147,7 +147,10 @@
 			},
 			
 			_init: function() {
-				invoke(this.options.callback, this.getMap() );
+				var self = this;
+				google.maps.event.addListenerOnce(self.getMap(), 'bounds_changed', function() {
+					invoke(self.options.callback, self.getMap() );
+				});
 			},
 			
 			addSidebar: function(panel, position) {
@@ -304,6 +307,17 @@
 					markers[i].setMap( null );
 				});
 				markers = new Array();
+			},
+			
+			toggleByCategory: function(category, isCategoryCallback, nonCategoryCallback) {
+				var markers = this.getMarkers();
+				$.each( markers, function(i, marker) { 
+					if ( marker.category == category ) {
+						invoke(isCategoryCallback, marker);
+					} else {
+						invoke(nonCategoryCallback, marker);
+					}
+				});
 			},
 			
 			getMap: function() {

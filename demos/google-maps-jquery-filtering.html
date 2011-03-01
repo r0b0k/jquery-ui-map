@@ -28,30 +28,34 @@
 				
 				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(59.3426606750, 18.0736160278), 'callback': function(map) {
 					
-					var bounds = map.getBounds();
-					var southWest = bounds.getSouthWest();
-					var northEast = bounds.getNorthEast();
-					var lngSpan = northEast.lng() - southWest.lng();
-					var latSpan = northEast.lat() - southWest.lat();
+					$(map).addListenerOnce('bounds_changed', function() {
+						
+						var bounds = map.getBounds();
+						var southWest = bounds.getSouthWest();
+						var northEast = bounds.getNorthEast();
+						var lngSpan = northEast.lng() - southWest.lng();
+						var latSpan = northEast.lat() - southWest.lat();
 
-					var tag = "jQuery";
-					for ( i = 0; i < 40; i++ ) {
-						if ( i > 10 ) { tag = "Google maps"; }
-						if ( i > 20 ) { tag = "Plugin"; }
-						if ( i > 30 ) { tag = "SEO"; }
-						$('#map_canvas').gmap('addMarker', { 'tag':tag, 'title':tag, 'bound':false, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } );
-					}
-					
-					$('#map_canvas').gmap('addSidebar', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
-					
-					var markers = $('#map_canvas').gmap('getMarkers');
-					$("#tags").change(function() {
-						var tag = $(this).val();
-						if ( tag == 'all' ) {
-							$.each(markers, function(key, value) { value.setVisible(true); });
-						} else {
-							$.each(markers, function(key, value) { if ( value.tag != tag ) { value.setVisible(false); } else { value.setVisible(true); } });					
+						var tag = "jQuery";
+						for ( i = 0; i < 40; i++ ) {
+							if ( i > 10 ) { tag = "Google maps"; }
+							if ( i > 20 ) { tag = "Plugin"; }
+							if ( i > 30 ) { tag = "SEO"; }
+							$('#map_canvas').gmap('addMarker', { 'tag':tag, 'title':tag, 'bound':false, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } );
 						}
+						
+						$('#map_canvas').gmap('addSidebar', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
+						
+						var markers = $('#map_canvas').gmap('getMarkers');
+						$("#tags").change(function() {
+							var tag = $(this).val();
+							if ( tag == 'all' ) {
+								$.each(markers, function(key, value) { value.setVisible(true); });
+							} else {
+								$.each(markers, function(key, value) { if ( value.tag != tag ) { value.setVisible(false); } else { value.setVisible(true); } });					
+							}
+						});
+					
 					});
 					
 				 }});

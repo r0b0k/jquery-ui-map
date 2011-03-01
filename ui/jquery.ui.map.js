@@ -86,6 +86,13 @@
 				this.bind(type, callback);	
 			}
 			return this;
+		},
+		
+		addListenerOnce: function(type, callback) {
+			if ( this.get(0) instanceof google.maps.MVCObject ) {
+				google.maps.event.addListenerOnce(this.get(0), type, callback );
+			}
+			return this;
 		}
 		
 	});
@@ -147,10 +154,10 @@
 			},
 			
 			_init: function() {
-				var self = this;
-				google.maps.event.addListenerOnce(self.getMap(), 'bounds_changed', function() {
-					invoke(self.options.callback, self.getMap() );
-				});
+				//var self = this;
+				//google.maps.event.addListenerOnce(self.getMap(), 'bounds_changed', function() {
+					invoke(this.options.callback, this.getMap() );
+				//});
 			},
 			
 			addSidebar: function(panel, position) {

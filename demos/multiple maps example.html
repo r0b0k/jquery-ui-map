@@ -55,7 +55,7 @@
 					var cssclass = ( i == 0 ) ? 'first' : '';
 					$('#multiple-maps').append('<div class="multi-map-wrap '+cssclass+'"><div id="m'+i+'" class="multi-map"></div><p><a class="buttonize" id="c'+i+'" href="#">Clear markers</a></p></div>');
 					$('#m'+i).gmap({ 'center': latlngs[i], 'streetViewControl': false, 'mapTypeControl': false, 'navigationControl': false, 'callback': 
-						function() {
+						function(map) {
 							var self = $('#m'+i);
 							self.gmap('addMarker', {'position':latlngs[i]});
 							$('#c'+i).click(function() {

@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head profile="http://microformats.org/profile/hcalendar">
+
+        <title>Example with Google maps and filtering - Google maps jQuery plugin</title>
+        <meta name="keywords" content="Google maps, jQuery, plugin, filtering" />
+		<meta name="description" content="An example how to filter markers by different criterias" />
+		<meta http-equiv="content-language" content="en">
+		
+		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
+		<meta name="DC.title" content="Example with Google maps and filtering - Google maps jQuery plugin" />
+		<meta name="DC.subject" content="Google maps;jQuery;plugin;filtering" />
+		<meta name="DC.description" content="An example how to filter markers by different criterias" />
+		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
+        <meta name="DC.language" content="en">
+        	
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+        
+        <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
+        <script type="text/javascript">
+			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("jquery", "1.5");
+			google.load("jqueryui", "1.8.9");
+		</script>
+        <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+        <script type="text/javascript">
+			$(function() {
+				
+				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(59.3426606750, 18.0736160278), 'callback': function(map) {
+					
+					var bounds = map.getBounds();
+					var southWest = bounds.getSouthWest();
+					var northEast = bounds.getNorthEast();
+					var lngSpan = northEast.lng() - southWest.lng();
+					var latSpan = northEast.lat() - southWest.lat();
+
+					var tag = "jQuery";
+					for ( i = 0; i < 40; i++ ) {
+						if ( i > 10 ) { tag = "Google maps"; }
+						if ( i > 20 ) { tag = "Plugin"; }
+						if ( i > 30 ) { tag = "SEO"; }
+						$('#map_canvas').gmap('addMarker', { 'tag':tag, 'title':tag, 'bound':false, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } );
+					}
+					
+					$('#map_canvas').gmap('addSidebar', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
+					
+					var markers = $('#map_canvas').gmap('getMarkers');
+					$("#tags").change(function() {
+						var tag = $(this).val();
+						if ( tag == 'all' ) {
+							$.each(markers, function(key, value) { value.setVisible(true); });
+						} else {
+							$.each(markers, function(key, value) { if ( value.tag != tag ) { value.setVisible(false); } else { value.setVisible(true); } });					
+						}
+					});
+					
+				 }});
+					
+            });
+		</script>
+        
+	</head>
+    <body>
+		
+		<h1><a href="/">Google maps jQuery plugin</a> filter markers by tag</h1>
+		
+		<div id="map_canvas"></div>
+		
+		<div id="tags-control" style="margin:5px;background:#f4f4f4;border:1px solid #888;padding:5px 5px 5px 10px;">
+			<label style="color:#555;font-size:12px; font-weight:bold;" for="tags">Filter by tag</label>
+			<select id="tags" style="outline:none;"> 
+				<option value="all">All</option>
+				<option value="jQuery">jQuery</option> 
+				<option value="Google maps">Google maps</option> 
+				<option value="Plugin">Plugin</option> 
+				<option value="SEO">SEO</option> 
+			</select>
+		</div>
+		
+		<p>Experimental...</p>
+		
+    </body>
+</html>
+
+
+
+      

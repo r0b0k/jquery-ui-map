@@ -46,13 +46,29 @@
 						
 						$('#map_canvas').gmap('addSidebar', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
 						
+						// Should remove alot of the code here...
 						var markers = $('#map_canvas').gmap('getMarkers');
 						$("#tags").change(function() {
+							var bounds = new google.maps.LatLngBounds();
 							var tag = $(this).val();
 							if ( tag == 'all' ) {
-								$.each(markers, function(key, value) { value.setVisible(true); });
+								$.each(markers, function(key, value) { 
+									value.setVisible(true); 
+									bounds.extend(value.position);
+									value.map.fitBounds(bounds);
+								});
+								$('#map_canvas').gmap('option', 'center', bounds.getCenter());
 							} else {
-								$.each(markers, function(key, value) { if ( value.tag != tag ) { value.setVisible(false); } else { value.setVisible(true); } });					
+								$.each(markers, function(key, value) { 
+									if ( value.tag != tag ) { 
+										value.setVisible(false); 
+									} else { 
+										value.setVisible(true); 
+										bounds.extend(value.position);
+										value.map.fitBounds(bounds);
+									} 
+								});	
+								$('#map_canvas').gmap('option', 'center', bounds.getCenter());
 							}
 						});
 					

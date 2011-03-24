@@ -47,14 +47,18 @@ $('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.34557
 == Example addInfoWindow ==
 
 {{{
-var callback = function(map, marker) {
-    // To use the gmap method addInfoWindow we need a marker, therefore we call this method in the addMarker callback
-    $('#map_canvas').gmap('addInfoWindow', { 'position': marker.getPosition(), 'content': 'My Marker' } );
-   // Add click event e.g $(marker).click(function() { ... });
-};
 
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
-$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573,-71.098326) }, callback );
+
+$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': new google.maps.LatLng(42.345573,-71.098326), 'animation': google.maps.Animation.DROP }, function(map, marker){
+	$('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': 'TEXT_AND_HTML_IN_INFOWINDOW' }, function(iw) {
+		$(marker).click(function() {
+			iw.open(map, marker);
+			map.panTo(marker.getPosition());
+		});																												  
+	});
+});
+
 }}}
 
 == Example loadJSON ==

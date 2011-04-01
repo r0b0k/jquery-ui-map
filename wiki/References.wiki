@@ -5,6 +5,10 @@ Mapusers is a geolocation service currently under construction to socialize and 
 <br>
 [http://mapusers.com Mapusers - a site to explore and discover places all around the world]
 
+= www.barebones.ca =
+Displays event information for Vancouver Sprint Camp.
+<br>
+[http://www.barebones.ca/myO Vancouver Spring Camp event information]
 ----
 
 Feel free to post a comment with a link, description and image if you have a website using the jQuery UI Google maps plugin. 

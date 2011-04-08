@@ -1,5 +1,7 @@
 #summary Examples.
 
+= Version 1.2 =
+
 == Example constructor call ==
 
 Make the selected element a Google map.

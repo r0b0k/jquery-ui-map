@@ -17,7 +17,7 @@ $(function() {
 });
 }}}
 
-= API =
+= API version 1.2 =
 
 ==Constructor==
 

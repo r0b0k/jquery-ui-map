@@ -1,5 +1,95 @@
 #summary Examples.
 
+= Version 2.0 (NOT YET RELEASED) =
+
+== Example constructor call ==
+
+Make the selected element a Google map.
+
+{{{
+$('#map_canvas').gmap();
+}}}
+
+or add some options.
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+    alert('Google map loaded!');
+}});
+}}}
+
+== Example addControl ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+    $('#map_canvas').gmap('addControl', $('#sidebar'), google.maps.ControlPosition.LEFT_TOP);
+	// OR $('#map_canvas').gmap('addControl', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+	// OR $('#map_canvas').gmap('addControl', document.getElementById('sidebar'), google.maps.ControlPosition.LEFT_TOP);
+}});
+}}}
+
+== Example addMarker ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573,-71.098326) } );
+});
+}}}
+
+== Example addInfoWindow ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': new google.maps.LatLng(42.345573,-71.098326), 'animation': google.maps.Animation.DROP }, function(map, marker){
+		$('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': 'TEXT_AND_HTML_IN_INFOWINDOW' }, function(iw) {
+			$(marker).click(function() {
+				iw.open(map, marker);
+				map.panTo(marker.getPosition());
+			});																												  
+		});
+	});
+});
+}}}
+
+== Example add markers with JSON ==
+
+{{{
+$('#map_canvas').gmap({ 'center':new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$.getJSON( 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', 'category=activity', function(data) { 
+		$.each( data.markers, function(i, m) {
+			$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(m.lat, m.lng) } );
+		});
+	});
+}});
+}}}
+
+== Example loadMetadata ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas').gmap('loadMetadata', 'microformat', 'vevent', function(item, data) {
+		$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(data.latitude.title, data.longitude.title) });
+	});
+}});
+}}}
+
+== Example find ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas').gmap('addMarker', { 'SOME_PROPERTY':'SOME_VALUE', 'position': new google.maps.LatLng(42.345573,-71.098326) });
+	$('#map_canvas').gmap('addMarker', { 'SOME_PROPERTY':'OTHER_VALUE', 'position': new google.maps.LatLng(52.345573,-71.098326) });
+}});
+
+// filter by the property you just added
+$('#map_canvas').gmap('find', 'SOME_VALUE', 'SOME_PROPERTY', function(found, marker) {
+	if (found)
+		marker.setVisible(true);
+	else 
+		marker.setVisible(false);
+});
+}}}
+
 = Version 1.2 =
 
 == Example constructor call ==

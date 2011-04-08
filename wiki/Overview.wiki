@@ -6,6 +6,10 @@
   * jquery.ui.core.js
   * jquery.ui.widget.js
 
+  OR
+  
+  * jquery.core 
+  * jquery.mobile 
 
 = Overview =
 
@@ -17,38 +21,6 @@ $(function() {
 });
 }}}
 
-= API version 1.2 =
-
-==Constructor==
-
-|| *Constructor* || *Description* || 
-|| gmap(opts?:[Overview#MapOptions MapOptions]) || Creates a new map. || 
-
-==Methods==
-
-|| *Methods* || *Return Value* || *Description* ||
-|| addSidebar(panel:string/element, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
-|| addMarker(markerOptions:[Overview#MarkerOptions MarkerOptions], callback?:function(map, marker)) || jQuery object || Creates a marker on the map. ||
-|| addInfoWindow(infoWindowOptions:[Overview#InfoWindowOptions InfoWindowOptions], callback?:function(infowindow)) || jQuery object || Creates an info window bound to the marker on the map. ||
-|| loadJSON(url:string, data?:string, callback?:function(iterator, marker)) || none || Adds markers to the map through a JSON request. The JSON format must be (["markers":[]]). ||
-|| loadHTML(type:string, class:string, callback?:function(markerOpts, node)) || none || Adds markers to the map by looking for sementic attributes in the selected classes. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
-|| loadDirections(panel:string/element, directionsOpts:[Overview#DirectionsRequest DirectionsRequest], successCallback:function(response), errorCallback:function(status)) || none || Displays directions on the map and/or in a div panel. ||
-|| loadStreetViewPanorama(panel:string, opts?:[Overview#StreetViewPanoramaOptions StreetViewPanoramaOptions]) || none || Displays the panorama for a given LatLng or panorama ID. ||
-|| loadFusion(id:string, fusionTablesLayerOptions:[Overview#FusionTablesLayerOptions FusionTablesLayerOptions]) || none || Adds markers from Fusion table. ||
-|| search(request:[Overview#GeocoderRequest GeocoderRequest], successCallback:function(Array.[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult GeocoderResult]), errorCallback:function([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderStatus GeocoderStatus])) || none || Search addresses and latitude/longitude. ||
-|| clearMarkers() || none || Clears all markers on the map. ||
-|| getMap() || map || Returns the map. ||
-|| getMarkers() || Array:marker || Returns an array of markers. ||
-|| addBound([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound. ||
-|| destroy() || none || Removes the map functionality. ||
-
-===!MapOptions===
-
-Supports all Google Maps [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] properties
-
-|| *Properties* || *Type* || *Description* ||
-|| callback || function || A callback routine invoked after the map has been loaded. Optional. ||
-
 All properties in the [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] object can be set and retrieved by
 
 {{{
@@ -58,30 +30,66 @@ var zoom= $('#map_canvas').gmap('option', 'zoom');
 $('#map_canvas').gmap('option', 'zoom', 7);
 }}}
 
-===!GeoLocationOptions===
+= API version 2.0 (NOT YET RELEASED) =
 
-see [http://dev.w3.org/geo/api/spec-source.html#position_options_interface GeoLocationOptions].
+==Constructor==
 
-===!MarkerOptions===
+|| *Constructor* || *Return value* || *Description* || 
+|| gmap(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOptions]) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map]) || Creates a new map. MapOptions is extended with an optional callback method, i.e. { 'callback':function() { } }, invoked after the map has been loaded || 
 
-see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions]
+==Methods==
 
-===!InfoWindowOptions===
+|| *Methods* || *Return value* || *Description* ||
+|| addControl(panel:jquery/node/string, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
+|| addMarker(markerOptions?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions], callback?:function(map:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])  || Creates a marker on the map. MarkerOptions is extended with a bounds property ('bounds':boolean) to add boundaries  ||
+|| addInfoWindow(infoWindowOptions:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions], callback?:function(infowindow:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow]) || Creates an info window bound to the marker on the map. ||
+|| loadMetadata(type:string, namespace:string, callback:function(item:$(node), result:Array.string )) || none || Finds sementic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+|| loadFusion(fusionTableId:string, fusionTablesLayerOptions?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions FusionTablesLayerOptions]) || none || Adds markers from Fusion table. ||
+|| loadDirections(directionsRequest:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest DirectionsRequest], directionsRendererOptions:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions DirectionsRendererOptions], callback:function(success:boolean, result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult DirectionsResult])) || none || Displays directions on the map and/or in a div panel. ||
+|| loadStreetViewPanorama(panel:jquery/string/node, streetViewPanoramaOptions?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]) || none || Displays the panorama for a given LatLng or panorama ID. || 
+|| search(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest], callback:function(success:boolean, result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult GeocoderResult])) || none || Search addresses and latitude/longitude. ||
+|| find (needle:string, haystack:string, callback:function(isFound:boolean, marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])) || none || Find marker(s) by property, e.g. 'tag':'map' ||
+|| getMap() || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map] || Returns the map. ||
+|| getMarkers() || Array.[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker] || Returns an array of markers. ||
+|| clear() || none || Removes all markers on the map. ||
+|| addBounds([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound to the existing boundaries. ||
+|| destroy() || none || Removes the map functionality. ||
+|| triggerEvent(type:string) || none || Trigger an event, e.g. 'resize'. ||
+|| addEventListener(type:string, callback:function()) || none || Adds a Google event listener or binds a jQuery event||
 
-see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions] 
+== Events ==
 
-==!StreetViewPanoramaOptions==
+|| *Event* || *Description* || *Supported elements* || 
+|| click || Adds a click event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
+|| rightclick || Adds a right click event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
+|| dblclick || Adds a double click event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
+|| mouseover || Adds a mouse over event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
+|| mouseout || Adds a mouse out event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
+|| drag || Adds a drag event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
+|| dragend || Adds a drag end event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
 
-see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]
 
-===!GeocoderRequest===
+= API version 1.2 =
 
-see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest]
+==Constructor==
 
-===!FusionTablesLayerOptions===
+|| *Constructor* || *Return value* || *Description* || 
+|| gmap(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOptions]) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map]) || Creates a new map. MapOptions is extended with an optional callback method, i.e. { 'callback':function() { } }, invoked after the map has been loaded || 
 
-see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions FusionTablesLayerOptions]
+==Methods==
 
-===!DirectionsRequest===
-
-see [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest DirectionsRequest]
+|| *Methods* || *Return Value* || *Description* ||
+|| addSidebar(panel:string/node, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
+|| addMarker(markerOptions:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions], callback?:function(map:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map, map], marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker, Marker])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || Creates a marker on the map. ||
+|| addInfoWindow(infoWindowOptions:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions], callback?:function(infowindow:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow]) || Creates an info window bound to the marker on the map. ||
+|| loadJSON(url:string, data?:string, callback?:function(iterator:integer, marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker, Marker])) || none || Adds markers to the map through a JSON request. The JSON format must be (["markers":[]]). ||
+|| loadHTML(type:string, class:string, callback?:function(markerOpts, node)) || none || Adds markers to the map by looking for sementic attributes in the selected classes. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+|| loadDirections(panel:string/node, directionsRequest:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest DirectionsRequest], successCallback:function(result), errorCallback:function(status)) || none || Displays directions on the map and/or in a div panel. ||
+|| loadStreetViewPanorama(panel:string, streetViewPanoramaOptions?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]) || none || Displays the panorama for a given LatLng or panorama ID. ||
+|| loadFusion(id:string, fusionTablesLayerOptions?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions FusionTablesLayerOptions]) || none || Adds markers from Fusion table. ||
+|| search(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest], successCallback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult GeocoderResult]), errorCallback:function([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderStatus GeocoderStatus])) || none || Search addresses and latitude/longitude. ||
+|| clearMarkers() || none || Clears all markers on the map. ||
+|| getMap() || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map, Map] || Returns the map. ||
+|| getMarkers() || Array.[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker, Marker] || Returns an array of markers. ||
+|| addBound([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound. ||
+|| destroy() || none || Removes the map functionality. ||

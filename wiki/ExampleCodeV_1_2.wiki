@@ -1,0 +1,172 @@
+#summary Examples version 1.2.
+
+== Example constructor call ==
+
+Make the selected element a Google map.
+
+{{{
+$('#map_canvas').gmap();
+}}}
+
+or add some options.
+
+{{{
+var callback = function() {
+    alert('Google map loaded!');
+};
+
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': callback });
+}}}
+
+
+== Example addSidebar ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('addSidebar', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+}}}
+
+== Example addMarker ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573,-71.098326) } );
+}}}
+
+or with a callback
+
+{{{
+var callback = function(map, marker) {
+    alert('Marker with position ' + marker.getPosition().lat() + ', ' + marker.getPosition().lng() + ' added!');
+};
+
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573,-71.098326) }, callback );
+}}}
+
+== Example addInfoWindow ==
+
+{{{
+
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+
+$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': new google.maps.LatLng(42.345573,-71.098326), 'animation': google.maps.Animation.DROP }, function(map, marker){
+	$('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': 'TEXT_AND_HTML_IN_INFOWINDOW' }, function(iw) {
+		$(marker).click(function() {
+			iw.open(map, marker);
+			map.panTo(marker.getPosition());
+		});																												  
+	});
+});
+
+}}}
+
+== Example loadJSON ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('loadJSON', 'http://localhost/json.php' );
+}}}
+
+or do the parsing yourself in the callback
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('loadJSON', 'http://localhost/json.php', { 'type': 'activities'}, function(i, marker) {
+    // Get the properties you want and add them to the map
+    // Create the marker options
+    var opts = { 'position': new google.maps.LatLng(marker.lat, marker.lng), 'title': marker.title };
+    $('#map_canvas').gmap('addMarker', opts);
+});
+}}}
+
+== Example loadHTML ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+// Load all elements with the classname "vevent"
+$('#map_canvas').gmap('loadHTML', 'microformat', '.vevent');
+}}}
+
+The HTML
+
+{{{
+<p class="vevent">
+    <a class="url hidden" href="http://conferences.oreillynet.com/pub/w/40/program.html">http://conferences.oreillynet.com/pub/w/40/program.html</a>
+    <span class="summary">Web 2.0 Conference</span> 
+    <abbr class="dtstart hidden" title="2005-10-05">October 5</abbr>
+    <abbr class="dtend hidden" title="2005-10-07">7</abbr>
+    <span class="location hidden">Argent Hotel, San Francisco, CA</span>
+    <span class="geo hidden">
+        <abbr class="latitude" title="37.7749295">&nbsp;</abbr> 
+        <abbr class="longitude" title="-122.4194155">&nbsp;</abbr>
+    </span>
+</p>
+}}}
+
+or do something yourself
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('loadHTML', 'microformat', 'vevent', function(markerOpts, node) {
+    // We have to add a callback in the addmarker method so we can access the marker just added
+    $('#map_canvas').gmap('addMarker', markerOpts, function(map, marker) {
+        // Find all a elements in this element with the class link 
+        $(node).find('.summary').click( function() {
+            alert('The a element with class link was clicked!');
+            // Trigger a click on the marker
+            $(marker).triggerEvent('click');
+            // Pan to the position
+            map.panTo(marker.position);
+            // Return false so that we won't accidentally go to the URL
+            return false;
+        });					
+    });
+});
+}}}
+
+== Example loadDirections ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('loadDirections', 'panel', { 'origin': new google.maps.LatLng(42.345573,-71.098326), 'destination': new google.maps.LatLng(42.345573,-72.098326), 'travelMode': google.maps.DirectionsTravelMode.DRIVING} );
+}}}
+
+== Example loadStreetViewPanorama ==
+
+{{{
+var latlng = new google.maps.LatLng(42.345573,-71.098326);
+$('#map_canvas').gmap({ 'center': latlng });
+var panoramaOptions = { 'position': latlng, 'pov': {'heading': 34, 'pitch': 10, 'zoom': 1 } };
+$('#map_canvas').gmap('loadStreetViewPanorama', 'panel', panoramaOptions);
+}}}
+
+== Example search ==
+
+{{{
+var latlng = new google.maps.LatLng(42.345573,-71.098326);
+$('#map_canvas').gmap({ 'center': latlng });
+$('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(results) {
+    alert('Found it!');
+    // Get the map
+    var map = $('#map_canvas').gmap('getMap');
+    // Pan to first result
+    map.panTo(results[0].geometry.location);
+});
+}}}
+
+== Example clearMarkers ==
+
+{{{
+var latlng = new google.maps.LatLng(42.345573,-71.098326);
+$('#map_canvas').gmap({ 'center': latlng });
+$('#map_canvas').gmap('addMarker', { 'position': latlng });
+$('#map_canvas').gmap('clearMarkers');
+}}}
+
+== Example destroy ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326) });
+$('#map_canvas').gmap('destroy');
+}}}

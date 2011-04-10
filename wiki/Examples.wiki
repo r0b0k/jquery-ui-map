@@ -63,6 +63,27 @@ $('#map_canvas').gmap({ 'center':new google.maps.LatLng(42.345573,-71.098326), '
 }});
 }}}
 
+== Example displayDirections ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas_1').gmap('displayDirections', { 'origin': new google.maps.LatLng(42.345573,-71.098326), 'destination': new google.maps.LatLng(42.345573,-72.098326), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(success, result) {
+		if ( success )
+			alert('Results found!');
+	});
+}});
+}}}
+
+== Example displayStreetView ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas').gmap('displayStreetView', 'panel', { 'position': latlng, 'pov': {'heading': 34, 'pitch': 10, 'zoom': 1 } });
+	// OR $('#map_canvas').gmap('displayStreetView', $('#panel'), { 'position': latlng, 'pov': {'heading': 34, 'pitch': 10, 'zoom': 1 } });
+	// OR $('#map_canvas').gmap('displayStreetView', document.getElementById('panel'), { 'position': latlng, 'pov': {'heading': 34, 'pitch': 10, 'zoom': 1 } });
+}});
+}}}
+
 == Example findMarker ==
 
 {{{
@@ -106,7 +127,7 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 
 		$('#map_canvas').gmap('addMarker', { position: new google.maps.LatLng(42.345573 + (i/100),-71.098326) } );
 	}
 }});
-var markerCluster = new MarkerClusterer?($('#map_canvas').gmap('getMap'), $('#map_canvas').gmap('getMarkers'));
+var markerCluster = new MarkerClusterer($('#map_canvas').gmap('getMap'), $('#map_canvas').gmap('getMarkers'));
 }}}
 
 == Example search ==
@@ -116,6 +137,10 @@ $('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(results) {
     $('#map_canvas').gmap('getMap').panTo(results[0].geometry.location);
 });
 }}}
+
+
+
+
 
 = Version 1.2 =
 

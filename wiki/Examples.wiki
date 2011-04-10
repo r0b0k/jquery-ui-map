@@ -90,6 +90,13 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 
 }});
 }}}
 
+== Example loadKML ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas').gmap('loadKML', 'dog_feed_1', 'http://api.flickr.com/services/feeds/geo/?g=322338@N20&lang=en-us&format=feed-georss');
+}});
+}}}
 
 == Example using [http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/docs/examples.html MarkerClusterer] ==
 
@@ -100,6 +107,14 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 
 	}
 }});
 var markerCluster = new MarkerClusterer?($('#map_canvas').gmap('getMap'), $('#map_canvas').gmap('getMarkers'));
+}}}
+
+== Example search ==
+
+{{{
+$('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(results) {
+    $('#map_canvas').gmap('getMap').panTo(results[0].geometry.location);
+});
 }}}
 
 = Version 1.2 =

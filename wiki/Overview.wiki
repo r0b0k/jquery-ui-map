@@ -39,7 +39,7 @@ $('#map_canvas').gmap('option', 'zoom', 7);
 
 ==Methods==
 
-|| *Methods* || *Return value* || *Description* ||
+|| *Method* || *Return value* || *Description* ||
 || addBounds([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound to the existing boundaries. ||
 || addControl(panel:jquery/node/string, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
 || addMarker(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions], callback?:function(map:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])  || Creates a marker on the map. MarkerOptions is extended with a bounds property ('bounds':boolean) to add boundaries  ||
@@ -57,10 +57,11 @@ $('#map_canvas').gmap('option', 'zoom', 7);
 || clearMarkers() || none || Removes all markers on the map. ||
 || destroy() || none || Removes the map functionality. ||
 
+== Events ==
+
+|| *Method* || *Return value* || *Description* ||
 || triggerEvent(type:string) || none || Trigger an event, e.g. 'resize'. ||
 || addEventListener(type:string, callback:function()) || none || Adds a Google event listener or binds a jQuery event||
-
-== Events ==
 
 || *Event* || *Description* || *Supported elements* || 
 || click || Adds a click event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
@@ -82,6 +83,7 @@ $('#map_canvas').gmap('option', 'zoom', 7);
 ==Methods==
 
 || *Methods* || *Return Value* || *Description* ||
+|| addBound([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound. ||
 || addSidebar(panel:string/node, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
 || addMarker(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions], callback?:function(map:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map, map], marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker, Marker])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || Creates a marker on the map. ||
 || addInfoWindow(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions], callback?:function(infowindow:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow]) || Creates an info window bound to the marker on the map. ||
@@ -94,5 +96,4 @@ $('#map_canvas').gmap('option', 'zoom', 7);
 || clearMarkers() || none || Clears all markers on the map. ||
 || getMap() || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map, Map] || Returns the map. ||
 || getMarkers() || Array.[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker, Marker] || Returns an array of markers. ||
-|| addBound([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound. ||
 || destroy() || none || Removes the map functionality. ||

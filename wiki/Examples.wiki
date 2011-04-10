@@ -1,6 +1,6 @@
 #summary Examples.
 
-= Version 2.0 (NOT YET RELEASED) =
+= Version 2.0 =
 
 == Example constructor call ==
 

@@ -30,7 +30,7 @@ var zoom= $('#map_canvas').gmap('option', 'zoom');
 $('#map_canvas').gmap('option', 'zoom', 7);
 }}}
 
-= API version 2.0 (NOT YET RELEASED) =
+= API version 2.0 =
 
 ==Constructor==
 

@@ -93,7 +93,7 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 
 }});
 
 // filter by the property you just added
-$('#map_canvas').gmap('findMarker', 'SOME_VALUE', 'SOME_PROPERTY', function(found, marker) {
+$('#map_canvas').gmap('findMarker', 'SOME_PROPERTY', 'SOME_VALUE', function(found, marker) {
 	if (found)
 		marker.setVisible(true);
 	else 

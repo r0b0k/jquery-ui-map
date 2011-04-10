@@ -1,8 +1,8 @@
  /*!
- * jQuery UI Map 0.1.2
+ * jQuery UI Google Map 2.0
  * http://code.google.com/p/jquery-ui-map/
  *
- * Copyright (c) 2010 Johan Säll Larsson
+ * Copyright (c) 2010 - 2011 Johan Säll Larsson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,22 +58,6 @@
 		dragend: function(callback) {
 			return this.addEventListener('dragend', callback );
 		},
-		/*
-		hide: function() {
-			if ( this.get(0) instanceof google.maps.MVCObject ) {
-				this.get(0).setVisible(false);
-			} else {
-				this.css('display', 'none')
-			}
-		},
-		
-		show: function() {
-			if ( this.get(0) instanceof google.maps.MVCObject ) {
-				this.get(0).setVisible(true);
-			} else {
-				this.css('display', 'block')
-			}	
-		},*/
 		
 		triggerEvent: function(type) {
 			google.maps.event.trigger(this.get(0), type);		
@@ -86,36 +70,9 @@
 				this.bind(type, callback);	
 			}
 			return this;
-		},
-		
-		addListenerOnce: function(type, callback) {
-			if ( this.get(0) instanceof google.maps.MVCObject ) {
-				google.maps.event.addListenerOnce(this.get(0), type, callback );
-			}
-			return this;
 		}
 		
 	});
-
-	var maps = [], markers = [], layers = [], bounds = [], directions = [], dservices = [];
-	
-	function unwrap(el) {
-		if ( el instanceof jQuery ) {
-			return el.get(0);
-		} else if ( el instanceof Object ) {
-			return el;
-		}
-		return document.getElementById(el);
-	}
-	
-	function invoke( callback ) {
-		if ( $.isFunction(callback) ) {
-			callback.apply(this, Array.prototype.slice.call(arguments, 1));
-			return true;
-		} else {
-			return false;
-		}
-	}
 	
 	$.widget( "ui.gmap", {
 			
@@ -144,293 +101,246 @@
 			},
 			
 			_create: function() {
-				var id = this.element.attr('id');
-				maps[id] = new google.maps.Map( this.element.get(0), this.options );
-				markers[id] = new Array;
-				bounds[id] = new google.maps.LatLngBounds();
-				directions[id] = new google.maps.DirectionsRenderer();
-				dservices[id] = new google.maps.DirectionsService();
-				return $(maps[id]);
+				$.ui.gmap.instances[this.element.attr('id')] = { map: new google.maps.Map( this.element[0], this.options ), markers: [], bounds: null, services: [] };
 			},
 			
 			_init: function() {
-				//var self = this;
-				//google.maps.event.addListenerOnce(self.getMap(), 'bounds_changed', function() {
-					invoke(this.options.callback, this.getMap() );
-				//});
-			},
-			
-			addSidebar: function(panel, position) {
-				this.getMap().controls[position].push(unwrap(panel));
-			},
-			
-			addMarker: function( markerOptions, callback ) {
-				var marker = new google.maps.Marker( jQuery.extend( { 'map': this.getMap(), 'bound':false }, markerOptions) );
-				invoke(callback, this.getMap(), marker );
-				this.getMarkers().push( marker );
-				if ( marker.bound ) {
-					this.addBound(marker.getPosition());
-				}
-				return $(marker);
-			},
-			
-			addInfoWindow: function (infoWindowOptions, callback) {
-				var iw = new google.maps.InfoWindow(infoWindowOptions);
-				invoke(callback, iw);
-				return $(iw);
-			},
-			
-			loadJSON: function( url, data, callback ) {
-				$.getJSON( url, data, function(data) { 
-					$.each( data.markers, function(i, m) {
-						invoke(callback, i, m );
-					});
-				});
-			},
-			
-			loadHTML: function ( type, clazz, callback ) {
-				var self = this;
-				switch ( type ) {
-					//FIXME error in rdfa
-					//http://www.google.com/support/webmasters/bin/answer.py?hl=sv&answer=146861
-					case 'rdfa':
-						var geoPoints = [];
-						$(clazz+' [property="geo:lat_long"]').each( function() {
-							geoPoints.push(($(this).attr('content')).split(','));												
-						});
-						$(clazz).each( function(index) {
-							var node = $(this);
-							var markerOptions = { 'position': new google.maps.LatLng(geoPoints[index][0], geoPoints[index][1]) };
-							if ( !invoke(callback, markerOptions, node, index) ) {
-								var summary = node.find('.summary');
-								self.addMarker( markerOptions, function(map, marker) {
-									var iw = self.addInfoWindow({ 'position':marker.getPosition(), 'content': summary.html() });
-									$(marker).click(function() {
-										iw.get(0).open(self.getMap(), marker);
-										map.panTo(marker.getPosition());
-									});
-									summary.click( function() {
-										$(marker).triggerEvent('click');
-										return false;
-									});
-								});
-							}
-						});
-					break;
-					case 'microformat':
-						$(clazz).each( function(index) {
-							var node = $(this);
-							var markerOptions = { 'position': new google.maps.LatLng(node.find('.latitude').attr('title'), node.find('.longitude').attr('title')) };
-							if ( !invoke(callback, markerOptions, node, index) ) {
-								var summary = node.find('.summary');
-								self.addMarker( markerOptions, function(map, marker) {
-									var iw = self.addInfoWindow({ 'position':marker.getPosition(), 'content': summary.html() });
-									$(marker).click(function() {
-										iw.get(0).open(self.getMap(), marker);
-										map.panTo(marker.getPosition());
-									});
-									summary.click( function() {
-										$(marker).triggerEvent('click');
-										return false;
-									});
-								});
-							}
-						});
-					break;
-					//FIXME: Seriously fix this
-					case 'microdata':
-						$(clazz).each( function() {
-							var node = $(this);
-							$(node).children().each( function(index) {
-								if ( $(this).attr('itemprop') == 'geo' ) {
-									var latlng = $(this).html().split(';');
-									var markerOptions = { 'position': new google.maps.LatLng(latlng[0], latlng[1]) };
-									if ( !invoke(callback, markerOptions, node, index) ) {
-										var summary = node.find('.summary');
-										self.addMarker( markerOptions, function(map, marker) {
-											var iw = self.addInfoWindow({ 'position':marker.getPosition(), 'content': summary.html() });
-											$(marker).click(function() {
-												iw.get(0).open(map, marker);
-												map.panTo(marker.getPosition());
-											});
-											summary.click( function() {
-												$(marker).triggerEvent('click');
-												return false;
-											});
-										});
-									}
-									
-								}
-							});
-						});
-					break;
-				}
-				
-			},
-			
-			loadFusion: function(id, fusionTablesLayerOptions) {
-				var layer = new google.maps.FusionTablesLayer(id, fusionTablesLayerOptions);
-				layer.setMap(this.getMap());
-			},
-			
-			//FIXME: Should be diff. params
-			loadDirections: function(panel, directionsOpts, successCallback, errorCallback) { 
-				var self = this;
-				var directionsDisplay = directions[this.element.attr('id')];
-				var directionsService = dservices[this.element.attr('id')];
-				directionsService.route( directionsOpts, function(response, status) {
-					if ( status == google.maps.DirectionsStatus.OK ) {
-						directionsDisplay.setMap(self.getMap());
-						directionsDisplay.setPanel(unwrap(panel));
-						directionsDisplay.setDirections(response);
-						invoke(successCallback, response);
-					} else {
-						directionsDisplay.setMap(null);
-						invoke(errorCallback, status);
-					}
-				});
-			},
-			
-			loadStreetViewPanorama: function(panel, streetViewPanoramaOptions) {
-				var panorama = new google.maps.StreetViewPanorama(unwrap(panel), streetViewPanoramaOptions);
-				this.getMap().setStreetView(panorama);
-			},
-			
-			search: function(request, successCallback, errorCallback) {
-				var geocoder = new google.maps.Geocoder();
-				geocoder.geocode( request, function(results, status) {
-					if ( status == google.maps.GeocoderStatus.OK ) {
-						invoke(successCallback, results);
-					} else {
-						invoke(errorCallback, status);
-					}
-				});
-			},
-			
-			clearMarkers: function() {
-				var markers = this.getMarkers();
-				$.each( markers, function(i, v) { 
-					google.maps.event.clearInstanceListeners(markers[i]);
-					markers[i].setMap( null );
-				});
-				markers = new Array();
-			},
-			
-			toggleByCategory: function(category, isCategoryCallback, nonCategoryCallback) {
-				var markers = this.getMarkers();
-				$.each( markers, function(i, marker) { 
-					if ( marker.category == category ) {
-						invoke(isCategoryCallback, marker);
-					} else {
-						invoke(nonCategoryCallback, marker);
-					}
-				});
-			},
-			
-			getMap: function() {
-				return maps[this.element.attr('id')];
-			},
-			
-			getMarkers: function() {
-				return markers[this.element.attr('id')];
-			},
-			
-			addBound: function(latLng) {
-				var bound = bounds[this.element.attr('id')];
-				bound.extend(latLng);
-				this.getMap().fitBounds(bound);
-			},
-						
-			destroy: function() {
-				this.clearMarkers();
-				$.Widget.prototype.destroy.call( this );
+				$.ui.gmap._trigger(this.options.callback, this.getMap() );
+				return $(this.getMap());
 			},
 			
 			_setOption: function(key, value) {
-				switch (key) {
-					case "backgroundColor":
-						this.options.backgroundColor = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "disableDefaultUI":
-						this.options.disableDefaultUI = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "disableDoubleClickZoom":
-						this.options.disableDoubleClickZoom = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "draggable":
-						this.options.draggable = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "draggableCursor":
-						this.options.draggableCursor = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "draggingCursor":
-						this.options.draggingCursor = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "keyboardShortcuts":
-						this.options.keyboardShortcuts = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "mapTypeControl":
-						this.options.mapTypeControl = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "mapTypeControlOptions":
-						this.options.mapTypeControlOptions = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "navigationControl":
-						this.options.navigationControl = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "navigationControlOptions":
-						this.options.navigationControlOptions = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "noClear":
-						this.options.noClear = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "scaleControl":
-						this.options.scaleControl = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "scaleControlOptions":
-						this.options.scaleControlOptions = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "scrollwheel":
-						this.options.scrollwheel = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "streetViewControl":
-						this.options.streetViewControl = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "streetViewControlOptions":
-						this.options.streetViewControlOptions = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case "center":
-						this.options.center = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-					case 'mapTypeId':
-						this.options.mapTypeId = value;
-						this.getMap().setOptions(this.options);
-					break;
-					case 'zoom':
-						this.options.zoom = value;
-                    	this.getMap().setOptions(this.options);
-					break;
-				}
 				$.Widget.prototype._setOption.apply(this, arguments);
+				this.getMap().setOptions(this.options);
+			},
+			
+			/**
+			 * Adds a LatLng to the bounds.
+			 */
+			addBounds: function(latLng) {
+				var instances = $.ui.gmap.instances[this.element.attr('id')];
+				if ( !instances.bounds ) {
+					instances.bounds = new google.maps.LatLngBounds(); 
+				}
+				instances.bounds.extend(latLng);
+				instances.map.fitBounds(instances.bounds);
+			},
+			
+			/**
+			 * Adds a control to the map
+			 * @param panel:jQuery/Node/String
+			 * @param position:google.maps.ControlPosition, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
+			 */
+			addControl: function(panel, position) {
+				this.getMap().controls[position].push($.ui.gmap._unwrap(panel));
+			},
+			
+			/**
+			 * Adds a Marker to the map
+			 * @param opts:google.maps.MarkerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
+			 * @param callback:function(map:google.maps.Map, marker:Marker)
+			 * @return $(google.maps.Marker)
+			 */
+			addMarker: function(opts, callback) {
+				var marker = new google.maps.Marker( jQuery.extend( { 'map': this.getMap(), 'bounds':false }, opts) );
+				this.getMarkers().push( marker );
+				if ( marker.bounds ) {
+					this.addBounds(marker.getPosition());
+				}
+				$.ui.gmap._trigger(callback, this.getMap(), marker );
+				return $(marker);
+			},
+			
+			/**
+			 * Adds an InfoWindow to the map
+			 * @param opts:google.maps.InfoWindowOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
+			 * @param callback:function(InfoWindow:google.maps.InfoWindowOptions)
+			 * @return $(google.maps.InfoWindowOptions)
+			 */
+			addInfoWindow: function(opts, callback) {
+				var iw = new google.maps.InfoWindow(opts);
+				$.ui.gmap._trigger(callback, iw);
+				return $(iw);
+			},
+			
+			/**
+			 * Computes directions between two or more places.
+			 * @param request:google.maps.DirectionsRequest, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest
+			 * @param opts:google.maps.DirectionsRendererOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
+			 * @param callback:function(success:boolean, result:google.maps.DirectionsResult), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
+			 */
+			displayDirections: function(request, opts, callback) { 
+				var instance = $.ui.gmap.instances[this.element.attr('id')];
+				if ( !instance.services.DirectionsService ) {
+					instance.services.DirectionsService = new google.maps.DirectionsService();
+				}
+				if ( !instance.services.DirectionsRenderer ) {
+					instance.services.DirectionsRenderer = new google.maps.DirectionsRenderer(jQuery.extend( { 'map': instance.map }, opts));
+				}
+				instance.services.DirectionsService.route( request, function(result, status) {
+					if ( status === google.maps.DirectionsStatus.OK ) {
+						if ( opts.panel ) {
+							instance.services.DirectionsRenderer.setDirections(result);
+						}
+					} else {
+						instance.services.DirectionsRenderer.setMap(null);
+					}
+					$.ui.gmap._trigger(callback, ( status === google.maps.DirectionsStatus.OK ), result);
+				});
+			},
+			
+			/**
+			 * Displays the panorama for a given LatLng or panorama ID.
+			 * @param panel:jQuery/String/Node
+			 * @param opts?:google.maps.StreetViewPanoramaOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions
+			 */
+			displayStreetView: function(panel, opts) {
+				var instance = $.ui.gmap.instances[this.element.attr('id')];
+				if ( !instance.services.StreetViewPanorama ) {
+					instance.services.StreetViewPanorama = new google.maps.StreetViewPanorama($.ui.gmap._unwrap(panel), opts);
+				}
+				instance.map.setStreetView(instance.services.StreetViewPanorama);
+			},
+			
+			/**
+			 * Returns the marker(s) with a specific property and value, e.g. 'category', 'airports'
+			 * @param property:String - the property to search within
+			 * @param value:String - the query
+			 * @param callback:function(found:boolean, marker:google.maps.Marker)
+			 */
+			findMarker : function(property, value, callback) {
+				$.each( this.getMarkers(), function(i, marker) {
+					$.ui.gmap._trigger(callback, ( marker[property] === value ), marker);
+				});
+			},
+			
+			/**
+			 * Extracts meta data from the HTML
+			 * @param type:String - rdfa, microformats or microdata 
+			 * @param ns:String - the namespace
+			 * @param callback:function(item:jQuery, result:Array<String>)
+			 */
+			loadMetadata: function(type, ns, callback) { 
+				if ( type === 'rdfa' ) {
+					$.ui.gmap.rdfa(ns, callback);
+				} else if ( type === 'microformat') {
+					$.ui.gmap.microformat(ns, callback);
+				} else if ( type === 'microdata') {
+					$.ui.gmap.microdata(ns, callback);
+				}
+			},
+			
+			/**
+			 * Adds fusion data to the map.
+			 * @param id:Integer - Fusion table ID
+			 * @param opts:google.maps.FusionTablesLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions
+			 */
+			loadFusion: function(id, opts) {
+				var instance = $.ui.gmap.instances[this.element.attr('id')];
+				if ( !instance.services.FusionTablesLayer ) {
+					instance.services.FusionTablesLayer = new google.maps.FusionTablesLayer(id, opts);
+				}
+				instance.services.FusionTablesLayer.setMap(this.getMap());
+			},
+			
+			/**
+			 * Adds markers from KML file or GeoRSS feed
+			 * @param id:String - an identifier for the RSS e.g. 'rss_dogs'
+			 * @param url:String - URL to feed
+			 * @param opts:google.maps.KmlLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#KmlLayerOptions
+			 */
+			loadKML: function(id, url, opts) {
+				var instance = $.ui.gmap.instances[this.element.attr('id')];
+				if ( !instance.services[id] )
+					instance.services[id] = new google.maps.KmlLayer(url, jQuery.extend({'map': instance.map }, opts)); 
+			},
+			
+			/**
+			 * A service for converting between an address and a LatLng.
+			 * @param request:google.maps.GeocoderRequest
+			 * @param callback:function(success:boolean, result:google.maps.GeocoderResult), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
+			 */
+			search: function(request, callback) {
+				var instance = $.ui.gmap.instances[this.element.attr('id')];
+				if ( !instance.services.Geocoder ) {
+					instance.services.Geocoder = new google.maps.Geocoder();
+				}
+				instance.services.Geocoder.geocode( request, function(result, status) {
+					$.ui.gmap._trigger(callback, ( status === google.maps.GeocoderStatus.OK ), result);
+				});
+			},
+			
+			/**
+			 * Returns the map.
+			 * @return google.maps.Map
+			 */
+			getMap: function() {
+				return $.ui.gmap.instances[this.element.attr('id')].map;
+			},
+			
+			/**
+			 * Returns all markers.
+			 * @return Array<google.maps.Marker>
+			 */
+			getMarkers: function() {
+				return $.ui.gmap.instances[this.element.attr('id')].markers;
+			},
+			
+			/**
+			 * Returns a service by its service name
+			 * @param id:string
+			 */
+			getService: function(id) {
+				return $.ui.gmap.instances[this.element.attr('id')].services[id];
+			},
+			
+			/**
+			 * Clears all the markers and added event listeners.
+			 */
+			clear: function() {
+				$.each( this.getMarkers(), function(i,m) {
+					google.maps.event.clearInstanceListeners(m);
+					m.setMap(null);
+					m = null;
+				});
+				$.ui.gmap.instances[this.element.attr('id')].markers = [];
+			},
+			
+			/**
+			 * Destroys the plugin.
+			 */
+			destroy: function() {
+				this.clear();
+				google.maps.event.clearInstanceListeners(this.getMap());
+				$.each($.ui.gmap.instances[this.element.attr('id')].services, function (i, obj) {
+					obj = null;
+				});
+				$.Widget.prototype.destroy.call( this );
 			}
+			
+	});
+
+	$.extend($.ui.gmap, {
+        
+		version: "2.0",
+		instances: [],
+		
+		_trigger: function(callback) {
+			if ( $.isFunction(callback) ) {
+				callback.apply(this, Array.prototype.slice.call(arguments, 1));
+			}
+		},
+		
+		_unwrap: function unwrap(obj) {
+			if ( !obj ) {
+				return null;
+			} else if ( obj instanceof jQuery ) {
+				return obj[0];
+			} else if ( obj instanceof Object ) {
+				return obj;
+			}
+			return document.getElementById(obj);
+		}
 			
 	});
 

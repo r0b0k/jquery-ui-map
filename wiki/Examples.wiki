@@ -63,6 +63,23 @@ $('#map_canvas').gmap({ 'center':new google.maps.LatLng(42.345573,-71.098326), '
 }});
 }}}
 
+== Example findMarker ==
+
+{{{
+$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
+	$('#map_canvas').gmap('addMarker', { 'SOME_PROPERTY':'SOME_VALUE', 'position': new google.maps.LatLng(42.345573,-71.098326) });
+	$('#map_canvas').gmap('addMarker', { 'SOME_PROPERTY':'OTHER_VALUE', 'position': new google.maps.LatLng(52.345573,-71.098326) });
+}});
+
+// filter by the property you just added
+$('#map_canvas').gmap('findMarker', 'SOME_VALUE', 'SOME_PROPERTY', function(found, marker) {
+	if (found)
+		marker.setVisible(true);
+	else 
+		marker.setVisible(false);
+});
+}}}
+
 == Example loadMetadata ==
 
 {{{
@@ -73,21 +90,16 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 
 }});
 }}}
 
-== Example find ==
+
+== Example using [http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/docs/examples.html MarkerClusterer] ==
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
-	$('#map_canvas').gmap('addMarker', { 'SOME_PROPERTY':'SOME_VALUE', 'position': new google.maps.LatLng(42.345573,-71.098326) });
-	$('#map_canvas').gmap('addMarker', { 'SOME_PROPERTY':'OTHER_VALUE', 'position': new google.maps.LatLng(52.345573,-71.098326) });
+	for ( var i=1; i < 100; i++ ) {
+		$('#map_canvas').gmap('addMarker', { position: new google.maps.LatLng(42.345573 + (i/100),-71.098326) } );
+	}
 }});
-
-// filter by the property you just added
-$('#map_canvas').gmap('find', 'SOME_VALUE', 'SOME_PROPERTY', function(found, marker) {
-	if (found)
-		marker.setVisible(true);
-	else 
-		marker.setVisible(false);
-});
+var markerCluster = new MarkerClusterer?($('#map_canvas').gmap('getMap'), $('#map_canvas').gmap('getMarkers'));
 }}}
 
 = Version 1.2 =

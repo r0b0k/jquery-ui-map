@@ -22,8 +22,8 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
-    $('#map_canvas').gmap('addControl', $('#sidebar'), google.maps.ControlPosition.LEFT_TOP);
-	// OR $('#map_canvas').gmap('addControl', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+    $('#map_canvas').gmap('addControl', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+	// OR $('#map_canvas').gmap('addControl', $('#sidebar'), google.maps.ControlPosition.LEFT_TOP);
 	// OR $('#map_canvas').gmap('addControl', document.getElementById('sidebar'), google.maps.ControlPosition.LEFT_TOP);
 }});
 }}}
@@ -138,7 +138,17 @@ $('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(results) {
 });
 }}}
 
+== Example clearMarkers ==
 
+{{{
+$('#map_canvas').gmap('clearMarkers');
+}}}
+
+== Example destroy ==
+
+{{{
+$('#map_canvas').gmap('destroy');
+}}}
 
 
 

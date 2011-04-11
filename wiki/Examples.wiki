@@ -105,7 +105,7 @@ $('#map_canvas').gmap('findMarker', 'SOME_PROPERTY', 'SOME_VALUE', function(foun
 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
-	$('#map_canvas').gmap('loadMetadata', 'microformat', 'vevent', function(item, data) {
+	$('#map_canvas').gmap('loadMetadata', 'microformat', 'vevent', function(i, item, data) {
 		$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(data.latitude.title, data.longitude.title) });
 	});
 }});

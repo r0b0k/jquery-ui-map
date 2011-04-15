@@ -28,7 +28,7 @@
         
         <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
         <script type="text/javascript">
-			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("maps", "3", {'other_params':'sensor=false'});
 			google.load("jquery", "1.5");
 			google.load("jqueryui", "1.8.9");
 		</script>        
@@ -41,7 +41,7 @@
 			$(function() {
 				// Only for code formatting
 				SyntaxHighlighter.all();
-				$('#map_canvas').gmap({ 'center':getLatLng(), 'streetViewControl': false, 'callback': function() {
+				$('#map_canvas').gmap({ 'center':new google.maps.LatLng(59.3426606750, 18.0736160278), 'streetViewControl': false, 'callback': function() {
 						$.getJSON( 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', 'category=activity', function(data) { 
 							$.each( data.markers, function(i, m) {
 								$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(m.lat, m.lng) } );
@@ -50,12 +50,6 @@
 					}
 				});
             });
-			function getLatLng() {
-				if ( google.loader.ClientLocation != null ) {
-					return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
-				}
-				return new google.maps.LatLng(59.3426606750, 18.0736160278);
-			}
 		</script>
     </head>
     <body>

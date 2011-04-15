@@ -297,7 +297,7 @@
 			/**
 			 * Clears all the markers and added event listeners.
 			 */
-			clear: function() {
+			clearMarkers: function() {
 				$.each( this.getMarkers(), function(i,m) {
 					google.maps.event.clearInstanceListeners(m);
 					m.setMap(null);
@@ -310,7 +310,7 @@
 			 * Destroys the plugin.
 			 */
 			destroy: function() {
-				this.clear();
+				this.clearMarkers();
 				google.maps.event.clearInstanceListeners(this.getMap());
 				$.each($.ui.gmap.instances[this.element.attr('id')].services, function (i, obj) {
 					obj = null;

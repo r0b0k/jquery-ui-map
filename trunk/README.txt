@@ -13,3 +13,9 @@ Issues: http://code.google.com/p/jquery-ui-map/issues/list
 Discuss at: http://groups.google.com/group/jquery-ui-map-discuss
 
 Packed with http://dean.edwards.name/packer/
+
+
+CHANGES:
+
+2011-04-15 Renamed the method clear to clearMarkers.
+

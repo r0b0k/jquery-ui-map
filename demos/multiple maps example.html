@@ -59,7 +59,7 @@
 							var self = $('#m'+i);
 							self.gmap('addMarker', {'position':latlngs[i]});
 							$('#c'+i).click(function() {
-								self.gmap('clear');
+								self.gmap('clearMarkers');
 								return false;
 							});
 						} 

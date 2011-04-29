@@ -133,8 +133,9 @@ var markerCluster = new MarkerClusterer($('#map_canvas').gmap('getMap'), $('#map
 == Example search ==
 
 {{{
-$('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(results) {
-    $('#map_canvas').gmap('getMap').panTo(results[0].geometry.location);
+$('#map_canvas').gmap('search', { 'address': 'Stockholm' }, function(isFound,results) {
+    if (isFound)
+		$('#map_canvas').gmap('getMap').panTo(results[0].geometry.location);
 });
 }}}
 

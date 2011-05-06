@@ -67,9 +67,8 @@
 							if ( success ) {
 								$('#results').show();
 							} else {
-								$('#map_canvas_1').gmap('clear');
+								$('#map_canvas_1').gmap('getService', 'DirectionsRenderer').setMap(null);
 								$('#results').hide();
-								alert('No results found');
 							}
 						});
 						return false;
@@ -79,7 +78,7 @@
 			<div data-role="content">
 				
 				<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
-				
+					
 					<div id="map_canvas_1" style="height:300px;"></div>
 				
 					<p>

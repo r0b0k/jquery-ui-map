@@ -33,7 +33,7 @@ $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 
 {{{
 $('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
 	$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573,-71.098326) } );
-});
+}});
 }}}
 
 == Example addInfoWindow ==

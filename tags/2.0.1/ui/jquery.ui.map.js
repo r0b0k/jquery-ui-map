@@ -238,9 +238,9 @@
 			loadFusion: function(id, opts) {
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
 				if ( !instance.services.FusionTablesLayer ) {
-					instance.services.FusionTablesLayer = new google.maps.FusionTablesLayer(id, opts);
+					instance.services.FusionTablesLayer = new google.maps.FusionTablesLayer();
 				}
-				instance.services.FusionTablesLayer.setMap(this.getMap());
+				instance.services.FusionTablesLayer.setOptions(jQuery.extend({'map': instance.map }, opts);
 			},
 			
 			/**

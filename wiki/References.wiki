@@ -1,4 +1,9 @@
-#summary The following websites is in one way or the other using this plugin.
+#summary The following websites use the plugin in one way or another.
+
+= mobiledevelopersolutions.com =
+
+Tutorial using plugin for Android mobile web app with PhoneGap / Android: Route Finder with dynamic location updates. Source code and demo video
+[http://www.mobiledevelopersolutions.com/home/start/twominutetutorials/tmt4part1 here].
 
 = Mapusers.com =
 Mapusers is a geolocation service currently under construction to socialize and share your favourite locations all across the globe.

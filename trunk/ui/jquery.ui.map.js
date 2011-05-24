@@ -175,8 +175,9 @@
 					instance.services.DirectionsService = new google.maps.DirectionsService();
 				}
 				if ( !instance.services.DirectionsRenderer ) {
-					instance.services.DirectionsRenderer = new google.maps.DirectionsRenderer(jQuery.extend( { 'map': instance.map }, opts));
+					instance.services.DirectionsRenderer = new google.maps.DirectionsRenderer();
 				}
+				instance.services.DirectionsRenderer.setOptions(jQuery.extend({'map': instance.map}, opts));
 				instance.services.DirectionsService.route( request, function(result, status) {
 					if ( status === google.maps.DirectionsStatus.OK ) {
 						if ( opts.panel ) {
@@ -196,9 +197,7 @@
 			 */
 			displayStreetView: function(panel, opts) {
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
-				if ( !instance.services.StreetViewPanorama ) {
-					instance.services.StreetViewPanorama = new google.maps.StreetViewPanorama($.ui.gmap._unwrap(panel), opts);
-				}
+				instance.services.StreetViewPanorama = new google.maps.StreetViewPanorama($.ui.gmap._unwrap(panel), opts);
 				instance.map.setStreetView(instance.services.StreetViewPanorama);
 			},
 			

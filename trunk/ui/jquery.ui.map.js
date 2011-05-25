@@ -64,7 +64,7 @@
 		},
 		
 		addEventListener: function(type, callback) {
-			if ( this.get(0) instanceof google.maps.MVCObject ) {
+			if ( google.maps && this.get(0) instanceof google.maps.MVCObject ) {
 				google.maps.event.addListener(this.get(0), type, callback );
 			} else {
 				this.bind(type, callback);	
@@ -78,7 +78,7 @@
 			
 			options: {
 				backgroundColor : null,
-				center: new google.maps.LatLng(0.0, 0.0),
+				center: ( google.maps ) ? new google.maps.LatLng(0.0, 0.0) : null,
 				disableDefaultUI: false,
 				disableDoubleClickZoom: false,
 				draggable: true,
@@ -87,7 +87,7 @@
 				keyboardShortcuts: true,
 				mapTypeControl: true,
 				mapTypeControlOptions: null,
-				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				mapTypeId: ( google.maps ) ? google.maps.MapTypeId.ROADMAP : null,
 				navigationControl: true,
 				navigationControlOptions: null,
 				noClear: false,

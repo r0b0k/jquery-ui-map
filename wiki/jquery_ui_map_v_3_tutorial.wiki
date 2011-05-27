@@ -1,6 +1,6 @@
 #jquery ui map v3. Tutorial
 
-= The easy way =
+= Beginner =
 
 Add the mandatory JavaScript libraries to your HTML HEAD tag. 
 If you are developing a web site for mobile content add:
@@ -19,6 +19,23 @@ If you are developing a web site without any mobile device support add:
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" type="text/javascript"></script>
 <script src="PATH_TO_PLUGIN/jquery.ui.map.full.min.js" type="text/javascript"></script>
+}}}
+
+To add a map just add 
+
+{{{
+<script type="text/javascript">
+	$(function() {
+		var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
+		$('#map_canvas').gmap({'center': yourStartLatLng});
+	});
+</script>
+}}}
+
+and add a DIV tag within the BODY section of your HTML document
+
+{{{
+	<div id="map_canvas" style="width:250px;height:250px"></div>
 }}}
 
 = Advanced =

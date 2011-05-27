@@ -231,14 +231,14 @@
 			
 			/**
 			 * Adds fusion data to the map.
-			 * @param id:Integer - Fusion table ID
 			 * @param opts:google.maps.FusionTablesLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions
 			 */
-			loadFusion: function(id, opts) {
+			loadFusion: function(opts) {
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
 				if ( !instance.services.FusionTablesLayer ) {
-					instance.services.FusionTablesLayer = new google.maps.FusionTablesLayer(id, opts);
+					instance.services.FusionTablesLayer = new google.maps.FusionTablesLayer();
 				}
+				instance.services.FusionTablesLayer.setOptions(opts);
 				instance.services.FusionTablesLayer.setMap(this.getMap());
 			},
 			

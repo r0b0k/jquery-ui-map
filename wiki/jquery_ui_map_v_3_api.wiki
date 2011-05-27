@@ -80,6 +80,7 @@ $('#map_canvas').gmap('option', 'zoom', 7);
 
 ===Methods===
 
+|| *Method* || *Return value* || *Description* ||
 || displayDirections(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest DirectionsRequest], opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions DirectionsRendererOptions], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult DirectionsResult], [http://code.google.com/apis/maps/documentation/javascript/reference.html#DirectionsStatus DirectionsStatus])) || none || Displays directions on the map and/or in a div panel. ||
 || displayDistanceMatrix(request:[http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixRequest DistanceMatrixRequest], callback:function(result:[http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixResponse DistanceMatrixResponse], status:[http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixStatus DistanceMatrixStatus])) || none || Issues a distance matrix request. ||
 || displayStreetView(panel:jquery/string/node, opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]) || none || Displays the panorama for a given LatLng or panorama ID. || 
@@ -90,3 +91,10 @@ $('#map_canvas').gmap('option', 'zoom', 7);
 || placesDetails(request:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceDetailsRequest PlaceDetailsRequest], callback:function(result:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult PlaceResult], status: [http://code.google.com/apis/maps/documentation/javascript/reference.html#PlacesServiceStatus PlacesServiceStatus])) || none || Retrieves details about the Place identified by the given reference. ||
 || search(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult GeocoderResult], status:[http://code.google.com/apis/maps/documentation/javascript/reference.html#GeocoderStatus GeocoderStatus])) || none || Search addresses and latitude/longitude. ||
 || getService(serviceName:string) || service || Returns a service by name. ||
+
+== jquery.ui.map metadata ==
+
+=== Methods ===
+
+|| *Method* || *Return value* || *Description* ||
+|| loadMetadata(type:string, namespace:string, callback:function(index:int, item:$(node), result:Array.string )) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||

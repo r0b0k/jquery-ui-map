@@ -42,7 +42,7 @@
 				// Only for code formatting
 				SyntaxHighlighter.all();
 				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(37.434538, -121.89970399999999), 'zoom': 10, 'callback': function() {
-						$('#map_canvas').gmap('loadFusion', 297050);
+						$('#map_canvas').gmap('loadFusion', { 'query': { 'from': '297050' } });
 						// Demonstration of query
 						// $('#map_canvas').gmap('loadFusion', 297050, { query: "SELECT * FROM 297050 WHERE ST_INTERSECTS(Address, CIRCLE(LATLNG(37.434538,-121.89970399999999),20000))"});
 					}

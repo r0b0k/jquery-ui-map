@@ -1,0 +1,58 @@
+#jquery ui map v3. Tutorial
+
+In v3 the plugin has been split up into 4 JavaScript files to better reflect the Google maps v.3 API:
+
+===jquery.ui.map core===
+Used when you need minimal map features e.g. adding a marker to a map, loading markers from JSON.
+
+===jquery.ui.map overlay===
+
+Used for KML and GeoRSS Layers and Fusion Table Layers, 
+see http://code.google.com/apis/maps/documentation/javascript/overlays.html
+
+===jquery.ui.map service===
+
+Used for Directions, Distance Matrix, Elevation, Geocoding, Places and 
+Street View, see http://code.google.com/apis/maps/documentation/javascript/services.html
+
+===jquery.ui.map extension===
+
+Used for your extensions and modifications of existing methods
+
+This is how you create a new method in the extension file
+
+{{{
+( function($) {
+
+	$.extend($.ui.gmap.prototype, {
+	
+		// Put your functions like this
+		function : theBeatles() {
+			alert('Helter skelter');
+		},
+		
+		function : scottMcKenzie() {
+			alert("If you're going to San Francisco. Be sure to wear some flowers in your hair.");
+		}
+		
+	});
+	
+} (jQuery) );
+}}}
+
+If you would like to modify existing methods you can do that too:
+
+{{{
+( function($) {
+
+	$.extend($.ui.gmap.prototype, {
+	
+		// We override the clearMarker method
+		function : clearMarker() {
+			alert('No more clearing markers!');
+		}
+		
+	});
+	
+} (jQuery) );
+}}}

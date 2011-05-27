@@ -1,0 +1,15 @@
+#summary jquery ui map v.3 API
+
+= API v3 =
+
+== jquery.ui.map core ==
+
+
+== jquery.ui.map services ==
+
+
+== jquery.ui.map layers ==
+
+== jquery.ui.map extensions ==
+
+This is defines by you. Please see *SET_REFERENCE*

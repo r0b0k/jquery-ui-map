@@ -35,7 +35,7 @@ To add a map just add
 and add a DIV tag within the BODY section of your HTML document
 
 {{{
-	<div id="map_canvas" style="width:250px;height:250px"></div>
+<div id="map_canvas" style="width:250px;height:250px"></div>
 }}}
 
 = Advanced =

@@ -154,7 +154,7 @@ $('#map_canvas').gmap('destroy');
 
 == Example get user position ==
 
-Retrieving the client posision can be accomplished by several ways, i.e. through 
+Retrieving the clinet position can be accomplished by several ways, i.e. through 
   * [https://developer.mozilla.org/en/using_geolocation Geolocation]
   * [http://code.google.com/intl/sv-SE/apis/loader/ Google loader]
   * [http://code.google.com/intl/sv-SE/apis/gears/api_geolocation.html Google gears]
@@ -206,7 +206,7 @@ you should minify the javascript before you use it in production:
 This code will extend the current jquery.ui.map plugin so that you may use the method "getCurrentPosition"
 like any other method in the plugin wrapper. 
 
-=== Using the extension with jQuery mobile === 
+== Using the extension with jQuery mobile == 
 
 The example assumes that your page div (with ID 'gmap-3') will look like this
 
@@ -250,7 +250,7 @@ Add the javascript
 	// whenever a user clicks on the 'submit' button it will call and show directions
 	$('#gmap-3').live("pagecreate", function() {
 		$('#submit').click(function() {
-			$('#map_canvas').gmap('displayDirections', { 'origin': latLng, 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(success, response) {
+			$('#map_canvas').gmap('displayDirections', { 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(success, response) {
 				if ( success ) {
 					$('#results').show();
 				} else {
@@ -291,6 +291,8 @@ Add the html
 </div>
 
 }}}
+
+
 
 = Version 1.2 =
 

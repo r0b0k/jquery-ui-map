@@ -152,6 +152,145 @@ $('#map_canvas').gmap('destroy');
 }}}
 
 
+== Example get user position ==
+
+Retrieving the client posision can be accomplished by several ways, i.e. through 
+  * [https://developer.mozilla.org/en/using_geolocation Geolocation]
+  * [http://code.google.com/intl/sv-SE/apis/loader/ Google loader]
+  * [http://code.google.com/intl/sv-SE/apis/gears/api_geolocation.html Google gears]
+  * Web services 
+
+This example will show how to implement navigator.geolocation using google loader as a fallback.
+
+First, create a file called jquery.ui.map.extensions.js. Paste this code and save the file,
+you should minify the javascript before you use it in production:
+
+{{{
+  /*!
+ * jQuery UI Google Map 2.1
+ * http://code.google.com/p/jquery-ui-map/
+ * Copyright (c) 2010 - 2011 Johan Säll Larsson
+ * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ */
+( function($) {
+
+	$.extend($.ui.gmap.prototype, {
+		 
+		/**
+		 * Gets the current position
+		 * @a: function(status, position)
+		 * @b:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
+		 */
+		getCurrentPosition: function(a, b) {
+			if ( navigator.geolocation ) {
+				navigator.geolocation.getCurrentPosition ( 
+					function(position) {
+						$.ui.gmap._trigger(a, "OK", position);
+					}, 
+					function(error) {
+						$.ui.gmap._trigger(a, error, null);
+					}, 
+					b 
+				);	
+			} else {
+				$.ui.gmap._trigger(a, "NOT_SUPPORTED", null);
+			}
+		}
+	
+	});
+	
+} (jQuery) );
+
+}}}
+
+This code will extend the current jquery.ui.map plugin so that you may use the method "getCurrentPosition"
+like any other method in the plugin wrapper. 
+
+=== Using the extension with jQuery mobile === 
+
+The example assumes that your page div (with ID 'gmap-3') will look like this
+
+{{{
+<div id="gmap-3" data-role="page">
+    ...
+</div>
+}}}
+
+Add the javascript
+
+{{{
+
+<script type="text/javascript">
+
+	// When the page show try to get the user's location
+	$('#gmap-3').live("pageshow", function() {
+		// Set the map to some default center
+		$('#map_canvas').gmap({'center': getLatLng()});
+		// Try to get the user's position
+		$('#map_canvas').gmap('getCurrentPosition', function(status, position) {
+			if ( status === 'OK' ) {
+				$('#map_canvas').gmap({'center': new google.maps.LatLng(position.coords.latitude, position.coords.longitude)});
+				$('#from').val(position.coords.latitude+ ','+position.coords.longitude);
+			} else {
+				// do some error handling
+			}
+		});
+		
+		// Get the google loaders client location
+		// If it fails, return some defult value
+		function getLatLng() {
+			if ( google.loader.ClientLocation != null )
+				return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+			return new google.maps.LatLng(59.3426606750, 18.0736160278);
+		}
+		
+	});
+	
+	// Bind the click event to the  displayDirections function so that 
+	// whenever a user clicks on the 'submit' button it will call and show directions
+	$('#gmap-3').live("pagecreate", function() {
+		$('#submit').click(function() {
+			$('#map_canvas').gmap('displayDirections', { 'origin': latLng, 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(success, response) {
+				if ( success ) {
+					$('#results').show();
+				} else {
+					$('#results').hide();
+				}
+			});
+			return false;
+		});
+	});
+</script>
+
+}}}
+
+Add the html
+
+{{{
+
+<div>	
+	<!-- The map will be loaded here, set width and height in the css to the map_canvas element -->
+	<div id="map_canvas" style="height:300px;width:300px;"></div>
+	<!-- The javascript will set the from ID -->
+	<p style="display:none;">
+		<label for="from">From</label>
+		<input id="from" type="hidden" class="ui-bar-c" value="" />
+	</p>
+	<!-- The user will set the 'to' field -->
+	<p>
+		<label for="to">To</label>
+		<input id="to" class="ui-bar-c" value="Stockholm, Sweden" />
+	</p>
+	<a id="submit" href="#" data-role="button" data-icon="search">Get directions</a>
+</div>
+
+<!-- results will ony show if there is a result to show -->
+<div id="results" style="display:none;">
+	<!-- the directions will be loaded in the directions div -->
+	<div id="directions"></div>
+</div>
+
+}}}
 
 = Version 1.2 =
 

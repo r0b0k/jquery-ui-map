@@ -48,7 +48,7 @@
 		},
 		
 		mouseout: function(a) {
-			return this.addEventListener('mouseout', callback);
+			return this.addEventListener('mouseout', a);
 		},
 		
 		drag: function(a) {

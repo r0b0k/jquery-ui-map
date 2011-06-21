@@ -31,43 +31,43 @@
 	
 	jQuery.fn.extend( {
 		
-		click: function(callback) { 
-			return this.addEventListener('click', callback);
+		click: function(a) { 
+			return this.addEventListener('click', a);
 		},
 		
-		rightclick: function(callback) {
-			return this.addEventListener('rightclick', callback);
+		rightclick: function(a) {
+			return this.addEventListener('rightclick', a);
 		},
 		
-		dblclick: function(callback) {
-			return this.addEventListener('dblclick', callback);
+		dblclick: function(a) {
+			return this.addEventListener('dblclick', a);
 		},
 		
-		mouseover: function(callback) {
-			return this.addEventListener('mouseover', callback);
+		mouseover: function(a) {
+			return this.addEventListener('mouseover', a);
 		},
 		
-		mouseout: function(callback) {
+		mouseout: function(a) {
 			return this.addEventListener('mouseout', callback);
 		},
 		
-		drag: function(callback) {
-			return this.addEventListener('drag', callback );
+		drag: function(a) {
+			return this.addEventListener('drag', a );
 		},
 		
-		dragend: function(callback) {
-			return this.addEventListener('dragend', callback );
+		dragend: function(a) {
+			return this.addEventListener('dragend', a );
 		},
 		
-		triggerEvent: function(type) {
-			google.maps.event.trigger(this.get(0), type);		
+		triggerEvent: function(a) {
+			google.maps.event.trigger(this.get(0), a);		
 		},
 		
-		addEventListener: function(type, callback) {
+		addEventListener: function(a, b) {
 			if ( google.maps && this.get(0) instanceof google.maps.MVCObject ) {
-				google.maps.event.addListener(this.get(0), type, callback );
+				google.maps.event.addListener(this.get(0), a, b );
 			} else {
-				this.bind(type, callback);	
+				this.bind(a, b);	
 			}
 			return this;
 		}
@@ -109,67 +109,71 @@
 				return $(this.getMap());
 			},
 			
-			_setOption: function(key, value) {
+			_setOption: function(a, b) {
+				var map = this.getMap();
+				this.options.center = map.getCenter();
+				this.options.mapTypeId = map.getMapTypeId();
+				this.options.zoom = map.getZoom();
 				$.Widget.prototype._setOption.apply(this, arguments);
-				this.getMap().setOptions(this.options);
+				map.setOptions(this.options);
 			},
 			
 			/**
 			 * Adds a LatLng to the bounds.
 			 */
-			addBounds: function(latLng) {
+			addBounds: function(a) {
 				var instances = $.ui.gmap.instances[this.element.attr('id')];
 				if ( !instances.bounds ) {
 					instances.bounds = new google.maps.LatLngBounds(); 
 				}
-				instances.bounds.extend(latLng);
+				instances.bounds.extend(a);
 				instances.map.fitBounds(instances.bounds);
 			},
 			
 			/**
 			 * Adds a control to the map
-			 * @param panel:jQuery/Node/String
-			 * @param position:google.maps.ControlPosition, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
+			 * @param a:jQuery/Node/String
+			 * @param b:google.maps.ControlPosition, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
 			 */
-			addControl: function(panel, position) {
-				this.getMap().controls[position].push($.ui.gmap._unwrap(panel));
+			addControl: function(a, b) {
+				this.getMap().controls[b].push($.ui.gmap._unwrap(a));
 			},
 			
 			/**
 			 * Adds a Marker to the map
-			 * @param opts:google.maps.MarkerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
-			 * @param callback:function(map:google.maps.Map, marker:Marker)
+			 * @param a:google.maps.MarkerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
+			 * @param b:function(map:google.maps.Map, marker:Marker)
 			 * @return $(google.maps.Marker)
 			 */
-			addMarker: function(opts, callback) {
-				var marker = new google.maps.Marker( jQuery.extend( { 'map': this.getMap(), 'bounds':false }, opts) );
+			addMarker: function(a, b) {
+				var marker = new google.maps.Marker( jQuery.extend( { 'map': this.getMap(), 'bounds':false }, a) );
 				this.getMarkers().push( marker );
 				if ( marker.bounds ) {
 					this.addBounds(marker.getPosition());
 				}
-				$.ui.gmap._trigger(callback, this.getMap(), marker );
+				$.ui.gmap._trigger(b, this.getMap(), marker );
 				return $(marker);
 			},
 			
 			/**
 			 * Adds an InfoWindow to the map
-			 * @param opts:google.maps.InfoWindowOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
-			 * @param callback:function(InfoWindow:google.maps.InfoWindowOptions)
+			 * @param a:google.maps.InfoWindowOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
+			 * @param b:function(InfoWindow:google.maps.InfoWindowOptions)
 			 * @return $(google.maps.InfoWindowOptions)
 			 */
-			addInfoWindow: function(opts, callback) {
-				var iw = new google.maps.InfoWindow(opts);
-				$.ui.gmap._trigger(callback, iw);
+			addInfoWindow: function(a, b) {
+				var iw = new google.maps.InfoWindow(a);
+				$.ui.gmap._trigger(b, iw);
 				return $(iw);
 			},
 			
 			/**
 			 * Computes directions between two or more places.
-			 * @param request:google.maps.DirectionsRequest, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest
-			 * @param opts:google.maps.DirectionsRendererOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
-			 * @param callback:function(success:boolean, result:google.maps.DirectionsResult), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
+			 * @param a:google.maps.DirectionsRequest, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest
+			 * @param b:google.maps.DirectionsRendererOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
+			 * @param c:function(success:boolean, result:google.maps.DirectionsResult), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
 			 */
-			displayDirections: function(request, opts, callback) { 
+			displayDirections: function(a, b, c) { 
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
 				if ( !instance.services.DirectionsService ) {
 					instance.services.DirectionsService = new google.maps.DirectionsService();
@@ -177,95 +181,95 @@
 				if ( !instance.services.DirectionsRenderer ) {
 					instance.services.DirectionsRenderer = new google.maps.DirectionsRenderer();
 				}
-				instance.services.DirectionsRenderer.setOptions(jQuery.extend({'map': instance.map}, opts));
-				instance.services.DirectionsService.route( request, function(result, status) {
+				instance.services.DirectionsRenderer.setOptions(jQuery.extend({'map': instance.map}, b));
+				instance.services.DirectionsService.route( a, function(result, status) {
 					if ( status === google.maps.DirectionsStatus.OK ) {
-						if ( opts.panel ) {
+						if ( b.panel ) {
 							instance.services.DirectionsRenderer.setDirections(result);
 						}
 					} else {
 						instance.services.DirectionsRenderer.setMap(null);
 					}
-					$.ui.gmap._trigger(callback, ( status === google.maps.DirectionsStatus.OK ), result);
+					$.ui.gmap._trigger(c, ( status === google.maps.DirectionsStatus.OK ), result);
 				});
 			},
 			
 			/**
 			 * Displays the panorama for a given LatLng or panorama ID.
-			 * @param panel:jQuery/String/Node
-			 * @param opts?:google.maps.StreetViewPanoramaOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions
+			 * @param a:jQuery/String/Node
+			 * @param b?:google.maps.StreetViewPanoramaOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions
 			 */
-			displayStreetView: function(panel, opts) {
+			displayStreetView: function(a, b) {
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
-				instance.services.StreetViewPanorama = new google.maps.StreetViewPanorama($.ui.gmap._unwrap(panel), opts);
+				instance.services.StreetViewPanorama = new google.maps.StreetViewPanorama($.ui.gmap._unwrap(a), b);
 				instance.map.setStreetView(instance.services.StreetViewPanorama);
 			},
 			
 			/**
 			 * Returns the marker(s) with a specific property and value, e.g. 'category', 'airports'
-			 * @param property:String - the property to search within
-			 * @param value:String - the query
-			 * @param callback:function(found:boolean, marker:google.maps.Marker)
+			 * @param a:String - the property to search within
+			 * @param b:String - the query
+			 * @param c:function(found:boolean, marker:google.maps.Marker)
 			 */
-			findMarker : function(property, value, callback) {
+			findMarker : function(a, b, c) {
 				$.each( this.getMarkers(), function(i, marker) {
-					$.ui.gmap._trigger(callback, ( marker[property] === value ), marker);
+					$.ui.gmap._trigger(c, ( marker[a] === b ), marker);
 				});
 			},
 			
 			/**
 			 * Extracts meta data from the HTML
-			 * @param type:String - rdfa, microformats or microdata 
-			 * @param ns:String - the namespace
-			 * @param callback:function(item:jQuery, result:Array<String>)
+			 * @param a:String - rdfa, microformats or microdata 
+			 * @param b:String - the namespace
+			 * @param c:function(item:jQuery, result:Array<String>)
 			 */
-			loadMetadata: function(type, ns, callback) { 
-				if ( type === 'rdfa' ) {
-					$.ui.gmap.rdfa(ns, callback);
-				} else if ( type === 'microformat') {
-					$.ui.gmap.microformat(ns, callback);
-				} else if ( type === 'microdata') {
-					$.ui.gmap.microdata(ns, callback);
+			loadMetadata: function(a, b, c) { 
+				if ( a === 'rdfa' ) {
+					$.ui.gmap.rdfa(b, c);
+				} else if ( a === 'microformat') {
+					$.ui.gmap.microformat(b, c);
+				} else if ( a === 'microdata') {
+					$.ui.gmap.microdata(b, c);
 				}
 			},
 			
 			/**
 			 * Adds fusion data to the map.
-			 * @param opts:google.maps.FusionTablesLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions
+			 * @param a:google.maps.FusionTablesLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions
 			 */
-			loadFusion: function(opts) {
+			loadFusion: function(a) {
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
 				if ( !instance.services.FusionTablesLayer ) {
 					instance.services.FusionTablesLayer = new google.maps.FusionTablesLayer();
 				}
-				instance.services.FusionTablesLayer.setOptions(opts);
+				instance.services.FusionTablesLayer.setOptions(a);
 				instance.services.FusionTablesLayer.setMap(this.getMap());
 			},
 			
 			/**
 			 * Adds markers from KML file or GeoRSS feed
-			 * @param id:String - an identifier for the RSS e.g. 'rss_dogs'
-			 * @param url:String - URL to feed
-			 * @param opts:google.maps.KmlLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#KmlLayerOptions
+			 * @param a:String - an identifier for the RSS e.g. 'rss_dogs'
+			 * @param b:String - URL to feed
+			 * @param c:google.maps.KmlLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#KmlLayerOptions
 			 */
-			loadKML: function(id, url, opts) {
+			loadKML: function(a, b, c) {
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
-				if ( !instance.services[id] )
-					instance.services[id] = new google.maps.KmlLayer(url, jQuery.extend({'map': instance.map }, opts)); 
+				if ( !instance.services[a] )
+					instance.services[a] = new google.maps.KmlLayer(b, jQuery.extend({'map': instance.map }, c)); 
 			},
 			
 			/**
 			 * A service for converting between an address and a LatLng.
-			 * @param request:google.maps.GeocoderRequest
-			 * @param callback:function(success:boolean, result:google.maps.GeocoderResult), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
+			 * @param a:google.maps.GeocoderRequest
+			 * @param b:function(success:boolean, result:google.maps.GeocoderResult), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
 			 */
-			search: function(request, callback) {
+			search: function(a, b) {
 				var instance = $.ui.gmap.instances[this.element.attr('id')];
 				if ( !instance.services.Geocoder ) {
 					instance.services.Geocoder = new google.maps.Geocoder();
 				}
-				instance.services.Geocoder.geocode( request, function(result, status) {
-					$.ui.gmap._trigger(callback, ( status === google.maps.GeocoderStatus.OK ), result);
+				instance.services.Geocoder.geocode( a, function(result, status) {
+					$.ui.gmap._trigger(b, ( status === google.maps.GeocoderStatus.OK ), result);
 				});
 			},
 			
@@ -297,10 +301,10 @@
 			 * Clears all the markers and added event listeners.
 			 */
 			clearMarkers: function() {
-				$.each( this.getMarkers(), function(i,m) {
-					google.maps.event.clearInstanceListeners(m);
-					m.setMap(null);
-					m = null;
+				$.each( this.getMarkers(), function(a,b) {
+					google.maps.event.clearInstanceListeners(b);
+					b.setMap(null);
+					b = null;
 				});
 				$.ui.gmap.instances[this.element.attr('id')].markers = [];
 			},
@@ -311,8 +315,8 @@
 			destroy: function() {
 				this.clearMarkers();
 				google.maps.event.clearInstanceListeners(this.getMap());
-				$.each($.ui.gmap.instances[this.element.attr('id')].services, function (i, obj) {
-					obj = null;
+				$.each($.ui.gmap.instances[this.element.attr('id')].services, function (a, b) {
+					b = null;
 				});
 				$.Widget.prototype.destroy.call( this );
 			}
@@ -324,21 +328,21 @@
 		version: "2.0",
 		instances: [],
 		
-		_trigger: function(callback) {
-			if ( $.isFunction(callback) ) {
-				callback.apply(this, Array.prototype.slice.call(arguments, 1));
+		_trigger: function(a) {
+			if ( $.isFunction(a) ) {
+				a.apply(this, Array.prototype.slice.call(arguments, 1));
 			}
 		},
 		
-		_unwrap: function unwrap(obj) {
-			if ( !obj ) {
+		_unwrap: function unwrap(a) {
+			if ( !a ) {
 				return null;
-			} else if ( obj instanceof jQuery ) {
-				return obj[0];
-			} else if ( obj instanceof Object ) {
-				return obj;
+			} else if ( a instanceof jQuery ) {
+				return a[0];
+			} else if ( a instanceof Object ) {
+				return a;
 			}
-			return document.getElementById(obj);
+			return document.getElementById(a);
 		}
 			
 	});

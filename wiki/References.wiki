@@ -14,6 +14,10 @@ Mapusers is a geolocation service currently under construction to socialize and 
 Displays event information for Vancouver Sprint Camp.
 <br>
 [http://www.barebones.ca/myO Vancouver Spring Camp event information]
+
+= Event-O-Matic =
+Wordpress plugin. Manage submissions to build a community-driven event listing. Allow users to submit events that you can easily review and moderate.
+[http://wordpress.org/extend/plugins/event-o-matic/ Event-O-Matic wordpress plugin]
 ----
 
 Found these three by a Google search for my name. I guess it picked up on the DC.creator meta tag.

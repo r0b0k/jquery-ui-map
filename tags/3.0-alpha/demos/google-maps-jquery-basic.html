@@ -43,32 +43,12 @@
 				
 				// Only for code formatting
 				SyntaxHighlighter.all();
-				
-$('#map_canvas').gmap({'center': new google.maps.LatLng(59.3426606750, 18.0736160278), 'callback': function () {
-	$('#map_canvas').gmap('getCurrentPosition', function(status, position) {
-		if ( status === 'OK' ) {
-			$('#map_canvas').gmap('addMarker', {'position': new google.maps.LatLng(position.coords.latitude, position.coords.longitude)}, function(map, marker) {
-				$('#map_canvas').gmap('addInfoWindow', { 'position': marker.getPosition(), 'content': 'Hello world!' }, function(iw) {
-					$(marker).click( function() {
-						iw.open(map, marker);
-						map.panTo(marker.getPosition());
+
+				$('#map_canvas').gmap().bind('create', function(event, map) {
+					$('#map_canvas').gmap('addMarker', { 'position': '57.7973333,12.0502107', 'bounds': true }).click(function() {
+						$('#map_canvas').gmap('openInfoWindow', { 'content': 'Hello World!' }, $(this)[0]);
 					});
 				});
-				// Just to pan the map to your position and not
-				// start with any default map latlng
-				map.panTo(marker.getPosition());
-			});
-		}
-		// if ( status === 'NOT_SUPPORTED' ) { //do something }
-	});
-}});
-				
-				function getLatLng() {
-					if ( google.loader.ClientLocation != null ) {
-						return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
-					}
-					return new google.maps.LatLng(59.3426606750, 18.0736160278);
-				}
 				
             });
 
@@ -106,17 +86,11 @@ $('#map_canvas').gmap({'center': new google.maps.LatLng(59.3426606750, 18.073616
 				<pre class="brush: js">
 &lt;script type="text/javascript"&gt;
 	$(function() {
-		var latlng = new google.maps.LatLng(59.3426606750, 18.0736160278);
-		$('#map_canvas').gmap({'center': latlng, 'callback': function () {
-			$('#map_canvas').gmap('addMarker', {'position': latlng}, function(map, marker) {
-				$('#map_canvas').gmap('addInfoWindow', { 'position': marker.getPosition(), 'content': 'Hello world!' }, function(iw) {
-					$(marker).click( function() {
-						iw.open(map, marker);
-						map.panTo(marker.getPosition());
-					});
-				});
+		$('#map_canvas').gmap().bind('create', function(event, map) {
+			$('#map_canvas').gmap('addMarker', { 'position': '57.7973333,12.0502107', 'bounds': true }).click(function() {
+				$('#map_canvas').gmap('openInfoWindow', { 'content': 'Hello World!' }, $(this)[0]);
 			});
-		}});
+		});
 	});
 &lt;/script&gt;</pre>
 			</div>

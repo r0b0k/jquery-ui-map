@@ -32,10 +32,8 @@
 	$.widget( "ui.gmap", {
 			
 		options: {
-			center: (google.maps) ? new google.maps.LatLng(0.0, 0.0) : null,
-			zoom: 5,
-			mapTypeId: (google.maps) ? google.maps.MapTypeId.ROADMAP : null
 			//backgroundColor : null,
+			center: (google.maps) ? new google.maps.LatLng(0.0, 0.0) : null,
 			//disableDefaultUI: false,
 			//disableDoubleClickZoom: false,
 			//draggable: true,
@@ -44,6 +42,7 @@
 			//keyboardShortcuts: true,
 			//mapTypeControl: true,
 			//mapTypeControlOptions: null,
+			mapTypeId: (google.maps) ? google.maps.MapTypeId.ROADMAP : null,
 			//navigationControl: true,
 			//navigationControlOptions: null,
 			//noClear: false,
@@ -52,11 +51,12 @@
 			//scrollwheel: false,
 			//streetViewControl: true,
 			//streetViewControlOptions: null,
+			zoom: 5
 		},
 		
 		_create: function() {
 			var a = this.element;
-			var b = $.ui.gmap.instances[a.attr('id')] = { map: new google.maps.Map( a[0], this.options ), markers: [] };
+			var b = $.ui.gmap.instances[a.attr('id')] = { map: new google.maps.Map( a[0], this.options ), markers: [], services: [], overlays: [] };
 			google.maps.event.addListenerOnce(b.map, 'bounds_changed', function() {
 				a.trigger('create', b.map);
 			});
@@ -68,7 +68,7 @@
 		 * @param callback:function()
 		 */
 		_update: function(b) {
-			var a = this.set('map');
+			var a = this.get('map');
 			jQuery.extend(this.options, { 'center': a.getCenter(), 'mapTypeId': a.getMapTypeId(), 'zoom': a.getZoom(), /*'heading': a.getHeading(), 'streetView': a.getStreetView(), 'tilt': a.getTilt(), 'bounds': a.getBounds(), 'projection': a.getProjection()*/ } );
 			$.ui.gmap._trigger(b);
 			a.setOptions(this.options);
@@ -92,8 +92,8 @@
 		 * @param latLng:google.maps.LatLng/String 
 		 */
 		addBounds: function(a) {
-			this.set('bounds', new google.maps.LatLngBounds()).extend($.ui.gmap._unwrapLatLng(a));
-			this.set('map').fitBounds(this.set('bounds'));
+			this.get('bounds', new google.maps.LatLngBounds()).extend($.ui.gmap._unwrapLatLng(a));
+			this.get('map').fitBounds(this.get('bounds'));
 		},
 		
 		/**
@@ -102,7 +102,7 @@
 		 * @param position:google.maps.ControlPosition, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
 		 */
 		addControl: function(a, b) {
-			this.set('map').controls[b].push($.ui.gmap._unwrap(a));
+			this.get('map').controls[b].push($.ui.gmap._unwrap(a));
 		},
 		
 		/**
@@ -112,10 +112,10 @@
 		 * @return $(google.maps.Marker)
 		 */
 		addMarker: function(a, b) {
-			var c = this.set('map');
+			var c = this.get('map');
 			a.position = (a.position) ? $.ui.gmap._unwrapLatLng(a.position) : null;
 			var d = new google.maps.Marker( jQuery.extend({'map': c, 'bounds': false}, a) );
-			this.set('markers', []).push(d);
+			this.get('markers', []).push(d);
 			if ( d.bounds ) {
 				this.addBounds(d.getPosition());
 			}
@@ -139,7 +139,7 @@
 		 * Clears all the markers and added event listeners.
 		 */
 		clear: function() {
-			var a = this.set('markers');
+			var a = this.get('markers');
 			$.each(a, function(b, c) {
 				google.maps.event.clearInstanceListeners(c);
 				c.setMap(null);
@@ -156,7 +156,7 @@
 		 * @param callback:function(status:boolean, marker:google.maps.Marker)
 		 */
 		find: function(a, b, c, d) {
-			var e = this.set('markers');
+			var e = this.get('markers');
 			for ( var i = 0; i < e.length; i++ ) {
 				var g = ( e[i][a] === b );
 				if ( c && e[i][a] ) {
@@ -191,8 +191,8 @@
 		 * @param b:google.maps.Marker
 		 */
 		openInfoWindow: function(a, b) {
-			this.set('iw', new google.maps.InfoWindow).setOptions(a);
-			this.set('iw').open(this.set('map'), b); 
+			this.get('iw', new google.maps.InfoWindow).setOptions(a);
+			this.get('iw').open(this.get('map'), b); 
 		},
 				
 		/**
@@ -208,7 +208,7 @@
 		 * Refreshes the map
 		 */
 		refresh: function() {
-			$(this.set('map')).triggerEvent('resize');
+			$(this.get('map')).triggerEvent('resize');
 			this._update();
 		},
 		

@@ -119,10 +119,12 @@
 		 * @return $(google.maps.InfoWindowOptions)
 		 */
 		addInfoWindow: function(a, b) {
-			if ( !this.getInfoWindow() )
+			if ( !this.getInfoWindow() ) {
 				this.setInfoWindow(new google.maps.InfoWindow());
-			//this.getInfoWindow().setOptions(a);
-			$.ui.gmap._trigger(b, this.getInfoWindow().setOptions(a));
+			}
+			var iw = this.getInfoWindow();
+			iw.setOptions(a);
+			$.ui.gmap._trigger(b, iw);
 			return $(this.getInfoWindow());
 		},
 		

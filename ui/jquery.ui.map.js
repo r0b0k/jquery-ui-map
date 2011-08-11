@@ -32,68 +32,77 @@
 	$.widget( "ui.gmap", {
 			
 		options: {
-			backgroundColor : null,
 			center: (google.maps) ? new google.maps.LatLng(0.0, 0.0) : null,
-			disableDefaultUI: false,
-			disableDoubleClickZoom: false,
-			draggable: true,
-			draggableCursor: null,
-			draggingCursor: null,
-			keyboardShortcuts: true,
-			mapTypeControl: true,
-			mapTypeControlOptions: null,
-			mapTypeId: (google.maps) ? google.maps.MapTypeId.ROADMAP : null,
-			navigationControl: true,
-			navigationControlOptions: null,
-			noClear: false,
-			scaleControl: false,
-			scaleControlOptions: null,
-			scrollwheel: false,
-			streetViewControl: true,
-			streetViewControlOptions: null,
 			zoom: 5,
-			callback: null
+			mapTypeId: (google.maps) ? google.maps.MapTypeId.ROADMAP : null
+			//backgroundColor : null,
+			//disableDefaultUI: false,
+			//disableDoubleClickZoom: false,
+			//draggable: true,
+			//draggableCursor: null,
+			//draggingCursor: null,
+			//keyboardShortcuts: true,
+			//mapTypeControl: true,
+			//mapTypeControlOptions: null,
+			//navigationControl: true,
+			//navigationControlOptions: null,
+			//noClear: false,
+			//scaleControl: false,
+			//scaleControlOptions: null,
+			//scrollwheel: false,
+			//streetViewControl: true,
+			//streetViewControlOptions: null,
 		},
 		
 		_create: function() {
-			$.ui.gmap.instances[this.element.attr('id')] = { map: new google.maps.Map( this.element[0], this.options ), markers: [], bounds: null, iw: null, services: [], overlays: [] };
-			return $(this.getMap());
+			var a = this.element;
+			var b = $.ui.gmap.instances[a.attr('id')] = { map: new google.maps.Map( a[0], this.options ), markers: [] };
+			google.maps.event.addListenerOnce(b.map, 'bounds_changed', function() {
+				a.trigger('create', b.map);
+			});
+			return $(b.map);
 		},
 		
-		_init: function() {
-			$.ui.gmap._trigger(this.options.callback, this.getMap() );
+		/**
+		 * Sets the current map options
+		 * @param callback:function()
+		 */
+		_update: function(b) {
+			var a = this.set('map');
+			jQuery.extend(this.options, { 'center': a.getCenter(), 'mapTypeId': a.getMapTypeId(), 'zoom': a.getZoom(), /*'heading': a.getHeading(), 'streetView': a.getStreetView(), 'tilt': a.getTilt(), 'bounds': a.getBounds(), 'projection': a.getProjection()*/ } );
+			$.ui.gmap._trigger(b);
+			a.setOptions(this.options);
 		},
 		
-		// todo get all map options and extend options before set options and before trigger resize, create function for this
+		/**
+		 * Sets the option
+		 * @param key:String	key
+		 * @param value:Object	object
+		 */
 		_setOption: function(a, b) {
-			var map = this.getMap();
-			this.options.center = map.getCenter();
-			this.options.mapTypeId = map.getMapTypeId();
-			this.options.zoom = map.getZoom();
-			$.Widget.prototype._setOption.apply(this, arguments);
-			map.setOptions(this.options);
+			var self = this;
+			var args = arguments;
+			this._update( function() {
+				$.Widget.prototype._setOption.apply(self, args);
+			});
 		},
 		
 		/**
 		 * Adds a LatLng to the bounds.
-		 * @param a:google.maps.LatLng 
+		 * @param latLng:google.maps.LatLng/String 
 		 */
 		addBounds: function(a) {
-			var instances = $.ui.gmap.instances[this.element.attr('id')];
-			if ( !instances.bounds ) {
-				instances.bounds = new google.maps.LatLngBounds(); 
-			}
-			instances.bounds.extend(a);
-			instances.map.fitBounds(instances.bounds);
+			this.set('bounds', new google.maps.LatLngBounds()).extend($.ui.gmap._unwrapLatLng(a));
+			this.set('map').fitBounds(this.set('bounds'));
 		},
 		
 		/**
 		 * Adds a control to the map
-		 * @param a:jQuery/Node/String
-		 * @param b:google.maps.ControlPosition, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
+		 * @param panel:jQuery/Node/String
+		 * @param position:google.maps.ControlPosition, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
 		 */
 		addControl: function(a, b) {
-			this.getMap().controls[b].push($.ui.gmap._unwrap(a));
+			this.set('map').controls[b].push($.ui.gmap._unwrap(a));
 		},
 		
 		/**
@@ -103,13 +112,15 @@
 		 * @return $(google.maps.Marker)
 		 */
 		addMarker: function(a, b) {
-			var marker = new google.maps.Marker( jQuery.extend({'map': this.getMap(), 'bounds':false}, a) );
-			this.getMarkers().push( marker );
-			if ( marker.bounds ) {
-				this.addBounds(marker.getPosition());
+			var c = this.set('map');
+			a.position = (a.position) ? $.ui.gmap._unwrapLatLng(a.position) : null;
+			var d = new google.maps.Marker( jQuery.extend({'map': c, 'bounds': false}, a) );
+			this.set('markers', []).push(d);
+			if ( d.bounds ) {
+				this.addBounds(d.getPosition());
 			}
-			$.ui.gmap._trigger(b, this.getMap(), marker );
-			return $(marker);
+			$.ui.gmap._trigger(b, c, d);
+			return $(d);
 		},
 		
 		/**
@@ -119,112 +130,107 @@
 		 * @return $(google.maps.InfoWindowOptions)
 		 */
 		addInfoWindow: function(a, b) {
-			var iw = new google.maps.InfoWindow(a);
-			$.ui.gmap._trigger(b, iw);
-			return $(iw);
-		},
-		
-		openInfoWindow: function(a) {
-			if ( !this.getInfoWindow() ) {
-				this.setInfoWindow(new google.maps.InfoWindow());
-			}
-			this.getInfoWindow().close();
-			this.getInfoWindow().setOptions(a);
-			this.getInfoWindow().open(this.getMap()); 
-		},
-		
-		/**
-		 * Returns the marker(s) with a specific property and value, e.g. 'category', 'airports'
-		 * @param a:String - the property to search within
-		 * @param b:String - the query
-		 * @param c:function(found:boolean, marker:google.maps.Marker)
-		 */
-		findMarker : function(a, b, c) {
-			$.each( this.getMarkers(), function(d, e) {
-				$.ui.gmap._trigger(c, ( e[a] === b ), e);
-			});
-		},
-		
-		/**
-		 * Returns the map.
-		 * @return google.maps.Map
-		 */
-		getMap: function() {
-			return $.ui.gmap.instances[this.element.attr('id')].map;
-		},
-		
-		/**
-		 * Returns all markers.
-		 * @return Array<google.maps.Marker>
-		 */
-		getMarkers: function() {
-			return $.ui.gmap.instances[this.element.attr('id')].markers;
-		},
-		
-		/**
-		 * Returns the info window.
-		 * @return google.maps.InfoWindow
-		 */
-		getInfoWindow: function() {
-			return $.ui.gmap.instances[this.element.attr('id')].iw;
-		},
-		
-		/**
-		 * Sets the info window.
-		 * @param a:google.maps.InfoWindow
-		 */
-		setInfoWindow: function(a) {
-			$.ui.gmap.instances[this.element.attr('id')].iw = a;
+			var c = new google.maps.InfoWindow(a);
+			$.ui.gmap._trigger(b, c);
+			return $(c);
 		},
 		
 		/**
 		 * Clears all the markers and added event listeners.
-		 * @param a:boolean, if true the method will hide the markers
 		 */
-		clearMarkers: function(a) {
-			$.each( this.getMarkers(), function(b,c) {
-				if (!a) {
-					google.maps.event.clearInstanceListeners(c);
-					c.setMap(null);
-					c = null;
-				} else {
-					c.setVisible(false);
-				}
+		clear: function() {
+			var a = this.set('markers');
+			$.each(a, function(b, c) {
+				google.maps.event.clearInstanceListeners(c);
+				c.setMap(null);
+				c = null;
 			});
-			if (!a)
-				$.ui.gmap.instances[this.element.attr('id')].markers = [];
+			this.set('markers', []);
+		},
+		
+		/**
+		 * Returns the marker(s) with a specific property and value, e.g. 'category', 'airports'
+		 * @param key:string - the property/key to search within
+		 * @param value:string - the value
+		 * @param delimiter:string/boolean - the delimiter if its multi-valued 
+		 * @param callback:function(status:boolean, marker:google.maps.Marker)
+		 */
+		find: function(a, b, c, d) {
+			var e = this.set('markers');
+			for ( var i = 0; i < e.length; i++ ) {
+				var g = ( e[i][a] === b );
+				if ( c && e[i][a] ) {
+					var f = e[i][a].split(c);
+					for ( var j = 0; j < f.length; j++ ) {
+						if (f[j] === b) {
+							g = true;
+							break;
+						}
+					}
+				}
+				$.ui.gmap._trigger(d, g, e[i]);
+			};
+		},
+
+		/**
+		 * Returns an instance property by key. Has the ability to set an object if the property does not exist
+		 * @param key:String	key
+		 * @param ?value:Object	optional object which will be set if it does not exist
+		 */
+		get: function(a, b) {
+			var c = $.ui.gmap.instances[this.element.attr('id')];
+			if ( b && !c[a] ) {
+				this.set(a, b);
+			}
+			return c[a];
+		},
+		
+		/**
+		 * Triggers an InfoWindow to open
+		 * @param a:google.maps.InfoWindowOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
+		 * @param b:google.maps.Marker
+		 */
+		openInfoWindow: function(a, b) {
+			this.set('iw', new google.maps.InfoWindow).setOptions(a);
+			this.set('iw').open(this.set('map'), b); 
+		},
+				
+		/**
+		 * Sets an instance property
+		 * @param key:String	key
+		 * @param value:Object	object
+		 */
+		set: function(a, b) {
+			$.ui.gmap.instances[this.element.attr('id')][a] = b;
 		},
 		
 		/**
 		 * Refreshes the map
 		 */
 		refresh: function() {
-			var instances = $.ui.gmap.instances[this.element.attr('id')];
-			$(instances.map).triggerEvent('resize');
-			instances.map.setOptions(this.options);
-			if ( instances.bounds )
-				instances.map.fitBounds(instances.bounds);
+			$(this.set('map')).triggerEvent('resize');
+			this._update();
 		},
-		
-		// clear Bounds
 		
 		/**
 		 * Destroys the plugin.
 		 */
 		destroy: function() {
-			this.clearMarkers();
-			google.maps.event.clearInstanceListeners(this.getMap());
-			$.each($.ui.gmap.instances[this.element.attr('id')].services, function (a, b) {
-				b = null;
-			});
-			$.Widget.prototype.destroy.call( this );
+			$.Widget.prototype.destroy.call(this);
+			this.clear();
+			var a = $.ui.gmap.instances[this.element.attr('id')];
+			for ( b in a ) {
+				if ( a[b] instanceof google.maps.MVCObject ) {
+					google.maps.event.clearInstanceListeners(a[b]);
+				}
+				a[b] = null;
+			}
 		}
 			
 	});
 
 	$.extend($.ui.gmap, {
         
-		version: "2.0",
 		instances: [],
 		
 		_trigger: function(a) {
@@ -233,7 +239,16 @@
 			}
 		},
 		
-		_unwrap: function unwrap(a) {
+		_unwrapLatLng: function(a) {
+			if ( a instanceof google.maps.LatLng ) {
+				return a;
+			} else {
+				var b = a.replace(' ','').split(',');
+				return new google.maps.LatLng(b[0], b[1]);
+			}
+		},
+		
+		_unwrap: function(a) {
 			if ( !a ) {
 				return null;
 			} else if ( a instanceof jQuery ) {
@@ -277,12 +292,12 @@
 		},
 		
 		triggerEvent: function(a) {
-			google.maps.event.trigger(this.get(0), a);		
+			google.maps.event.trigger(this[0], a);		
 		},
 		
 		addEventListener: function(a, b) {
-			if ( google.maps && this.get(0) instanceof google.maps.MVCObject ) {
-				google.maps.event.addListener(this.get(0), a, b );
+			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
+				google.maps.event.addListener(this[0], a, b );
 			} else {
 				this.bind(a, b);	
 			}

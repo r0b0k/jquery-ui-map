@@ -30,66 +30,57 @@
 ( function($) {
 	
 	$.widget( "ui.gmap", {
-			
+		
+		/**
+		 * Widget options
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions
+		 */
 		options: {
-			//backgroundColor : null,
 			center: (google.maps) ? new google.maps.LatLng(0.0, 0.0) : null,
-			//disableDefaultUI: false,
-			//disableDoubleClickZoom: false,
-			//draggable: true,
-			//draggableCursor: null,
-			//draggingCursor: null,
-			//keyboardShortcuts: true,
-			//mapTypeControl: true,
-			//mapTypeControlOptions: null,
 			mapTypeId: (google.maps) ? google.maps.MapTypeId.ROADMAP : null,
-			//navigationControl: true,
-			//navigationControlOptions: null,
-			//noClear: false,
-			//scaleControl: false,
-			//scaleControlOptions: null,
-			//scrollwheel: false,
-			//streetViewControl: true,
-			//streetViewControlOptions: null,
 			zoom: 5
 		},
 		
+		/**
+		 * Create widget
+		 * @return $(google.maps.Map)
+		 */
 		_create: function() {
-			var a = this.element;
-			var b = $.ui.gmap.instances[a.attr('id')] = { map: new google.maps.Map( a[0], this.options ), markers: [], services: [], overlays: [] };
-			google.maps.event.addListenerOnce(b.map, 'bounds_changed', function() {
-				a.trigger('create', b.map);
+			this.options.center = $.ui.gmap._unwrapLatLng(this.options.center);
+			var a = $.ui.gmap.instances[this.element.attr('id')] = { map: new google.maps.Map( this.element[0], this.options ), markers: [], services: [], overlays: [] };
+			google.maps.event.addListenerOnce(a.map, 'bounds_changed', function() {
+				a.trigger('init', a.map);
 			});
-			return $(b.map);
+			return $(a.map);
 		},
 		
 		/**
 		 * Sets the current map options
-		 * @param callback:function()
+		 * @param callback:function() (optional)
 		 */
-		_update: function(b) {
-			var a = this.get('map');
-			jQuery.extend(this.options, { 'center': a.getCenter(), 'mapTypeId': a.getMapTypeId(), 'zoom': a.getZoom(), /*'heading': a.getHeading(), 'streetView': a.getStreetView(), 'tilt': a.getTilt(), 'bounds': a.getBounds(), 'projection': a.getProjection()*/ } );
-			$.ui.gmap._trigger(b);
-			a.setOptions(this.options);
+		_update: function(a) {
+			var map = this.get('map');
+			jQuery.extend(this.options, { 'center': map.getCenter(), 'mapTypeId': map.getMapTypeId(), 'zoom': map.getZoom(), /*'heading': map.getHeading(), 'streetView': map.getStreetView(), 'tilt': map.getTilt(), 'bounds': map.getBounds(), 'projection': map.getProjection()*/ } );
+			$.ui.gmap._trigger(a);
+			map.setOptions(this.options);
 		},
 		
 		/**
 		 * Sets the option
-		 * @param key:String	key
-		 * @param value:Object	object
+		 * @param name:string
+		 * @param value:object
 		 */
 		_setOption: function(a, b) {
 			var self = this;
-			var args = arguments;
+			var c = arguments;
 			this._update( function() {
-				$.Widget.prototype._setOption.apply(self, args);
+				$.Widget.prototype._setOption.apply(self, c);
 			});
 		},
 		
 		/**
-		 * Adds a LatLng to the bounds.
-		 * @param latLng:google.maps.LatLng/String 
+		 * Adds a latitude longitude pair to the bounds.
+		 * @param position:google.maps.LatLng/string
 		 */
 		addBounds: function(a) {
 			this.get('bounds', new google.maps.LatLngBounds()).extend($.ui.gmap._unwrapLatLng(a));
@@ -97,9 +88,10 @@
 		},
 		
 		/**
-		 * Adds a control to the map
-		 * @param panel:jQuery/Node/String
-		 * @param position:google.maps.ControlPosition, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
+		 * Adds a custom control to the map
+		 * @param panel:jquery/node/string	
+		 * @param position:google.maps.ControlPosition	 
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
 		 */
 		addControl: function(a, b) {
 			this.get('map').controls[b].push($.ui.gmap._unwrap(a));
@@ -107,9 +99,10 @@
 		
 		/**
 		 * Adds a Marker to the map
-		 * @param a?:google.maps.MarkerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
-		 * @param b?:function(map:google.maps.Map, marker:Marker)
+		 * @param markerOptions:google.maps.MarkerOptions (optional)
+		 * @param callback:function(map:google.maps.Map, marker:google.maps.Marker) (optional)
 		 * @return $(google.maps.Marker)
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
 		 */
 		addMarker: function(a, b) {
 			var c = this.get('map');
@@ -125,9 +118,10 @@
 		
 		/**
 		 * Adds an InfoWindow to the map
-		 * @param a:google.maps.InfoWindowOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
-		 * @param b?:function(InfoWindow:google.maps.InfoWindowOptions)
+		 * @param infoWindowOptions:google.maps.InfoWindowOptions (optional)
+		 * @param callback:function(InfoWindow:google.maps.InfoWindowOptions) (optional)
 		 * @return $(google.maps.InfoWindowOptions)
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
 		 */
 		addInfoWindow: function(a, b) {
 			var c = new google.maps.InfoWindow(a);
@@ -136,26 +130,27 @@
 		},
 		
 		/**
-		 * Clears all the markers and added event listeners.
+		 * Clears by type
+		 * @param type:string i.e. markers, overlays, services
 		 */
-		clear: function() {
-			var a = this.get('markers');
-			$.each(a, function(b, c) {
-				google.maps.event.clearInstanceListeners(c);
-				c.setMap(null);
-				c = null;
+		clear: function(a) {
+			var b = this.get(a);
+			$.each(b, function(c, d) {
+				google.maps.event.clearInstanceListeners(d);
+				d.setMap(null);
+				d = null;
 			});
-			this.set('markers', []);
+			this.set(a, []);
 		},
 		
 		/**
-		 * Returns the marker(s) with a specific property and value, e.g. 'category', 'airports'
-		 * @param key:string - the property/key to search within
-		 * @param value:string - the value
-		 * @param delimiter:string/boolean - the delimiter if its multi-valued 
+		 * Returns the marker(s) with a specific property and value, e.g. 'category', 'tags'
+		 * @param property:string the property to search within
+		 * @param value:string
+		 * @param delimiter:string/boolean	a delimiter if it's multi-valued otherwise false
 		 * @param callback:function(status:boolean, marker:google.maps.Marker)
 		 */
-		find: function(a, b, c, d) {
+		findMarker: function(a, b, c, d) {
 			var e = this.get('markers');
 			for ( var i = 0; i < e.length; i++ ) {
 				var g = ( e[i][a] === b );
@@ -174,8 +169,8 @@
 
 		/**
 		 * Returns an instance property by key. Has the ability to set an object if the property does not exist
-		 * @param key:String	key
-		 * @param ?value:Object	optional object which will be set if it does not exist
+		 * @param key:string
+		 * @param value:object(optional)
 		 */
 		get: function(a, b) {
 			var c = $.ui.gmap.instances[this.element.attr('id')];
@@ -187,8 +182,9 @@
 		
 		/**
 		 * Triggers an InfoWindow to open
-		 * @param a:google.maps.InfoWindowOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
-		 * @param b:google.maps.Marker
+		 * @param infoWindowOptions:google.maps.InfoWindowOptions
+		 * @param marker:google.maps.Marker (optional)
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
 		 */
 		openInfoWindow: function(a, b) {
 			this.get('iw', new google.maps.InfoWindow).setOptions(a);
@@ -197,8 +193,8 @@
 				
 		/**
 		 * Sets an instance property
-		 * @param key:String	key
-		 * @param value:Object	object
+		 * @param key:string
+		 * @param value:object
 		 */
 		set: function(a, b) {
 			$.ui.gmap.instances[this.element.attr('id')][a] = b;
@@ -217,12 +213,11 @@
 		 */
 		destroy: function() {
 			$.Widget.prototype.destroy.call(this);
-			this.clear();
+			this.clear('markers');
+			this.clear('services');
+			this.clear('overlays');
 			var a = $.ui.gmap.instances[this.element.attr('id')];
 			for ( b in a ) {
-				if ( a[b] instanceof google.maps.MVCObject ) {
-					google.maps.event.clearInstanceListeners(a[b]);
-				}
 				a[b] = null;
 			}
 		}

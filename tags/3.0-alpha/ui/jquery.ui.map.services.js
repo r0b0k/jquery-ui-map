@@ -2,6 +2,7 @@
 	
 	$.extend($.ui.gmap.prototype, {
 		
+		
 		/* ELEVATION SERVICE */
 		
 		/**
@@ -10,9 +11,10 @@
 		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
 		elevationPath: function(a, b) {
-			if ( !this.getService('ElevationService') )
-				this.setService('ElevationService', new google.maps.ElevationService());
-			this.getService('ElevationService').getElevationAlongPath(a, b);
+			if ( !this.get('services').ElevationService ) {
+				this.get('services').ElevationService = new google.maps.ElevationService();
+			}
+			this.get('services').ElevationService.getElevationAlongPath(a, b);
 		},
 		
 		/**
@@ -21,9 +23,10 @@
 		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
 		elevationLocations: function(a, b) {
-			if ( !this.getService('ElevationService') )
-				this.setService('ElevationService', new google.maps.ElevationService());
-			this.getService('ElevationService').getElevationForLocations(a, b);
+			if ( !this.get('services').ElevationService ) {
+				this.get('services').ElevationService = new google.maps.ElevationService();
+			}
+			this.get('services').ElevationService.getElevationForLocations(a, b);
 		},
 		
 		/* PLACES SERVICE */		
@@ -34,9 +37,10 @@
 		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
 		placesSearch: function(a, b) {
-			if ( !this.getService('PlacesService') )
-				this.setService('PlacesService', new google.maps.places.PlacesService(this.getMap()));
-			this.getService('PlacesService').search(a, b);
+			if ( !this.get('services').PlacesService ) {
+				this.get('services').PlacesService = new google.maps.places.PlacesService(this.get('map'));
+			}
+			this.get('services').PlacesService.search(a, b);
 		},
 		
 		/**
@@ -45,9 +49,10 @@
 		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
 		placesDetails: function(a, b) {
-			if ( !this.getService('PlacesService') )
-				this.setService('PlacesService', new google.maps.places.PlacesService(this.getMap()));
-			this.getService('PlacesService').getDetails(a, b);
+			if ( !this.get('services').PlacesService ) {
+				this.get('services').PlacesService = new google.maps.places.PlacesService(this.get('map'));
+			}
+			this.get('services').PlacesService.getDetails(a, b);
 		},
 		
 		/**
@@ -56,8 +61,9 @@
 		 * @param b:google.maps.places.AutocompleteOptions, http://code.google.com/apis/maps/documentation/javascript/reference.html#AutocompleteOptions
 		 */		
 		placesAutocomplete: function(a, b) {
-			if ( !this.getService('Autocomplete') )
-				this.setService('Autocomplete', new google.maps.places.Autocomplete($.ui.gmap._unwrap(a)));
+			if ( !this.get('services').Autocomplete ) {
+				this.get('services').Autocomplete = new google.maps.places.Autocomplete($.ui.gmap._unwrap(a));
+			}
 		},
 		
 		/* DISTANCE MATRIX SERVICE */
@@ -68,26 +74,41 @@
 		 * @param b:function(result:google.maps.DistanceMatrixResponse, status: google.maps.DistanceMatrixStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixResponse
 		 */
 		displayDistanceMatrix: function(a, b) {
-			if ( !this.getService('DistanceMatrixService') )
-				this.setService('DistanceMatrixService', new google.maps.DistanceMatrixService());
-			this.getService('DistanceMatrixService').getDistanceMatrix(a, b);
+			if ( !this.get('services').DistanceMatrixService ) {
+				this.get('services').DistanceMatrixService = new google.maps.DistanceMatrixService();
+			}
+			this.get('services').DistanceMatrixService.getDistanceMatrix(a, b);
 		},
 		
 		/* DIRECTIONS SERVICE */
 		
 		/**
 		 * Computes directions between two or more places.
-		 * @param a:google.maps.DirectionsRequest, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest
-		 * @param b:google.maps.DirectionsRendererOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
-		 * @param c:function(result:google.maps.DirectionsResult, status:google.maps.DirectionsStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
+		 * @param request:google.maps.DirectionsRequest, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest
+		 * @param options:google.maps.DirectionsRendererOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
+		 * @param callback:function(result:google.maps.DirectionsResult, status:google.maps.DirectionsStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
 		 */
-		displayDirections: function(a, b, c) { 
-			if ( !this.getService('DirectionsService') )
-				this.setService('DirectionsService', new google.maps.DirectionsService());
-			if ( !this.getService('DirectionsRenderer') )
-				this.setService('DirectionsRenderer', new google.maps.DirectionsRenderer());
-			this.getService('DirectionsRenderer').setOptions(jQuery.extend({'map': this.getMap()}, b));
-			this.getService('DirectionsService').route(a, c);
+		displayDirections: function(a, b, c) {
+			var self = this;		
+			var map = this.get('map');
+			if ( !this.get('services').DirectionsService ) {
+				this.get('services').DirectionsService = new google.maps.DirectionsService();
+			}
+			if ( !this.get('services').DirectionsRenderer ) {
+				this.get('services').DirectionsRenderer = new google.maps.DirectionsRenderer();
+			}
+			this.get('services').DirectionsRenderer.setOptions(b);
+			this.get('services').DirectionsService.route(a, function(result, status) {
+				if ( status === 'OK' ) {
+					if ( b.panel ) {
+						self.get('services').DirectionsRenderer.setDirections(result);
+						self.get('services').DirectionsRenderer.setMap(map);
+					}
+				} else {
+					self.get('services').DirectionsRenderer.setMap(null);
+				}
+				$.ui.gmap._trigger(c, result, status);
+			});
 		},
 		
 		/**
@@ -97,9 +118,8 @@
 		 */
 		displayStreetView: function(a, b) {
 			// StreetViewPanorama has no setOptions method (?)
-			// if ( !this.getService('StreetViewPanorama') )
-				this.setService('StreetViewPanorama', new google.maps.StreetViewPanorama($.ui.gmap._unwrap(a), b));
-			this.getMap().setStreetView(this.getService('StreetViewPanorama'));
+			this.get('services').StreetViewPanorama = new google.maps.StreetViewPanorama($.ui.gmap._unwrap(a), b);
+			this.get('map').setStreetView(this.get('services').StreetViewPanorama);
 		},
 		
 		/* GEOCODING SERVICE */
@@ -110,26 +130,10 @@
 		 * @param b:function(result:google.maps.GeocoderResult, status:google.maps.GeocoderStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
 		 */
 		search: function(a, b) {
-			if ( !this.getService('Geocoder') )
-				this.setService('Geocoder', new google.maps.Geocoder());
-			this.getService('Geocoder').geocode(a, b);
-		},
-		
-		/**
-		 * Returns a service by its service name
-		 * @param a:string
-		 */
-		getService: function(a) {
-			return $.ui.gmap.instances[this.element.attr('id')].services[a];
-		},
-		
-		/**
-		 * Adds a service to the services
-		 * @param a:string
-		 * @param b:object
-		 */
-		setService: function(a, b) {
-			$.ui.gmap.instances[this.element.attr('id')].services[a] = b;
+			if ( !this.get('services').Geocoder ) {
+				this.get('services').Geocoder = new google.maps.Geocoder();
+			}
+			this.get('services').Geocoder.geocode(a, b);
 		}
 	
 	});

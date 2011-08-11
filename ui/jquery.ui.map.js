@@ -119,13 +119,18 @@
 		 * @return $(google.maps.InfoWindowOptions)
 		 */
 		addInfoWindow: function(a, b) {
+			var iw = new google.maps.InfoWindow(a);
+			$.ui.gmap._trigger(b, iw);
+			return $(iw);
+		},
+		
+		openInfoWindow: function(a) {
 			if ( !this.getInfoWindow() ) {
 				this.setInfoWindow(new google.maps.InfoWindow());
 			}
-			var iw = this.getInfoWindow();
-			iw.setOptions(a);
-			$.ui.gmap._trigger(b, iw);
-			return $(this.getInfoWindow());
+			this.getInfoWindow().close();
+			this.getInfoWindow().setOptions(a);
+			this.getInfoWindow().open(this.getMap()); 
 		},
 		
 		/**

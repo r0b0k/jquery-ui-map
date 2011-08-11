@@ -39,7 +39,13 @@
 				// Only for code formatting
 				SyntaxHighlighter.all();
 				
-				$('#map_canvas').gmap({ 'mapTypeControl': false, 'navigationControlOptions': {'position':google.maps.ControlPosition.TOP_RIGHT},'center': new google.maps.LatLng(59.3426606750, 18.0736160278), 'callback': function(map) {
+				$('#map_canvas').gmap({ 
+				'mapTypeControl': true, 
+				'mapTypeId': google.maps.MapTypeId.SATELLITE,
+				'mapTypeControlOptions': { 'mapTypeIds': [google.maps.MapTypeId.SATELLITE], 
+				'position':google.maps.ControlPosition.TOP_RIGHT,
+				'style':google.maps.MapTypeControlStyle.HORIZONTAL_BAR },
+				'navigationControlOptions': {'position':google.maps.ControlPosition.TOP_RIGHT},'center': new google.maps.LatLng(59.3426606750, 18.0736160278), 'callback': function(map) {
 					
 					google.maps.event.addListenerOnce(map, 'bounds_changed', function() {
 						
@@ -50,14 +56,14 @@
 						var latSpan = northEast.lat() - southWest.lat();
 
 						var tag = "jQuery";
-						for ( i = 0; i < 40; i++ ) {
-							if ( i > 10 ) { tag = "Google maps"; }
-							if ( i > 20 ) { tag = "Plugin"; }
-							if ( i > 30 ) { tag = "SEO"; }
+						for ( i = 0; i < 300; i++ ) {
+							if ( i > 100 ) { tag = "Google maps"; }
+							if ( i > 200 ) { tag = "Plugin"; }
+							if ( i > 300 ) { tag = "SEO"; }
 							$('#map_canvas').gmap('addMarker', { 'tag':tag, 'title':tag, 'bound':false, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } );
 						}
 						
-						$('#map_canvas').gmap('addControl', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
+						//$('#map_canvas').gmap('addControl', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
 					
 					});
 					
@@ -65,26 +71,42 @@
 							var bounds = new google.maps.LatLngBounds();
 							var tag = $(this).val();
 							if ( tag == 'all' ) {
+								console.time('findMarkerAll');
 								$('#map_canvas').gmap('findMarker', 'tag', tag, function(found, marker) {
-									marker.setVisible(true); 
-									bounds.extend(marker.position);
-									marker.map.fitBounds(bounds);	
+									//marker.setVisible(true); 
+									//bounds.extend(marker.position);
+									//marker.map.fitBounds(bounds);	
 								});
+								console.timeEnd('findMarkerAll');
 							} else {
+								console.time('findMarkerTag');
 								$('#map_canvas').gmap('findMarker', 'tag', tag, function(found, marker) {
-									if (found) {
+									/*if (found) {
 										marker.setVisible(true); 
-										bounds.extend(marker.position);
-										marker.map.fitBounds(bounds);
+										//bounds.extend(marker.position);
+										//marker.map.fitBounds(bounds);
 									} else { 
 										marker.setVisible(false); 
-									}
+									}*/
 								});
+								console.timeEnd('findMarkerTag');
 							}
-							$('#map_canvas').gmap('option', 'center', bounds.getCenter());
+							//$('#map_canvas').gmap('option', 'center', bounds.getCenter());
 						});
 					
 				 }});
+				 
+				 $('#destroy').click(function() {
+					console.log('clikk');
+					//Set the zoom to 16
+					
+	$('#map_canvas').gmap('option', 'zoom', 16);
+	// Change to hybrid
+	$('#map_canvas').gmap('option', 'mapTypeId', google.maps.MapTypeId.HYBRID);
+	return false;
+					//alert('DESTROYING');
+					//$('#map_canvas').gmap('destroy');
+				 });
 					
             });
 		</script>
@@ -112,7 +134,7 @@
 					<option value="SEO">SEO</option> 
 				</select>
 			</div>
-			
+			<a href="#" id="destroy">destroy</a>
 			<h2>Using jquery with Google maps</h2>
 			<p>
 				Download <a href="http://jquery.com/">jQuery 1.4.X or higher</a> and <a href="http://jqueryui.com/">jQuery UI 1.8.X or higher</a> or
@@ -158,7 +180,6 @@
 				<li><a href="load Fusion.html">Import markers with Google Fusion tables</a></li>
 				<li><a href="basic-example.html">Google maps and jQuery example</a></li>
 				<li><a href="multiple maps example.html">Multiple maps on a single page example</a></li>
-				<li><a href="google-maps-jquery-markerclusterer.html">Marker Clusterer Utility</a></li>
 			</ul>
 			
 			<div id="ft" class="hidden">

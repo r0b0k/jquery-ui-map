@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head profile="http://microformats.org/profile/hcalendar">
-
-        <title>Example with Google maps and microformats - Google maps jQuery plugin</title>
-        <meta name="keywords" content="Google maps, jQuery, plugin, microformats" />
-		<meta name="description" content="An example how to load markers with microformats using jQuery and Google maps v3" />
+    <head profile="http://dublincore.org/documents/dcq-html/">
+        
+        <title>Google Fusion tables - Google maps jQuery plugin</title>
+        <meta name="keywords" content="Google maps, jQuery, plugin, Google Fusion tables" />
+		<meta name="description" content="An example with jQuery and Google Fusion tables using Google maps jQuery plugin" />
 		<meta http-equiv="content-language" content="en" />
 		
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
-		<meta name="DC.title" content="Example with Google maps and microformats - Google maps jQuery plugin" />
-		<meta name="DC.subject" content="Google maps;jQuery;plugin;microformats" />
-		<meta name="DC.description" content="An example how to load markers with microformats using jQuery and Google maps v3" />
+		<meta name="DC.title" content="Example with Google Streetview with microformats - Google maps jQuery plugin" />
+		<meta name="DC.subject" content="Google maps;jQuery;plugin;Google Fusion tables" />
+		<meta name="DC.description" content="An example with jQuery and Google Fusion tables using Google maps jQuery plugin" />
 		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
         <meta name="DC.language" content="en" />
 		
@@ -28,86 +28,42 @@
         
         <script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
         <script type="text/javascript">
-			google.load("maps", "3", {'other_params':'sensor=false'});
+			google.load("maps", "3", {'other_params':'sensor=true'});
 			google.load("jquery", "1.5");
 			google.load("jqueryui", "1.8.9");
 		</script>
-		
         <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
-		<script type="text/javascript" src="../ui/jquery.ui.gmap.microformat.js"></script>
-		
 		<script src="../thirdparty/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
       	<script src="../thirdparty/SyntaxHighlighter/shAutoloader.js" type="text/javascript"></script>
 		<script src="../thirdparty/SyntaxHighlighter/shBrushJScript.js" type="text/javascript"></script>
 		<script src="../thirdparty/SyntaxHighlighter/shBrushXml.js" type="text/javascript"></script>
         <script type="text/javascript">
-		//<![CDATA[
 			$(function() {
 				// Only for code formatting
 				SyntaxHighlighter.all();
-				$('#sidebar-wrap').hide();
-				$('#map_canvas').gmap({ 'navigationControl': false, 'streetViewControl': false, 'callback': function() {
-					$('#map_canvas').gmap('loadMetadata', 'microformat', 'vevent', function(i, item, data) {
-						$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': new google.maps.LatLng(data.latitude.title, data.longitude.title) }, function(map, marker) {
-							var content = '<h2>Extracted metadata</h2>';
-							for ( var p in data ) {
-								if ( data[p].text )
-									content += '<p class="iw-'+p+'">' + '<b>' + p + ':</b> ' + data[p].text + '<p>';
-							}
-							$('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': content }, function(iw) {
-								$(marker).click(function() {
-									iw.open(map, marker);
-									map.panTo(marker.getPosition());
-								});
-							});
-							$(item).click(function() {
-								$(marker).triggerEvent('click');
-								return false;
-							});
-						});
-					});
-					$('#map_canvas').gmap('addControl', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
-				}});
+				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(37.434538, -121.89970399999999), 'zoom': 10, 'callback': function() {
+						$('#map_canvas').gmap('loadFusion', 297050);
+						// remove all markers
+						$('#map_canvas').gmap('getService', 'FusionTablesLayer').setMap(null);
+						// Demonstration of query
+						// $('#map_canvas').gmap('loadFusion', 297050, { query: "SELECT * FROM 297050 WHERE ST_INTERSECTS(Address, CIRCLE(LATLNG(37.434538,-121.89970399999999),20000))"});
+					}
+				});
             });
-		//]]>
 		</script>
-
-    </head>
-    <body>
         
+	</head>
+    <body>
+		
 		<div id="doc">
 		
 			<div id="hd">
-                <h1><a href="/">Google maps jQuery plugin</a> load markers with microformats example</h1>
-            </div>
-            
-            <div class="item gradient ui-corner-all shadow-all">
+				<h1><a href="/">Google maps jQuery plugin</a> Google Fusion tables example</h1>
+			</div>
+			
+			<div class="item gradient ui-corner-all shadow-all">
                 <div id="map_canvas"></div>
             </div>
-		
-			<div id="sidebar-wrap">
-				<div id="sidebar">
-					<h3>Event</h3>
-					<div class="vevent">
-						<span class="datetime">
-							<abbr title="20101214" class="dtstart">Tuesday December 14, 2010</abbr>
-						</span>
-						<span class="summary">Robyn - Stockholm</span> at
-						<span class="location vcard">  
-							<a class="fn org" href="http://www.berns.se/">Berns Salonger</a>
-							<span class="address adr">
-								<span class="street-address">Berzelii Park</span>
-								<span class="locality">Stockholm</span>, <span class="region">Stockholm</span>
-								<span class="geo">
-									<abbr title="59.3426606750" class="latitude"></abbr> 
-									<abbr title="18.0736160278" class="longitude"></abbr>
-								</span>
-							</span>
-						</span>
-						<div class="website">Website: <a class="url" href="http://concertful.com/concert/robyn/" rel="nofollow">http://concertful.com/concert/robyn/</a></div>
-					</div>
-				</div>
-			</div>
 		
 			<h2>Using jquery with Google maps</h2>
 			<p>
@@ -128,29 +84,26 @@
 				<pre class="brush: js">
 &lt;script type="text/javascript"&gt;
 	$(function() {
-		$('#map_canvas').gmap({ 'callback': function () {
-				$('#map_canvas').gmap('loadMetadata', 'microformat', 'vevent', function(item, data) {
-					$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(data.latitude.title, data.longitude.title) });
-				});
+		$('#map_canvas').gmap({ 'center': new google.maps.LatLng(41.850033, -87.6500523), 'zoom': 10, 'callback': function() {
+				$('#map_canvas').gmap('loadFusion', YOUR_GOOGLE_FUSION_TABLE_ID);
 			}
 		});
 	});
 &lt;/script&gt;</pre>
 			</div>
-			
+		
 			<h2>More Google maps and jQuery examples</h2>
 			<ul>
 				<li><a href="jquery-mobile-example.html">Google maps with jQuery mobile example</a></li>
 				<li><a href="advanced-example.html">Microformats, Google streetview and jQuery dialog example</a></li>
 				<li><a href="other-examples.html">Click and drag events with Google geo search example</a></li>
 				<li><a href="load JSON example.html">Import markers with JSON example</a></li>
+				<li><a href="load Microformat example.html">Import markers with microformats example</a></li>
 				<li><a href="load RDFa example.html">Import markers with RDFa example</a></li>
 				<li><a href="load Microdata example.html">Import markers with microdata example</a></li>
-				<li><a href="load Fusion.html">Import markers with Google Fusion tables</a></li>
 				<li><a href="multiple maps example.html">Multiple maps on a single page example</a></li>
 				<li><a href="basic-example.html">Google maps and jQuery example</a></li>
 				<li><a href="google-maps-jquery-filtering.html">Filter markers example</a></li>
-				<li><a href="google-maps-jquery-markerclusterer.html">Marker Clusterer Utility</a></li>
 			</ul>
 			
 			<div id="ft" class="hidden">
@@ -166,8 +119,8 @@
 					</span>
 				</div>
 			</div>
-		</div>
-		<script type="text/javascript">
+		<div>
+        <script type="text/javascript">
 			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 		</script>
@@ -179,3 +132,7 @@
 		</script>
     </body>
 </html>
+
+
+
+      

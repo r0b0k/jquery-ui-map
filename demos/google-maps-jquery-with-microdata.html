@@ -32,8 +32,10 @@
 			google.load("jqueryui", "1.8.9");
 		</script>
         
+		<!--<script type="text/javascript" src="../ui/jquery.googlemap.js"></script>-->
 		<script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
-        <script type="text/javascript" src="../ui/jquery.ui.gmap.microdata.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.map.metadata.js"></script>
+
 		<script src="../thirdparty/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
       	<script src="../thirdparty/SyntaxHighlighter/shAutoloader.js" type="text/javascript"></script>
 		<script src="../thirdparty/SyntaxHighlighter/shBrushJScript.js" type="text/javascript"></script>
@@ -43,16 +45,24 @@
 			$(function() {
 				// Only for code formatting
 				SyntaxHighlighter.all();
-				
+				var iws = [];
 				$('#map_canvas').gmap({ 'callback': function () {
 						$('#map_canvas').gmap('loadMetadata', 'microdata', 'http://data-vocabulary.org/Event', function(index, item, result) {
-							var latlng = new google.maps.LatLng(result.properties.location[0].properties.geo[0].properties.latitude[0], result.properties.location[0].properties.geo[0].properties.longitude[0]);
+							
+							/*var latlng = new google.maps.LatLng(result.properties.location[0].properties.geo[0].properties.latitude[0], result.properties.location[0].properties.geo[0].properties.longitude[0]);
 							$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': latlng, 'animation': google.maps.Animation.DROP }, function(map, marker){
 								var content = '<div class="iw"><img class="iw-photo shadow-all" src="'+result.properties.photo[0]+'"/><h1 class="iw-summary">'+result.properties.summary[0]+'</h1><p class="iw-description">'+result.properties.description[0]+'</p><div class="clear"><div></div>';
 								var iw = $('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': content }, function(iw) {
+									//console.log(iw.getContent());
+									//var content = iw.getContent();
+									iws.push(iw);
 									$(marker).click(function() {
+										//iw.setContent(content);
 										iw.open(map, marker);
 										map.panTo(marker.getPosition());
+										for ( var i = 0 ; i < iws.length; i++ )
+											iws[i].close();
+										$('#map_canvas').gmap('clearMarkers');
 									});																												  
 								});
 								$(item).addClass('clickable');
@@ -60,10 +70,12 @@
 									$(marker).triggerEvent('click');
 									return false;
 								});
-							});																	 
+							});	*/																 
 						});
 					}
 				});
+				
+				
             });
 		//]]>
 		</script>
@@ -206,7 +218,6 @@
                     <li><a href="multiple maps example.html">Multiple maps on a single page example</a></li>
                     <li><a href="basic-example.html">Google maps and jQuery example</a></li>
 					<li><a href="google-maps-jquery-filtering.html">Filter markers example</a></li>
-					<li><a href="google-maps-jquery-markerclusterer.html">Marker Clusterer Utility</a></li>
                 </ul>
                 
             </article>

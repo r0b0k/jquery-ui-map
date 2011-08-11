@@ -40,7 +40,7 @@
 			google.load("jqueryui", "1.8.9");
 		</script>
         <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
-		<script type="text/javascript" src="../ui/jquery.ui.gmap.rdfa.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.map.metadata.js"></script>
 		<script src="../thirdparty/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
       	<script src="../thirdparty/SyntaxHighlighter/shAutoloader.js" type="text/javascript"></script>
 		<script src="../thirdparty/SyntaxHighlighter/shBrushJScript.js" type="text/javascript"></script>
@@ -51,13 +51,14 @@
 				SyntaxHighlighter.all();
 				$('#sidebar-wrap').hide();
 				$('#map_canvas').gmap({ 'navigationControl': false, 'streetViewControl': false, 'callback': function() {
-					$('#map_canvas').gmap('loadMetadata', 'rdfa', 'vcard:Vevent', function(i, item, data) { 
-						var latlng = data['geo:lat_long'].content.split(',');
+					$('#map_canvas').gmap('loadMetadata', 'rdfa', 'vcard:Vevent', function(data, i) { 
+						console.log(data);
+						var latlng = data['vevent']['geo:lat_long'].content.split(',');
 						$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': new google.maps.LatLng(latlng[0], latlng[1]), 'animation': google.maps.Animation.DROP }, function(map, marker) {
 							var content = '<h2>Extracted metadata</h2>';
-							for ( var p in data ) {
-								if ( data[p].text )
-									content += '<p class="iw-'+p+'">' + '<b>' + p + ':</b> ' + data[p].text + '<p>';
+							for ( var p in data['vevent'] ) {
+								if ( data['vevent'][p].content )
+									content += '<p class="iw-'+p+'">' + '<b>' + p + ':</b> ' + data['vevent'][p].content + '<p>';
 							}
 							$('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': content }, function(iw) {
 								$(marker).click(function() {
@@ -156,7 +157,6 @@
 				<li><a href="multiple maps example.html">Multiple maps on a single page example</a></li>
 				<li><a href="basic-example.html">Google maps and jQuery example</a></li>
 				<li><a href="google-maps-jquery-filtering.html">Filter markers example</a></li>
-				<li><a href="google-maps-jquery-markerclusterer.html">Marker Clusterer Utility</a></li>
 			</ul>
 			
 			<div id="ft" class="hidden">

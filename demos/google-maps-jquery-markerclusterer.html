@@ -46,7 +46,7 @@
 				
 				$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
 						for ( var i=1; i < 100; i++ ) {
-							$('#map_canvas').gmap('addMarker', { position: new google.maps.LatLng(42.345573 + (i/100),-71.098326 - (2*(Math.random()))) } );
+								$('#map_canvas').gmap('addMarker', { position: new google.maps.LatLng(42.345573 + (i/100),-71.098326) } );
 						}
 				}});
 				var markerCluster = new MarkerClusterer($('#map_canvas').gmap('getMap'), $('#map_canvas').gmap('getMarkers'));
@@ -61,7 +61,7 @@
     	<div id="doc">
 			
 			<div id="hd">
-				<h1><a href="/">Google maps jQuery plugin</a> Marker Clusterer Utility</h1>
+				<h1><a href="/">Google maps jQuery plugin</a> MarkerClusterer example</h1>
 			</div>
 			
 			<div class="item gradient ui-corner-all shadow-all">
@@ -90,7 +90,7 @@
 	$(function() {
 		$('#map_canvas').gmap({ 'center': new google.maps.LatLng(42.345573,-71.098326), 'callback': function() {
 				for ( var i=1; i < 100; i++ ) {
-					$('#map_canvas').gmap('addMarker', { position: new google.maps.LatLng(42.345573 + (i/100),-71.098326 - (2*(Math.random()))) } );
+						$('#map_canvas').gmap('addMarker', { position: new google.maps.LatLng(42.345573 + (i/100),-71.098326) } );
 				}
 		}});
 		var markerCluster = new MarkerClusterer($('#map_canvas').gmap('getMap'), $('#map_canvas').gmap('getMarkers'));

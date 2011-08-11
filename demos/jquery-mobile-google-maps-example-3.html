@@ -29,7 +29,7 @@
 		</style>
 		<script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
         <script type="text/javascript">
-			google.load("maps", "3", {'other_params':'sensor=true'});
+			google.load("maps", "3", {'other_params':'sensor=true&libraries=places'});
 			google.load("jquery", "1.5");
 		</script>
 		<script type="text/javascript">
@@ -40,6 +40,9 @@
 		</script>
 		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.js"></script>
 		<script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+		<!--<script type="text/javascript" src="../ui/jquery.ui.map.services.js"></script>-->
+		
+		<script type="text/javascript" src="../ui/jquery.ui.map.extensions.js"></script>
 	</head> 
 
 	<body> 
@@ -51,12 +54,22 @@
 			</div>
 
 			<script type="text/javascript">
+				var latLng;
+				
 				$('#gmap-3').live("pageshow", function() {
 					$('#map_canvas_1').gmap({'center': getLatLng()});
-					function getLatLng() {
-						if ( google.loader.ClientLocation != null ) {
-							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
+					$('#map_canvas_1').gmap('getCurrentPosition', function(status, position) {
+						if ( status === 'OK' ) {
+							$('#map_canvas_1').gmap({'center': new google.maps.LatLng(position.coords.latitude, position.coords.longitude)});
+							$('#from').val(position.coords.latitude+ ','+position.coords.longitude);
+						} else {
+							alert('Unable to get current position');
+							// set the #from to some valid default value
 						}
+					});
+					function getLatLng() {
+						if ( google.loader.ClientLocation != null )
+							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
 						return new google.maps.LatLng(59.3426606750, 18.0736160278);
 					}
 				});
@@ -67,7 +80,6 @@
 							if ( success ) {
 								$('#results').show();
 							} else {
-								$('#map_canvas_1').gmap('getService', 'DirectionsRenderer').setMap(null);
 								$('#results').hide();
 							}
 						});
@@ -81,9 +93,9 @@
 					
 					<div id="map_canvas_1" style="height:300px;"></div>
 				
-					<p>
+					<p style="display:none;">
 						<label for="from">From</label>
-						<input id="from" class="ui-bar-c" value="G&ouml;teborg, Sweden" />
+						<input id="from" type="hidden" class="ui-bar-c" value="G&ouml;teborg, Sweden" />
 					</p>
 					<p>
 						<label for="to">To</label>
@@ -112,7 +124,6 @@
 					<li><a data-ajax="false" href="multiple maps example.html">Multiple maps on a single page example</a></li>
 					<li><a data-ajax="false" href="basic-example.html">Google maps and jQuery example</a></li>
 					<li><a data-ajax="false" href="google-maps-jquery-filtering.html">Filter markers example</a></li>
-					<li><a data-ajax="false" href="google-maps-jquery-markerclusterer.html">Marker Clusterer Utility</a></li>
 				</ul>
 
 			</div>

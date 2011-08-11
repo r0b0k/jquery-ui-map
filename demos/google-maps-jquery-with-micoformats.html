@@ -1,16 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head profile="http://dublincore.org/documents/dcq-html/">
-        
-        <title>Example with Google maps, jQuery and JSON - Google maps jQuery plugin</title>
-        <meta name="keywords" content="Google maps, jQuery, plugin, JSON" />
-		<meta name="description" content="An example how to load markers with JSON using jQuery and Google maps v3" />
+    <head profile="http://microformats.org/profile/hcalendar">
+
+        <title>Example with Google maps and microformats - Google maps jQuery plugin</title>
+        <meta name="keywords" content="Google maps, jQuery, plugin, microformats" />
+		<meta name="description" content="An example how to load markers with microformats using jQuery and Google maps v3" />
 		<meta http-equiv="content-language" content="en" />
 		
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
-		<meta name="DC.title" content="Example with Google maps, jQuery and JSON - Google maps jQuery plugin" />
-		<meta name="DC.subject" content="Google maps;jQuery;plugin;JSON" />
-		<meta name="DC.description" content="An example how to load markers with JSON using jQuery and Google maps v3" />
+		<meta name="DC.title" content="Example with Google maps and microformats - Google maps jQuery plugin" />
+		<meta name="DC.subject" content="Google maps;jQuery;plugin;microformats" />
+		<meta name="DC.description" content="An example how to load markers with microformats using jQuery and Google maps v3" />
 		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
         <meta name="DC.language" content="en" />
 		
@@ -31,39 +31,84 @@
 			google.load("maps", "3", {'other_params':'sensor=false'});
 			google.load("jquery", "1.5");
 			google.load("jqueryui", "1.8.9");
-		</script>        
+		</script>
+		
         <script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.gmap.microformat.js"></script>
+		
 		<script src="../thirdparty/SyntaxHighlighter/shCore.js" type="text/javascript"></script>
       	<script src="../thirdparty/SyntaxHighlighter/shAutoloader.js" type="text/javascript"></script>
 		<script src="../thirdparty/SyntaxHighlighter/shBrushJScript.js" type="text/javascript"></script>
 		<script src="../thirdparty/SyntaxHighlighter/shBrushXml.js" type="text/javascript"></script>
         <script type="text/javascript">
+		//<![CDATA[
 			$(function() {
 				// Only for code formatting
 				SyntaxHighlighter.all();
-				$('#map_canvas').gmap({ 'center':new google.maps.LatLng(59.3426606750, 18.0736160278), 'streetViewControl': false, 'callback': function() {
-						$.getJSON( 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', 'category=activity', function(data) { 
-							$.each( data.markers, function(i, m) {
-								$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(m.lat, m.lng) } );
+				$('#sidebar-wrap').hide();
+				$('#map_canvas').gmap({ 'navigationControl': false, 'streetViewControl': false, 'callback': function() {
+					$('#map_canvas').gmap('loadMetadata', 'microformat', 'vevent', function(i, item, data) {
+						$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': new google.maps.LatLng(data.latitude.title, data.longitude.title) }, function(map, marker) {
+							var content = '<h2>Extracted metadata</h2>';
+							for ( var p in data ) {
+								if ( data[p].text )
+									content += '<p class="iw-'+p+'">' + '<b>' + p + ':</b> ' + data[p].text + '<p>';
+							}
+							$('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': content }, function(iw) {
+								$(marker).click(function() {
+									iw.open(map, marker);
+									map.panTo(marker.getPosition());
+								});
+							});
+							$(item).click(function() {
+								$(marker).triggerEvent('click');
+								return false;
 							});
 						});
-					}
-				});
+					});
+					$('#map_canvas').gmap('addControl', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
+				}});
             });
+		//]]>
 		</script>
+
     </head>
     <body>
-		
+        
 		<div id="doc">
 		
 			<div id="hd">
-				<h1><a href="/">Google maps jQuery plugin</a> load markers with JSON example</h1>
-			</div>
-			
-			<div class="item gradient ui-corner-all shadow-all">
+                <h1><a href="/">Google maps jQuery plugin</a> load markers with microformats example</h1>
+            </div>
+            
+            <div class="item gradient ui-corner-all shadow-all">
                 <div id="map_canvas"></div>
             </div>
-			
+		
+			<div id="sidebar-wrap">
+				<div id="sidebar">
+					<h3>Event</h3>
+					<div class="vevent">
+						<span class="datetime">
+							<abbr title="2010-12-14" class="dtstart">Tuesday December 14, 2010</abbr>
+						</span>
+						<span class="summary">Robyn - Stockholm</span> at
+						<span class="location vcard">  
+							<a class="fn org" href="http://www.berns.se/">Berns Salonger</a>
+							<span class="address adr">
+								<span class="street-address">Berzelii Park</span>
+								<span class="locality">Stockholm</span>, <span class="region">Stockholm</span>
+								<span class="geo">
+									<abbr title="59.3426606750" class="latitude"></abbr> 
+									<abbr title="18.0736160278" class="longitude"></abbr>
+								</span>
+							</span>
+						</span>
+						<div class="website">Website: <a class="url" href="http://concertful.com/concert/robyn/" rel="nofollow">http://concertful.com/concert/robyn/</a></div>
+					</div>
+				</div>
+			</div>
+		
 			<h2>Using jquery with Google maps</h2>
 			<p>
 				Download <a href="http://jquery.com/">jQuery 1.4.X or higher</a> and <a href="http://jqueryui.com/">jQuery UI 1.8.X or higher</a> or
@@ -83,10 +128,9 @@
 				<pre class="brush: js">
 &lt;script type="text/javascript"&gt;
 	$(function() {
-		var latlng = new google.maps.LatLng(59.3426606750, 18.0736160278);
-		$('#map_canvas').gmap({ 'center':latlng, 'callback': function() {
-				$('#map_canvas').gmap('loadJSON', 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', 'category=activity', function(i, m) {
-					$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(m.lat, m.lng) } );
+		$('#map_canvas').gmap({ 'callback': function () {
+				$('#map_canvas').gmap('loadMetadata', 'microformat', 'vevent', function(item, data) {
+					$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(data.latitude.title, data.longitude.title) });
 				});
 			}
 		});
@@ -99,14 +143,13 @@
 				<li><a href="jquery-mobile-example.html">Google maps with jQuery mobile example</a></li>
 				<li><a href="advanced-example.html">Microformats, Google streetview and jQuery dialog example</a></li>
 				<li><a href="other-examples.html">Click and drag events with Google geo search example</a></li>
-				<li><a href="load Microformat example.html">Import markers with microformats example</a></li>
+				<li><a href="load JSON example.html">Import markers with JSON example</a></li>
 				<li><a href="load RDFa example.html">Import markers with RDFa example</a></li>
 				<li><a href="load Microdata example.html">Import markers with microdata example</a></li>
 				<li><a href="load Fusion.html">Import markers with Google Fusion tables</a></li>
 				<li><a href="multiple maps example.html">Multiple maps on a single page example</a></li>
 				<li><a href="basic-example.html">Google maps and jQuery example</a></li>
 				<li><a href="google-maps-jquery-filtering.html">Filter markers example</a></li>
-				<li><a href="google-maps-jquery-markerclusterer.html">Marker Clusterer Utility</a></li>
 			</ul>
 			
 			<div id="ft" class="hidden">

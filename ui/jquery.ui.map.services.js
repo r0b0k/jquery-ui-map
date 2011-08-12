@@ -5,14 +5,11 @@
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
  *
  * Depends:
- *      jquery.ui.core.js
- *      jquery.ui.widget.js
  *		jquery.ui.map.js
  */
 ( function($) {
 	
 	$.extend($.ui.gmap.prototype, {
-		
 		
 		/**
 		 * Makes an elevation request along a path, where the elevation data are returned as distance-based samples along that path.

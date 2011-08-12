@@ -44,11 +44,11 @@
 				// Only for code formatting
 				SyntaxHighlighter.all();
 				
-				$('#map_canvas').gmap().bind('create', function() { 
+				$('#map_canvas').gmap().bind('init', function() { 
 					for ( var i=1; i < 100; i++ ) {
 						$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(42.345573 + (i/100),-71.098326), 'bounds':true } );
 					}
-					var markerCluster = new MarkerClusterer($('#map_canvas').gmap('get', 'map'), $('#map_canvas').gmap('get', 'markers'));
+					$('#map_canvas').gmap('set', 'MarkerClusterer', new MarkerClusterer($('#map_canvas').gmap('get', 'map'), $('#map_canvas').gmap('get', 'markers')));
 				});
 				
 				

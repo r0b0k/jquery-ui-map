@@ -9,25 +9,6 @@
   * jquery.core 
   * jquery.mobile 
 
-= Overview =
-
-Make the selected element a Google map.
-
-{{{
-$(function() {				
-    $('#map_canvas').gmap();
-});
-}}}
-
-All properties in the [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOption] object can be set and retrieved by
-
-{{{
-//getter
-var zoom= $('#map_canvas').gmap('option', 'zoom');
-//setter
-$('#map_canvas').gmap('option', 'zoom', 7);
-}}}
-
 = API version 3.0 =
 
 == jquery.ui.map core ==

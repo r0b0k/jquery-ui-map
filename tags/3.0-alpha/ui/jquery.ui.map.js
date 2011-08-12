@@ -8,6 +8,7 @@
  *      jquery.ui.core.js
  *      jquery.ui.widget.js
  */
+
 ( function($) {
 	
 	$.widget( "ui.gmap", {
@@ -170,7 +171,7 @@
 		 */
 		openInfoWindow: function(a, b) {
 			this.get('iw', new google.maps.InfoWindow).setOptions(a);
-			this.get('iw').open(this.get('map'), b); 
+			this.get('iw').open(this.get('map'), $.ui.gmap._unwrap(b)); 
 		},
 				
 		/**

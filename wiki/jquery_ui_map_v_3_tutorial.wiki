@@ -97,3 +97,21 @@ If you would like to modify existing methods you can do that too. Let's say you 
 	
 } (jQuery) );
 }}}
+
+Or do something during the widget initialization. This will geocode the address option property and call the option callback property. 
+
+{{{
+// This fires after the widgets create method
+_init: function() {
+	var self = this;
+	// If you add the property option address in the constructor it will be geocoded 
+	if ( this.options.address && this.options.callback ) {
+		this.search({'address': this.options.address}, function(results, status) {
+			if ( status === 'OK' ) {
+				$.ui.gmap._trigger(self.options.callback, results, status);
+			}
+		});
+	}
+}
+
+}}}

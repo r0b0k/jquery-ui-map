@@ -205,3 +205,11 @@ $('#map_canvas').gmap('get', 'bounds');
 // Clear bounds
 $('#map_canvas').gmap('set', 'bounds', null);
 }}}
+
+== Rendering issues with e.g. mobile or UI tabs? ==
+
+Most often calling refresh will fix rendering issues, such as when the map is being positioned in the top left corner and not fully visible.
+
+{{{
+$('#map_canvas').gmap('refresh');
+}}}

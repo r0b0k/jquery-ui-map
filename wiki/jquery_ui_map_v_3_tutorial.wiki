@@ -66,14 +66,13 @@ This is how you create a new method in the extension file
 ( function($) {
 
 	$.extend($.ui.gmap.prototype, {
-	
-		// Put your functions like this
-		function : theBeatles() {
+		
+		theBeatles : function() {
 			alert('Helter skelter');
 		},
 		
-		function : scottMcKenzie() {
-			alert("If you're going to San Francisco. Be sure to wear some flowers in your hair.");
+		alertSomething: function(a) {
+			alert(a);
 		}
 		
 	});
@@ -89,7 +88,7 @@ If you would like to modify existing methods you can do that too. Let's say you 
 	$.extend($.ui.gmap.prototype, {
 	
 		// We override the addMarker method
-		function : addMarker(markerOptions, callback) {
+		addMarker: function(markerOptions, callback) {
 			var marker = new google.maps.MarkerWithLabel( jQuery.extend({'map': this.get('map'), 'bounds': false}, markerOptions) );
 			...
 		}

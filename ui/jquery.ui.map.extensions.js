@@ -13,24 +13,47 @@
 		 
 		/**
 		 * Gets the current position
-		 * @a: function(status, position)
-		 * @b:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
+		 * @param callback:function(position, status)
+		 * @param geoPositionOptions:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
 		 */
 		getCurrentPosition: function(a, b) {
 			if ( navigator.geolocation ) {
 				navigator.geolocation.getCurrentPosition ( 
 					function(position) {
-						$.ui.gmap._trigger(a, "OK", position);
+						$.ui.gmap._trigger(a, position, "OK");
 					}, 
 					function(error) {
-						$.ui.gmap._trigger(a, error, null);
+						$.ui.gmap._trigger(a, null, error);
 					}, 
 					b 
 				);	
 			} else {
-				$.ui.gmap._trigger(a, "NOT_SUPPORTED", null);
+				$.ui.gmap._trigger(a, null, "NOT_SUPPORTED");
+			}
+		},
+		
+		/**
+		 * Watches current position
+		 * To clear watch, call navigator.geolocation.clearWatch(this.get('watch'));
+		 * @param callback:function(position, status)
+		 * @param geoPositionOptions:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
+		 */
+		watchPosition: function(a, b) {
+			if ( navigator.geolocation ) {
+				this.set('watch', navigator.geolocation.watchPosition ( 
+					function(position) {
+						$.ui.gmap._trigger(a, position, "OK");
+					}, 
+					function(error) {
+						$.ui.gmap._trigger(a, null, error);
+					}, 
+					b 
+				));	
+			} else {
+				$.ui.gmap._trigger(a, null, "NOT_SUPPORTED");
 			}
 		}
+		
 	
 	});
 	

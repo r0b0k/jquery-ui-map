@@ -1,33 +1,42 @@
+ /*!
+ * jQuery UI Google Map 3.0-alpha
+ * http://code.google.com/p/jquery-ui-map/
+ * Copyright (c) 2010 - 2011 Johan Säll Larsson
+ * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
+ *
+ * Depends:
+ *      jquery.ui.core.js
+ *      jquery.ui.widget.js
+ *		jquery.ui.map.js
+ */
 ( function($) {
 	
 	$.extend($.ui.gmap.prototype, {
 		
-		
-		/* ELEVATION SERVICE */
 		
 		/**
 		 * Makes an elevation request along a path, where the elevation data are returned as distance-based samples along that path.
 		 * @param a:google.maps.PathElevationRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest
 		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
-		elevationPath: function(a, b) {
+		/*elevationPath: function(a, b) {
 			if ( !this.get('services').ElevationService ) {
 				this.get('services').ElevationService = new google.maps.ElevationService();
 			}
 			this.get('services').ElevationService.getElevationAlongPath(a, b);
-		},
+		},*/
 		
 		/**
 		 * Makes an elevation request for a list of discrete locations.
 		 * @param a:google.maps.PathElevationRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest
 		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
-		elevationLocations: function(a, b) {
+		/*elevationLocations: function(a, b) {
 			if ( !this.get('services').ElevationService ) {
 				this.get('services').ElevationService = new google.maps.ElevationService();
 			}
 			this.get('services').ElevationService.getElevationForLocations(a, b);
-		},
+		},*/
 		
 		/* PLACES SERVICE */		
 		
@@ -36,35 +45,35 @@
 		 * @param a:google.maps.places.PlaceSearchRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceSearchRequest
 		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
-		placesSearch: function(a, b) {
+		/*placesSearch: function(a, b) {
 			if ( !this.get('services').PlacesService ) {
 				this.get('services').PlacesService = new google.maps.places.PlacesService(this.get('map'));
 			}
 			this.get('services').PlacesService.search(a, b);
-		},
+		},*/
 		
 		/**
 		 * Retrieves details about the Place identified by the given reference.
 		 * @param a:google.maps.places.PlaceDetailsRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceDetailsRequest
 		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
-		placesDetails: function(a, b) {
+		/*placesDetails: function(a, b) {
 			if ( !this.get('services').PlacesService ) {
 				this.get('services').PlacesService = new google.maps.places.PlacesService(this.get('map'));
 			}
 			this.get('services').PlacesService.getDetails(a, b);
-		},
+		},*/
 		
 		/**
 		 * A service to predict the desired Place based on user input. The service is attached to an <input> field in the form of a drop-down list. The list of predictions is updated dynamically as text is typed into the input field. 
 		 * @param a:jquery/node/string
 		 * @param b:google.maps.places.AutocompleteOptions, http://code.google.com/apis/maps/documentation/javascript/reference.html#AutocompleteOptions
 		 */		
-		placesAutocomplete: function(a, b) {
+		/*placesAutocomplete: function(a, b) {
 			if ( !this.get('services').Autocomplete ) {
 				this.get('services').Autocomplete = new google.maps.places.Autocomplete($.ui.gmap._unwrap(a));
 			}
-		},
+		},*/
 		
 		/* DISTANCE MATRIX SERVICE */
 		
@@ -73,20 +82,23 @@
 		 * @param a:google.maps.DistanceMatrixRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixRequest 
 		 * @param b:function(result:google.maps.DistanceMatrixResponse, status: google.maps.DistanceMatrixStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixResponse
 		 */
-		displayDistanceMatrix: function(a, b) {
+		/*displayDistanceMatrix: function(a, b) {
 			if ( !this.get('services').DistanceMatrixService ) {
 				this.get('services').DistanceMatrixService = new google.maps.DistanceMatrixService();
 			}
 			this.get('services').DistanceMatrixService.getDistanceMatrix(a, b);
-		},
+		},*/
 		
 		/* DIRECTIONS SERVICE */
 		
 		/**
 		 * Computes directions between two or more places.
-		 * @param request:google.maps.DirectionsRequest, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest
-		 * @param options:google.maps.DirectionsRendererOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
-		 * @param callback:function(result:google.maps.DirectionsResult, status:google.maps.DirectionsStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
+		 * @param directionsRequest:google.maps.DirectionsRequest
+		 * @param directionsRendererOptions:google.maps.DirectionsRendererOptions (optional)
+		 * @param callback:function(result:google.maps.DirectionsResult, status:google.maps.DirectionsStatus)
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
 		 */
 		displayDirections: function(a, b, c) {
 			var self = this;		
@@ -113,8 +125,9 @@
 		
 		/**
 		 * Displays the panorama for a given LatLng or panorama ID.
-		 * @param a:jQuery/String/Node
-		 * @param b?:google.maps.StreetViewPanoramaOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions
+		 * @param panel:jQuery/String/Node
+		 * @param streetViewPanoramaOptions:google.maps.StreetViewPanoramaOptions (optional) 
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions
 		 */
 		displayStreetView: function(a, b) {
 			// StreetViewPanorama has no setOptions method (?)
@@ -126,8 +139,9 @@
 		
 		/**
 		 * A service for converting between an address and a LatLng.
-		 * @param a:google.maps.GeocoderRequest
-		 * @param b:function(result:google.maps.GeocoderResult, status:google.maps.GeocoderStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
+		 * @param geocoderRequest:google.maps.GeocoderRequest
+		 * @param callback:function(result:google.maps.GeocoderResult, status:google.maps.GeocoderStatus), 
+		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
 		 */
 		search: function(a, b) {
 			if ( !this.get('services').Geocoder ) {

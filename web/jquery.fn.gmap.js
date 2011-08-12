@@ -332,7 +332,7 @@
 			} else if ( a instanceof Object ) {
 				return a;
 			}
-			return document.getElementById(a);
+			return $(a)[0];
 		}
 			
 	});

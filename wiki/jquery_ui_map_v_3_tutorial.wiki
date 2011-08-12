@@ -26,6 +26,7 @@ To add a map just add
 {{{
 <script type="text/javascript">
 	$(function() {
+		// Also works with: var yourStartLatLng = '59.3426606750, 18.0736160278';
 		var yourStartLatLng = new google.maps.LatLng(59.3426606750, 18.0736160278);
 		$('#map_canvas').gmap({'center': yourStartLatLng});
 	});
@@ -42,20 +43,20 @@ and add a DIV tag within the BODY section of your HTML document
 
 In v3 the plugin has been split up into 4 JavaScript files to better reflect the Google maps v.3 API:
 
-===jquery.ui.map core===
+===jquery.ui.map===
 Used when you need minimal map features e.g. adding a marker to a map, loading markers from JSON.
 
-===jquery.ui.map overlay===
+===jquery.ui.map.overlays===
 
 Used for KML and GeoRSS Layers and Fusion Table Layers, 
 see http://code.google.com/apis/maps/documentation/javascript/overlays.html
 
-===jquery.ui.map service===
+===jquery.ui.map.services===
 
 Used for Directions, Distance Matrix, Elevation, Geocoding, Places and 
 Street View, see http://code.google.com/apis/maps/documentation/javascript/services.html
 
-===jquery.ui.map extension===
+===jquery.ui.map.extensions===
 
 Used for your extensions and modifications of existing methods
 
@@ -80,16 +81,17 @@ This is how you create a new method in the extension file
 } (jQuery) );
 }}}
 
-If you would like to modify existing methods you can do that too:
+If you would like to modify existing methods you can do that too. Let's say you would like to use [http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerwithlabel/docs/reference.html MarkerWithLabel] this is how you would do it:
 
 {{{
 ( function($) {
 
 	$.extend($.ui.gmap.prototype, {
 	
-		// We override the clearMarker method
-		function : clearMarker() {
-			alert('No more clearing markers!');
+		// We override the addMarker method
+		function : addMarker(markerOptions, callback) {
+			var marker = new google.maps.MarkerWithLabel( jQuery.extend({'map': this.get('map'), 'bounds': false}, markerOptions) );
+			...
 		}
 		
 	});

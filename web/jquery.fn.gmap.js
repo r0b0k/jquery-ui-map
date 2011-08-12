@@ -332,7 +332,7 @@
 			} else if ( a instanceof Object ) {
 				return a;
 			}
-			return $(a)[0];
+			return $('#'+a)[0];
 		}
 			
 	});

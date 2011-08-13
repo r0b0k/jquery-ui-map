@@ -5,7 +5,6 @@
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
  *
  * Depends:
- *      jquery.ui.core.js
  *      jquery.ui.widget.js
  */
 
@@ -28,9 +27,11 @@
 		 * @return $(google.maps.Map)
 		 */
 		_create: function() {
-			this.options.center = $.ui.gmap._unwrapLatLng(this.options.center);
+			this.options.center = this._latLng(this.options.center);
 			var a = this.element;
-			var b = $.ui.gmap.instances[a.attr('id')] = { map: new google.maps.Map( a[0], this.options ), markers: [], services: [], overlays: [] };
+			this.id = a.attr('id');
+			this.instances = [];
+			var b = this.instances[a.attr('id')] = { map: new google.maps.Map( a[0], this.options ), markers: [], services: [], overlays: [] };
 			google.maps.event.addListenerOnce(b.map, 'bounds_changed', function() {
 				a.trigger('init', b.map);
 			});
@@ -44,7 +45,7 @@
 		_update: function(a) {
 			var map = this.get('map');
 			jQuery.extend(this.options, { 'center': map.getCenter(), 'mapTypeId': map.getMapTypeId(), 'zoom': map.getZoom(), /*'heading': map.getHeading(), 'streetView': map.getStreetView(), 'tilt': map.getTilt(), 'bounds': map.getBounds(), 'projection': map.getProjection()*/ } );
-			$.ui.gmap._trigger(a);
+			this._call(a);
 			map.setOptions(this.options);
 		},
 		
@@ -66,7 +67,7 @@
 		 * @param position:google.maps.LatLng/string
 		 */
 		addBounds: function(a) {
-			this.get('bounds', new google.maps.LatLngBounds()).extend($.ui.gmap._unwrapLatLng(a));
+			this.get('bounds', new google.maps.LatLngBounds()).extend(this._latLng(a));
 			this.get('map').fitBounds(this.get('bounds'));
 		},
 		
@@ -77,7 +78,7 @@
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
 		 */
 		addControl: function(a, b) {
-			this.get('map').controls[b].push($.ui.gmap._unwrap(a));
+			this.get('map').controls[b].push(this._unwrap(a));
 		},
 		
 		/**
@@ -89,13 +90,13 @@
 		 */
 		addMarker: function(a, b) {
 			var c = this.get('map');
-			a.position = (a.position) ? $.ui.gmap._unwrapLatLng(a.position) : null;
+			a.position = (a.position) ? this._latLng(a.position) : null;
 			var d = new google.maps.Marker( jQuery.extend({'map': c, 'bounds': false}, a) );
 			this.get('markers', []).push(d);
 			if ( d.bounds ) {
 				this.addBounds(d.getPosition());
 			}
-			$.ui.gmap._trigger(b, c, d);
+			this._call(b, c, d);
 			return $(d);
 		},
 		
@@ -108,7 +109,7 @@
 		 */
 		addInfoWindow: function(a, b) {
 			var c = new google.maps.InfoWindow(a);
-			$.ui.gmap._trigger(b, c);
+			this._call(b, c);
 			return $(c);
 		},
 		
@@ -131,7 +132,7 @@
 		 * @param property:string the property to search within
 		 * @param value:string
 		 * @param delimiter:string/boolean	a delimiter if it's multi-valued otherwise false
-		 * @param callback:function(status:boolean, marker:google.maps.Marker)
+		 * @param callback:function(marker:google.maps.Marker, isFound:boolean)
 		 */
 		findMarker: function(a, b, c, d) {
 			var e = this.get('markers');
@@ -146,7 +147,7 @@
 						}
 					}
 				}
-				$.ui.gmap._trigger(d, g, e[i]);
+				this._call(d, e[i], g);
 			};
 		},
 
@@ -156,7 +157,7 @@
 		 * @param value:object(optional)
 		 */
 		get: function(a, b) {
-			var c = $.ui.gmap.instances[this.element.attr('id')];
+			var c = this.instances[this.id];
 			if ( b && !c[a] ) {
 				this.set(a, b);
 			}
@@ -171,7 +172,7 @@
 		 */
 		openInfoWindow: function(a, b) {
 			this.get('iw', new google.maps.InfoWindow).setOptions(a);
-			this.get('iw').open(this.get('map'), $.ui.gmap._unwrap(b)); 
+			this.get('iw').open(this.get('map'), this._unwrap(b)); 
 		},
 				
 		/**
@@ -180,7 +181,7 @@
 		 * @param value:object
 		 */
 		set: function(a, b) {
-			$.ui.gmap.instances[this.element.attr('id')][a] = b;
+			this.instances[this.id][a] = b;
 		},
 		
 		/**
@@ -199,25 +200,27 @@
 			this.clear('markers');
 			this.clear('services');
 			this.clear('overlays');
-			var a = $.ui.gmap.instances[this.element.attr('id')];
+			var a = this.instances[this.id];
 			for ( b in a ) {
 				a[b] = null;
 			}
-		}
-			
-	});
-
-	$.extend($.ui.gmap, {
-        
-		instances: [],
+		},
 		
-		_trigger: function(a) {
+		/**
+		 * Helper method for calling a function
+		 * @param callback
+		 */
+		_call: function(a) {
 			if ( $.isFunction(a) ) {
 				a.apply(this, Array.prototype.slice.call(arguments, 1));
 			}
 		},
 		
-		_unwrapLatLng: function(a) {
+		/**
+		 * Helper method for google.maps.Latlng
+		 * @param callback
+		 */
+		_latLng: function(a) {
 			if ( a instanceof google.maps.LatLng ) {
 				return a;
 			} else {
@@ -226,6 +229,10 @@
 			}
 		},
 		
+		/**
+		 * Helper method for unwrapping jQuery/DOM/string elements
+		 * @param callback
+		 */
 		_unwrap: function(a) {
 			if ( !a ) {
 				return null;
@@ -234,7 +241,7 @@
 			} else if ( a instanceof Object ) {
 				return a;
 			}
-			return document.getElementById(a);
+			return $('#'+a)[0];
 		}
 			
 	});

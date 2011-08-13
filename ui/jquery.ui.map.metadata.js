@@ -121,20 +121,22 @@
 			prefix = prefix.toLowerCase();
 			var retval = [];
 			retval[prefix] = [];
-
+			
+			var self = this;
+			
 			if ( type === 'rdfa' ) {
 				jQuery(document).items('typeof', ns, function() { return (this.getAttribute('typeof') != null); }).each(function(i, node) {
-					getItem($(node), retval[prefix]);
-					$.ui.gmap._trigger(callback, retval, i);
+					var item = getItem($(node), retval[prefix]);
+					self._call(callback, retval, item, i);
 				});
 			} else if ( type === 'microformat') {
 				$('.'+ns).each(function(i, node) {
-					$.ui.gmap._trigger(callback, i, $(node), getMicroformatItem($(node), []));
+					self._call(callback, i, $(node), getMicroformatItem($(node), []));
 				});
 			} else if ( type === 'microdata') {
 				jQuery(document).items('itemtype', ns, function() { return (this.getAttribute('itemscope') != null && this.getAttribute('itemprop') == null); } ).each(function(i, node) {
 
-					//$.ui.gmap._trigger(callback, i, $(node), getMicroformatItem($(node), []));
+					//self._call(callback, i, $(node), getMicroformatItem($(node), []));
 					
 				});
 			}

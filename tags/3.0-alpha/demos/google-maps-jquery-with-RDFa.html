@@ -50,33 +50,22 @@
 				// Only for code formatting
 				SyntaxHighlighter.all();
 				$('#sidebar-wrap').hide();
-				$('#map_canvas').gmap({ 'navigationControl': false, 'streetViewControl': false, 'callback': function() {
-					$('#map_canvas').gmap('loadMetadata', 'rdfa', 'vcard:Vevent', function(data, i) { 
-						console.log(data);
-						var latlng = data['vevent']['geo:lat_long'].content.split(',');
-						$('#map_canvas').gmap('addMarker', { 'bounds':true, 'position': new google.maps.LatLng(latlng[0], latlng[1]), 'animation': google.maps.Animation.DROP }, function(map, marker) {
-							var content = '<h2>Extracted metadata</h2>';
-							for ( var p in data['vevent'] ) {
-								if ( data['vevent'][p].content )
-									content += '<p class="iw-'+p+'">' + '<b>' + p + ':</b> ' + data['vevent'][p].content + '<p>';
+				$('#map_canvas').gmap({ 'navigationControl': false, 'streetViewControl': false }).bind('init', function(event, map) {
+					$('#map_canvas').gmap('loadMetadata', 'rdfa', 'vcard:Vevent', function(data, item, i) { 
+						var content = '<h2>Extracted metadata</h2>';
+						for ( var p in data['vevent'] ) {
+							if ( data['vevent'][p].content ) {
+								content += '<p class="iw-'+p+'">' + '<b>' + p + ':</b> ' + data['vevent'][p].content + '<p>';
 							}
-							$('#map_canvas').gmap('addInfoWindow', { 'position':marker.getPosition(), 'content': content }, function(iw) {
-								$(marker).click(function() {
-									iw.open(map, marker);
-									map.panTo(marker.getPosition());
-								});
-							});
-							$(item).click(function() {
-								$(marker).triggerEvent('click');
-								return false;
-							});
+						}
+						$('#map_canvas').gmap('addMarker', { 'position': data['vevent']['geo:lat_long'].content, 'bounds':true }).click(function() {
+							$('#map_canvas').gmap('openInfoWindow', { 'content': content }, this);
 						});
 					});
-					$('#map_canvas').gmap('addControl', 'sidebar', google.maps.ControlPosition.LEFT_TOP);
-				}});
+					$('#map_canvas').gmap('addControl', 'sidebar', 1);
+				});
             });
 		</script>
-
     </head>
     <body>
 	

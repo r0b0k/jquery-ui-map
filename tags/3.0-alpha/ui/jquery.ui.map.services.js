@@ -68,7 +68,7 @@
 		 */		
 		/*placesAutocomplete: function(a, b) {
 			if ( !this.get('services').Autocomplete ) {
-				this.get('services').Autocomplete = new google.maps.places.Autocomplete($.ui.gmap._unwrap(a));
+				this.get('services').Autocomplete = new google.maps.places.Autocomplete(this._unwrap(a));
 			}
 		},*/
 		
@@ -98,7 +98,7 @@
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
 		 */
 		displayDirections: function(a, b, c) {
-			var self = this;		
+			var d = this;		
 			var map = this.get('map');
 			if ( !this.get('services').DirectionsService ) {
 				this.get('services').DirectionsService = new google.maps.DirectionsService();
@@ -110,13 +110,13 @@
 			this.get('services').DirectionsService.route(a, function(result, status) {
 				if ( status === 'OK' ) {
 					if ( b.panel ) {
-						self.get('services').DirectionsRenderer.setDirections(result);
-						self.get('services').DirectionsRenderer.setMap(map);
+						d.get('services').DirectionsRenderer.setDirections(result);
 					}
+					d.get('services').DirectionsRenderer.setMap(map);
 				} else {
-					self.get('services').DirectionsRenderer.setMap(null);
+					d.get('services').DirectionsRenderer.setMap(null);
 				}
-				$.ui.gmap._trigger(c, result, status);
+				this._call(c, result, status);
 			});
 		},
 		
@@ -128,7 +128,7 @@
 		 */
 		displayStreetView: function(a, b) {
 			// StreetViewPanorama has no setOptions method (?)
-			this.get('services').StreetViewPanorama = new google.maps.StreetViewPanorama($.ui.gmap._unwrap(a), b);
+			this.get('services').StreetViewPanorama = new google.maps.StreetViewPanorama(this._unwrap(a), b);
 			this.get('map').setStreetView(this.get('services').StreetViewPanorama);
 		},
 		

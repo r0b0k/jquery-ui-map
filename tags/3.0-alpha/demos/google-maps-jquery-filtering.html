@@ -42,7 +42,16 @@
 					var northEast = bounds.getNorthEast();
 					var lngSpan = northEast.lng() - southWest.lng();
 					var latSpan = northEast.lat() - southWest.lat();
-
+					
+					var images = [];
+					images.push("http://google-maps-icons.googlecode.com/files/friends.png");
+					images.push("http://google-maps-icons.googlecode.com/files/home.png");
+					images.push("http://google-maps-icons.googlecode.com/files/girlfriend.png");
+					images.push("http://google-maps-icons.googlecode.com/files/dates.png");
+					images.push("http://google-maps-icons.googlecode.com/files/realestate.png");
+					images.push("http://google-maps-icons.googlecode.com/files/apartment.png");
+					images.push("http://google-maps-icons.googlecode.com/files/family.png");
+					
 					var tags = [];
 					tags.push("jQuery");
 					tags.push("Google maps");
@@ -67,7 +76,9 @@
 							var index = Math.floor(Math.random()*10);
 							temp.push(tags[index]);
 						}
-						var opts = { 'id': 'm_'+i, 'tags':temp.toString(), 'bound':true, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) };
+						
+						console.log( images[(Math.floor(Math.random()*7))]);
+						var opts = { 'id': 'm_'+i, 'icon': images[(Math.floor(Math.random()*7))], 'tags':temp.toString(), 'bound':true, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) };
 						$('#map_canvas').gmap('addMarker', opts ).click(function() {
 							$('#map_canvas').gmap('openInfoWindow', { 'content': $(this)[0].tags }, this);
 						});

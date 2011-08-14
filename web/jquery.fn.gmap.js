@@ -13,19 +13,20 @@
 	 * @param base:object
 	 */
 	$.a = function( a, b, c ) {
-		var d;
+		var d = [];
 		$[a] = $[a] || {};
 		$[a][b] = function(options, element) {
 			if ( arguments.length ) {
-				this._setup(options, element);
+				this._s(options, element);
 			}
 		};
 		$[a][b].prototype = c;
 		$.fn[b] = function(options) {
-			if ( d && d[options] ) {
-				return d[options].apply(d, Array.prototype.slice.call(arguments, 1));
+			var id = this.attr('id');
+			if ( d[id] && d[id][options] ) {
+				return d[id][options].apply(d[id], Array.prototype.slice.call(arguments, 1));
 			} else if ( typeof options === 'object' || ! options ) {
-				d = new $[a][b](options, this);
+				d[id] = new $[a][b](options, this);
 				return this;
 			}  
 		};
@@ -53,9 +54,7 @@
 			if (!b) {
 				return c.options[a];
 			} else {
-				c._update( function() {	
-					c.options[a] = b;
-				});
+				c._u(a, b);
 			}
 		},
 		
@@ -63,7 +62,7 @@
 		 * Setup plugin basics, 
 		 * Set the jQuery UI Widget this.element, so extensions will work on both plugins
 		 */
-		_setup: function( a, b ) {
+		_s: function( a, b ) {
 			this.id = b.attr('id');
 			this.instances = [];
 			this.element = b;
@@ -83,19 +82,22 @@
 			var a = this.element;
 			var b = this.instances[this.id] = { map: new google.maps.Map( a[0], this.options ), markers: [], services: [], overlays: [] };
 			google.maps.event.addListenerOnce(b.map, 'bounds_changed', function() {
-				a.trigger('init', b.map);
+				a.trigger('init', this);
 			});
 			return $(b.map);
 		},
 		
 		/**
-		 * Sets the current map options
-		 * @param callback:function() (optional)
+		 * Set map options
+		 * @param key:string (optional)
+		 * @param value:object (optional)
 		 */
-		_update: function(a) {
+		_u: function(a, b) {
 			var map = this.get('map');
 			jQuery.extend(this.options, { 'center': map.getCenter(), 'mapTypeId': map.getMapTypeId(), 'zoom': map.getZoom() } );
-			this._call(a);
+			if (a && b) {
+				this.options[a] = b;
+			}
 			map.setOptions(this.options);
 		},
 		
@@ -122,19 +124,26 @@
 		 * Adds a Marker to the map
 		 * @param markerOptions:google.maps.MarkerOptions (optional)
 		 * @param callback:function(map:google.maps.Map, marker:google.maps.Marker) (optional)
+		 * @param marker:function (optional)
 		 * @return $(google.maps.Marker)
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
 		 */
-		addMarker: function(a, b) {
-			var c = this.get('map');
+		addMarker: function(a, b, c) {
+			var d = this.get('map');
+			var c = c || google.maps.Marker;
 			a.position = (a.position) ? this._latLng(a.position) : null;
-			var d = new google.maps.Marker( jQuery.extend({'map': c, 'bounds': false}, a) );
-			this.get('markers', []).push(d);
-			if ( d.bounds ) {
-				this.addBounds(d.getPosition());
+			var e = new c( jQuery.extend({'map': d, 'bounds': false}, a) );
+			var f = this.get('markers', []);
+			if ( e.id ) {
+				f[e.id] = e;
+			} else {
+				f.push(e);
 			}
-			this._call(b, c, d);
-			return $(d);
+			if ( e.bounds ) {
+				this.addBounds(e.getPosition());
+			}
+			this._call(b, d, e);
+			return $(e);
 		},
 		
 		/**
@@ -155,13 +164,20 @@
 		 * @param type:string i.e. markers, overlays, services
 		 */
 		clear: function(a) {
-			var b = this.get(a);
-			$.each(b, function(c, d) {
-				google.maps.event.clearInstanceListeners(d);
-				d.setMap(null);
-				d = null;
-			});
+			this._c(this.get(a));
 			this.set(a, []);
+		},
+		
+		_c: function(a) {
+			for ( b in a ) {
+				if ( a[b] instanceof google.maps.MVCObject ) {
+					google.maps.event.clearInstanceListeners(a[b]);
+					a[b].setMap(null);
+				} else if ( a[b] instanceof Array ) {
+					this._c(a[b]);
+				}
+				a[b] = null;
+			}
 		},
 		
 		/**
@@ -173,18 +189,9 @@
 		 */
 		findMarker: function(a, b, c, d) {
 			var e = this.get('markers');
-			for ( var i = 0; i < e.length; i++ ) {
-				var g = ( e[i][a] === b );
-				if ( c && e[i][a] ) {
-					var f = e[i][a].split(c);
-					for ( var j = 0; j < f.length; j++ ) {
-						if (f[j] === b) {
-							g = true;
-							break;
-						}
-					}
-				}
-				this._call(d, e[i], g);
+			for ( f in e ) {
+				var g = ( c && e[f][a] ) ? ( e[f][a].split(c).indexOf(b) > -1 ) : ( e[f][a] === b );
+				this._call(d, e[f], g);
 			};
 		},
 
@@ -195,8 +202,23 @@
 		 */
 		get: function(a, b) {
 			var c = this.instances[this.id];
-			if ( b && !c[a] ) {
-				this.set(a, b);
+			if (!c[a]) {
+				if ( a.indexOf('>') > -1 ) {
+					var e = a.replace(/ /g, '').split('>');
+					for ( var i = 0; i < e.length; i++ ) {
+						if ( !c[e[i]] ) {
+							if (b) {
+								c[e[i]] = ( (i + 1) < e.length ) ? [] : b;
+							} else {
+								return null;
+							}
+						}
+						c = c[e[i]];
+					}
+					return c;
+				} else if ( b && !c[a] ) {
+					this.set(a, b);
+				}
 			}
 			return c[a];
 		},

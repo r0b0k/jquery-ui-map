@@ -99,24 +99,19 @@
 		 */
 		displayDirections: function(a, b, c) {
 			var d = this;		
-			var map = this.get('map');
-			if ( !this.get('services').DirectionsService ) {
-				this.get('services').DirectionsService = new google.maps.DirectionsService();
-			}
-			if ( !this.get('services').DirectionsRenderer ) {
-				this.get('services').DirectionsRenderer = new google.maps.DirectionsRenderer();
-			}
-			this.get('services').DirectionsRenderer.setOptions(b);
-			this.get('services').DirectionsService.route(a, function(result, status) {
-				if ( status === 'OK' ) {
+			var e = this.get('services > DirectionsService', new google.maps.DirectionsService());
+			var f = this.get('services > DirectionsRenderer', new google.maps.DirectionsRenderer());
+			f.setOptions(b);
+			e.route(a, function(g, h) {
+				if ( h === 'OK' ) {
 					if ( b.panel ) {
-						d.get('services').DirectionsRenderer.setDirections(result);
+						f.setDirections(g);
 					}
-					d.get('services').DirectionsRenderer.setMap(map);
+					f.setMap(d.get('map'));
 				} else {
-					d.get('services').DirectionsRenderer.setMap(null);
+					f.setMap(null);
 				}
-				this._call(c, result, status);
+				d._call(c, g, h);
 			});
 		},
 		
@@ -127,9 +122,7 @@
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions
 		 */
 		displayStreetView: function(a, b) {
-			// StreetViewPanorama has no setOptions method (?)
-			this.get('services').StreetViewPanorama = new google.maps.StreetViewPanorama(this._unwrap(a), b);
-			this.get('map').setStreetView(this.get('services').StreetViewPanorama);
+			this.get('map').setStreetView(this.get('services > StreetViewPanorama', new google.maps.StreetViewPanorama(this._unwrap(a), b)));
 		},
 		
 		/* GEOCODING SERVICE */
@@ -141,10 +134,7 @@
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
 		 */
 		search: function(a, b) {
-			if ( !this.get('services').Geocoder ) {
-				this.get('services').Geocoder = new google.maps.Geocoder();
-			}
-			this.get('services').Geocoder.geocode(a, b);
+			this.get('services > Geocoder', new google.maps.Geocoder()).geocode(a, b);
 		}
 	
 	});

@@ -39,27 +39,17 @@
 		},
 		
 		/**
-		 * Sets the current map options
-		 * @param callback:function() (optional)
-		 */
-		_update: function(a) {
-			var map = this.get('map');
-			jQuery.extend(this.options, { 'center': map.getCenter(), 'mapTypeId': map.getMapTypeId(), 'zoom': map.getZoom(), /*'heading': map.getHeading(), 'streetView': map.getStreetView(), 'tilt': map.getTilt(), 'bounds': map.getBounds(), 'projection': map.getProjection()*/ } );
-			this._call(a);
-			map.setOptions(this.options);
-		},
-		
-		/**
 		 * Sets the option
 		 * @param name:string
 		 * @param value:object
 		 */
 		_setOption: function(a, b) {
-			var self = this;
-			var c = arguments;
-			this._update( function() {
-				$.Widget.prototype._setOption.apply(self, c);
-			});
+			var map = this.get('map');
+			jQuery.extend(this.options, { 'center': map.getCenter(), 'mapTypeId': map.getMapTypeId(), 'zoom': map.getZoom() } );
+			if ( a && b ) {
+				$.Widget.prototype._setOption.apply(this, arguments);
+			};
+			map.setOptions(this.options);
 		},
 		
 		/**
@@ -85,19 +75,26 @@
 		 * Adds a Marker to the map
 		 * @param markerOptions:google.maps.MarkerOptions (optional)
 		 * @param callback:function(map:google.maps.Map, marker:google.maps.Marker) (optional)
+		 * @param marker:function (optional)
 		 * @return $(google.maps.Marker)
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
 		 */
-		addMarker: function(a, b) {
-			var c = this.get('map');
+		addMarker: function(a, b, c) {
+			var d = this.get('map');
+			var c = c || google.maps.Marker;
 			a.position = (a.position) ? this._latLng(a.position) : null;
-			var d = new google.maps.Marker( jQuery.extend({'map': c, 'bounds': false}, a) );
-			this.get('markers', []).push(d);
-			if ( d.bounds ) {
-				this.addBounds(d.getPosition());
+			var e = new c( jQuery.extend({'map': d, 'bounds': false}, a) );
+			var f = this.get('markers', []);
+			if ( e.id ) {
+				f[e.id] = e;
+			} else {
+				f.push(e);
 			}
-			this._call(b, c, d);
-			return $(d);
+			if ( e.bounds ) {
+				this.addBounds(e.getPosition());
+			}
+			this._call(b, d, e);
+			return $(e);
 		},
 		
 		/**
@@ -118,13 +115,20 @@
 		 * @param type:string i.e. markers, overlays, services
 		 */
 		clear: function(a) {
-			var b = this.get(a);
-			$.each(b, function(c, d) {
-				google.maps.event.clearInstanceListeners(d);
-				d.setMap(null);
-				d = null;
-			});
+			this._c(this.get(a));
 			this.set(a, []);
+		},
+		
+		_c: function(a) {
+			for ( b in a ) {
+				if ( a[b] instanceof google.maps.MVCObject ) {
+					google.maps.event.clearInstanceListeners(a[b]);
+					a[b].setMap(null);
+				} else if ( a[b] instanceof Array ) {
+					this._c(a[b]);
+				}
+				a[b] = null;
+			}
 		},
 		
 		/**
@@ -136,18 +140,9 @@
 		 */
 		findMarker: function(a, b, c, d) {
 			var e = this.get('markers');
-			for ( var i = 0; i < e.length; i++ ) {
-				var g = ( e[i][a] === b );
-				if ( c && e[i][a] ) {
-					var f = e[i][a].split(c);
-					for ( var j = 0; j < f.length; j++ ) {
-						if (f[j] === b) {
-							g = true;
-							break;
-						}
-					}
-				}
-				this._call(d, e[i], g);
+			for ( f in e ) {
+				var g = ( c && e[f][a] ) ? ( e[f][a].split(c).indexOf(b) > -1 ) : ( e[f][a] === b );
+				this._call(d, e[f], g);
 			};
 		},
 
@@ -158,8 +153,23 @@
 		 */
 		get: function(a, b) {
 			var c = this.instances[this.id];
-			if ( b && !c[a] ) {
-				this.set(a, b);
+			if (!c[a]) {
+				if ( a.indexOf('>') > -1 ) {
+					var e = a.replace(/ /g, '').split('>');
+					for ( var i = 0; i < e.length; i++ ) {
+						if ( !c[e[i]] ) {
+							if (b) {
+								c[e[i]] = ( (i + 1) < e.length ) ? [] : b;
+							} else {
+								return null;
+							}
+						}
+						c = c[e[i]];
+					}
+					return c;
+				} else if ( b && !c[a] ) {
+					this.set(a, b);
+				}
 			}
 			return c[a];
 		},
@@ -189,7 +199,7 @@
 		 */
 		refresh: function() {
 			$(this.get('map')).triggerEvent('resize');
-			this._update();
+			this._setOption();
 		},
 		
 		/**
@@ -199,7 +209,7 @@
 			$.Widget.prototype.destroy.call(this);
 			this.clear('markers');
 			this.clear('services');
-			this.clear('overlays');
+			this.clear('overlays', true);
 			var a = this.instances[this.id];
 			for ( b in a ) {
 				a[b] = null;

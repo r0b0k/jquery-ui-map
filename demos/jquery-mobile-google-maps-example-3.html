@@ -14,7 +14,7 @@
 		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
 		<meta name="DC.language" content="en"/>
 		
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
 		<style rel="stylesheet">
 			body {  background: #ddd; }
 			.ui-body-c a.ui-link { color: #008595; font-weight: bold; text-decoration: none; }
@@ -27,21 +27,17 @@
 			h2 { font-size: 16px; overflow: hidden; white-space: nowrap; display: block; }
 			.more { text-align: center; }
 		</style>
-		<script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
-        <script type="text/javascript">
-			google.load("maps", "3", {'other_params':'sensor=true&libraries=places'});
-			google.load("jquery", "1.5");
-		</script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>	
 		<script type="text/javascript">
 			// Demonstration purpose only...
 			$(document).bind("mobileinit", function () {
 				$.mobile.ajaxEnabled  = true;
 			});
 		</script>
-		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
 		<script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
-		<!--<script type="text/javascript" src="../ui/jquery.ui.map.services.js"></script>-->
-		
+		<script type="text/javascript" src="../ui/jquery.ui.map.services.js"></script>
 		<script type="text/javascript" src="../ui/jquery.ui.map.extensions.js"></script>
 	</head> 
 
@@ -54,27 +50,30 @@
 			</div>
 
 			<script type="text/javascript">
-				var latLng;
-				
+
 				$('#gmap-3').live("pageshow", function() {
-					$('#map_canvas_1').gmap({'center': getLatLng()});
-					$('#map_canvas_1').gmap('getCurrentPosition', function(status, position) {
+					//$('#map_canvas_2').gmap('refresh');
+					$('#map_canvas_1').gmap('getCurrentPosition', function(position, status) {
 						if ( status === 'OK' ) {
-							$('#map_canvas_1').gmap({'center': new google.maps.LatLng(position.coords.latitude, position.coords.longitude)});
-							$('#from').val(position.coords.latitude+ ','+position.coords.longitude);
+							var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+							$('#map_canvas_1').gmap('get', 'map').panTo(latlng);
+							$('#map_canvas_1').gmap('search', { 'location': latlng }, function(results, status) {
+								if ( status === 'OK' ) {
+									$('#from').val(results[0].formatted_address);
+								}
+							});
+							
 						} else {
 							alert('Unable to get current position');
-							// set the #from to some valid default value
 						}
 					});
-					function getLatLng() {
-						if ( google.loader.ClientLocation != null )
-							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
-						return new google.maps.LatLng(59.3426606750, 18.0736160278);
-					}
 				});
+				
 				// To stop the click from looping into nonsense
 				$('#gmap-3').live("pagecreate", function() {
+					
+					$('#map_canvas_1').gmap({'center': '59.3426606750, 18.0736160278'});
+					
 					$('#submit').click(function() {
 						$('#map_canvas_1').gmap('displayDirections', { 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(success, response) {
 							if ( success ) {
@@ -93,13 +92,13 @@
 					
 					<div id="map_canvas_1" style="height:300px;"></div>
 				
-					<p style="display:none;">
+					<p>
 						<label for="from">From</label>
-						<input id="from" type="hidden" class="ui-bar-c" value="G&ouml;teborg, Sweden" />
+						<input id="from" class="ui-bar-c" type="text" value="G&ouml;teborg, Sweden" />
 					</p>
 					<p>
 						<label for="to">To</label>
-						<input id="to" class="ui-bar-c" value="Stockholm, Sweden" />
+						<input id="to" class="ui-bar-c" type="text" value="Stockholm, Sweden" />
 					</p>
 				
 					<a id="submit" href="#" data-role="button" data-icon="search">Get directions</a>

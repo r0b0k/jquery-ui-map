@@ -14,7 +14,7 @@
 		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
 		<meta name="DC.language" content="en"/>
 		
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.css" />
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" />
 		<style rel="stylesheet">
 			body {  background: #ddd; }
 			.ui-body-c a.ui-link { color: #008595; font-weight: bold; text-decoration: none; }
@@ -22,19 +22,18 @@
 			h2 { font-size: 16px; overflow: hidden; white-space: nowrap; display: block; }
 			.more { text-align: center; }
 		</style>
-		<script src="http://www.google.com/jsapi?key=ABQIAAAAahcO7noe62FuOIQacCQQ7RTHkUDJMJAZieEeKAqNDtpKxMhoFxQsdtJdv3FJ1dT3WugUNJb7xD-jsQ" type="text/javascript"></script>        
-        <script type="text/javascript">
-			google.load("maps", "3", {'other_params':'sensor=true'});
-			google.load("jquery", "1.5");
-		</script>
+		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.1.min.js"></script>	
 		<script type="text/javascript">
 			// Demonstration purpose only...
 			$(document).bind("mobileinit", function () {
 				$.mobile.ajaxEnabled  = true;
 			});
 		</script>
-		<script type="text/javascript" src="http://code.jquery.com/mobile/1.0a4/jquery.mobile-1.0a4.min.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
 		<script type="text/javascript" src="../ui/jquery.ui.map.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.map.services.js"></script>
+		<script type="text/javascript" src="../ui/jquery.ui.map.extensions.js"></script>
 	</head> 
 
 	<body> 
@@ -47,44 +46,24 @@
 
 			<script type="text/javascript">
 				$('#gmap-4').live("pageshow", function() {
-					
-					$('#map_canvas_2').gmap( { 'center': getLatLng(), 'callback': 
-						function (map) {
-							if ( navigator.geolocation ) {
-								watch = navigator.geolocation.watchPosition ( 
-									function( position ) { 
-										$('#map_canvas_2').gmap('clearMarkers');
-										$('#map_canvas_2').gmap('addMarker', { 'title': 'You are here!', 'bound': true, 'position':new google.maps.LatLng(position.coords.latitude, position.coords.longitude) }, function(map, marker) {
-											$('#map_canvas_2').gmap('addInfoWindow', { 'position': marker.getPosition(), 'content': 'You are here!' }, function(iw) {
-												$(marker).click(function() {
-													iw.open(map, marker);
-												});
-											});
-											map.panTo( marker.getPosition() );
-										});
-									}
-								);
-							}
-						}
-					}); 
-					
-					function getLatLng() {
-						if ( google.loader.ClientLocation != null ) {
-							return new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);	
-						}
-						return new google.maps.LatLng(59.3426606750, 18.0736160278);
-					}
-
-				});
-				
-				$('#gmap-4').live("pagehide", function() {
-					if ( navigator.geolocation ) {
-						navigator.geolocation.clearWatch(watch);
-                    }
+					//$('#map_canvas_2').gmap('refresh');
 				});
 				
 				$('#gmap-4').live("pagecreate", function() {
-					var watch;
+					$('#map_canvas_2').gmap({'center': '59.3426606750, 18.0736160278', 'mapTypeId': 'terrain'}).bind('init', function(evt, map) {
+						$('#map_canvas_2').gmap('watchPosition', function(position, status) {
+							if ( status === 'OK' ) {
+								var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+								var markers = $('#map_canvas_2').gmap('get', 'markers' );
+								if ( !markers['client'] ) {
+									$('#map_canvas_2').gmap('addMarker', { 'id': 'client', 'position': latlng, 'bounds': true });
+								} else {
+									markers['client'].setPosition(latlng);
+									map.panTo(latlng);
+								}
+							}
+						});
+					});
 				});
 
 			</script>

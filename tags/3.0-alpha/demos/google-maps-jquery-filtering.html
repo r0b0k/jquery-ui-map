@@ -77,7 +77,6 @@
 							temp.push(tags[index]);
 						}
 						
-						console.log( images[(Math.floor(Math.random()*7))]);
 						var opts = { 'id': 'm_'+i, 'icon': images[(Math.floor(Math.random()*7))], 'tags':temp.toString(), 'bound':true, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) };
 						$('#map_canvas').gmap('addMarker', opts ).click(function() {
 							$('#map_canvas').gmap('openInfoWindow', { 'content': $(this)[0].tags }, this);

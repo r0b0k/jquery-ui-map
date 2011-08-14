@@ -79,9 +79,11 @@
 						"Remove": function() {
 							$(this).dialog( "close" );
 							el.setMap(null);
+							return false;
 						},
 						"Save": function() {
 							$(this).dialog( "close" );
+							return false;
 						}
 					}});
 				}

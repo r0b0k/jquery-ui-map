@@ -83,10 +83,11 @@
 				<pre class="brush: js">
 &lt;script type="text/javascript"&gt;
 	$(function() {
-		var latlng = new google.maps.LatLng(59.3426606750, 18.0736160278);
-		$('#map_canvas').gmap({ 'center':latlng, 'callback': function() {
-				$('#map_canvas').gmap('loadJSON', 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', 'category=activity', function(i, m) {
-					$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(m.lat, m.lng) } );
+		$('#map_canvas').gmap({ 'center':new google.maps.LatLng(59.3426606750, 18.0736160278), 'streetViewControl': false, 'callback': function() {
+				$.getJSON( 'http://jquery-ui-map.googlecode.com/svn/trunk/demos/json.json', 'category=activity', function(data) { 
+					$.each( data.markers, function(i, m) {
+						$('#map_canvas').gmap('addMarker', { 'position': new google.maps.LatLng(m.lat, m.lng) } );
+					});
 				});
 			}
 		});

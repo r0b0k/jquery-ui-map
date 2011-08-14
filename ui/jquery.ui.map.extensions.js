@@ -17,18 +17,19 @@
 		 * @param geoPositionOptions:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
 		 */
 		getCurrentPosition: function(a, b) {
+			var c = this;
 			if ( navigator.geolocation ) {
 				navigator.geolocation.getCurrentPosition ( 
 					function(position) {
-						$.ui.gmap._trigger(a, position, "OK");
+						c._call(a, position, "OK");
 					}, 
 					function(error) {
-						$.ui.gmap._trigger(a, null, error);
+						c._call(a, null, error);
 					}, 
 					b 
 				);	
 			} else {
-				$.ui.gmap._trigger(a, null, "NOT_SUPPORTED");
+				c._call(a, null, "NOT_SUPPORTED");
 			}
 		},
 		
@@ -39,20 +40,21 @@
 		 * @param geoPositionOptions:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
 		 */
 		watchPosition: function(a, b) {
+			var c = this;
 			if ( navigator.geolocation ) {
 				this.set('watch', navigator.geolocation.watchPosition ( 
 					function(position) {
-						$.ui.gmap._trigger(a, position, "OK");
+						c._call(a, position, "OK");
 					}, 
 					function(error) {
-						$.ui.gmap._trigger(a, null, error);
+						c._call(a, null, error);
 					}, 
 					b 
 				));	
 			} else {
-				$.ui.gmap._trigger(a, null, "NOT_SUPPORTED");
+				c._call(a, null, "NOT_SUPPORTED");
 			}
-		}
+		}	
 		
 	
 	});

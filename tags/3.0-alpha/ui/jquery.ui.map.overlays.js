@@ -12,6 +12,24 @@
 	$.extend($.ui.gmap.prototype, {
 		
 		/**
+		 * Adds a shape to the map
+		 * @param type:string Polygon, Polyline, Rectangle, Circle
+		 * @param options:
+		 */
+		addShape: function(a, b) {
+			var c = a.toLowerCase() + 's';
+			if ( !this.get('overlays')[c]) {
+				this.get('overlays')[c] = [];
+			}
+			var shape = new google.maps[a]();
+			this.get('overlays')[c].push(new google.maps[a]());
+			b = b || {};
+			shape.setOptions(jQuery.extend({'map': this.get('map')}, b));
+			this.get('overlays')[c].push(shape);
+			return $(shape);
+		},
+		
+		/**
 		 * Adds fusion data to the map.
 		 * @param fusionTableOptions:google.maps.FusionTablesLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions
 		 * @param fusionTableId:int

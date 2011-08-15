@@ -122,3 +122,59 @@ Or do something during the widget initialization. This will geocode the address 
         
 } (jQuery) );
 }}}
+
+Create an autocomplete function with Google Gecoder. This example requires jQuery UI.
+
+{{{
+( function($) {
+
+	$.extend($.ui.gmap.prototype, {
+	
+		/**
+		 * Autocomplete using Google Geocoder
+		 * @param panel:string/node/jquery
+		 */
+		autocomplete: function(panel) {
+			var self = this;
+			$(this._unwrap(panel)).autocomplete({
+				source: function( request, response ) {
+					self.search({'address':request.term}, function(results, status) {
+						if ( status === 'OK' ) {
+							response( $.map( results, function(item) {
+								return { label: item.formatted_address, value: item.geometry.location }
+							}));
+						}
+					});
+				},
+				minLength: 3,
+				select: function( event, ui ) { 
+					if ( !self.get('markers > search') ) {
+						self.addMarker({ 'id': 'search', 'position': ui.item.value, 'bounds':true }).click(function() {
+							self.openInfoWindow({'content':ui.item.label}, this);
+						});
+					} else {
+						self.get('markers > search').setPosition(ui.item.value);
+						self.get('map').panTo(ui.item.value);
+					}
+					ui.item.value = ui.item.label;
+				},
+				open: function() { $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" ); },
+				close: function() { $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" ); }
+			});
+		}
+	
+	});
+	
+} (jQuery) );
+}}}
+
+Call the autocomplete like this
+
+{{{
+$('#map_canvas').gmap('autocomplete', 'locality');
+}}}
+
+Remember to have an input element with id 'locality'
+{{{
+<input id="locality" type="text" />
+}}}

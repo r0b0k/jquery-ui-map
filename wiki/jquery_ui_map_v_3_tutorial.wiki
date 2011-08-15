@@ -165,8 +165,8 @@ Call the autocomplete like this
 
 {{{
 $('#map_canvas').gmap('autocomplete', 'locality', function(ui) {
-			// ui.item.position <-- selected position (google.maps.LatLng)
-		});
+	// ui.item.position <-- selected position (google.maps.LatLng)
+});
 }}}
 
 Remember to have an input element with id 'locality'

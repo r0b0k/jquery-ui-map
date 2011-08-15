@@ -75,8 +75,8 @@
 					$('#map_canvas_1').gmap({'center': '59.3426606750, 18.0736160278'});
 					
 					$('#submit').click(function() {
-						$('#map_canvas_1').gmap('displayDirections', { 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(success, response) {
-							if ( success ) {
+						$('#map_canvas_1').gmap('displayDirections', { 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(response, status) {
+							if ( status === 'OK' ) {
 								$('#results').show();
 							} else {
 								$('#results').hide();

@@ -237,3 +237,32 @@ Most often calling refresh will fix rendering issues, such as when the map is be
 {{{
 $('#map_canvas').gmap('refresh');
 }}}
+
+== Autocomplete with Google Maps ==
+{{{
+$('#address').autocomplete({
+	source: function( request, response ) {
+		$('#map_canvas').gmap('search', {'address':request.term}, function(results, status) {
+			if ( status === 'OK' ) {
+				response( $.map( results, function( item ) {
+					return { label: item.formatted_address, value: item.geometry.location }
+				}));
+			}
+		});
+	},
+	minLength: 3,
+	select: function( event, ui ) { 
+		if ( !$('#map_canvas').gmap('get', 'markers > search') ) {
+			$('#map_canvas').gmap('addMarker', { 'id': 'search', 'position': ui.item.value, 'bounds':true }).click(function() {
+				$('#map_canvas').gmap('openInfoWindow', {'content':ui.item.label}, this);
+			});
+		} else {
+			$('#map_canvas').gmap('get', 'markers > search').setPosition(ui.item.value);
+			$('#map_canvas').gmap('get', 'map').panTo(ui.item.value);
+		}
+		ui.item.value = ui.item.label;
+	},
+	open: function() { $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" ); },
+	close: function() { $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" ); }
+});
+}}}

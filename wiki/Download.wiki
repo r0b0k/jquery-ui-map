@@ -1,0 +1,17 @@
+#summary Download minified versions
+
+= Download minified files =
+
+===version 3.0.alpha===
+
+  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.full.min.js Full version] (core, jquery.ui.map.overlays.js and jquery.ui.map.services.js
+  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.min.js Core] 
+  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.overlays.min.js Overlays]
+  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.services.min.js Services]
+
+===version 2.0.2===
+
+  * [http://jquery-ui-map.googlecode.com/svn/tags/2.0.2/ui/jquery.ui.map.min.js Full version]
+  * [http://jquery-ui-map.googlecode.com/svn/tags/2.0.2/ui/jquery.ui.gmap.microformat.min.js Microformats]
+  * [http://jquery-ui-map.googlecode.com/svn/tags/2.0.2/ui/jquery.ui.gmap.microdata.min.js Microdata]
+  * [http://jquery-ui-map.googlecode.com/svn/tags/2.0.2/ui/jquery.ui.gmap.rdfa.min.js RDFa]

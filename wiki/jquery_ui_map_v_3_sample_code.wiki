@@ -48,10 +48,11 @@ $('#map_canvas').gmap().bind('init', function() {
 
 The position can be set with a string representation of a latitude/longitude ('xx.xx,xx.xx') or with a google.maps.LatLng().
 If you set the property bounds to true the map will calculate the viewport and zoom automagically :)
+If a property 'id' is added to the addMarker method the marker will be retrievable by it's id with the 'get' method.
 
 {{{
 $('#map_canvas').gmap().bind('init', function(evt, map) { 
-	$('#map_canvas').gmap('addMarker', { 'position': '42.345573,-71.098326', 'bounds': true } );																										  
+	$('#map_canvas').gmap('addMarker', { /*id:'m_1',*/ 'position': '42.345573,-71.098326', 'bounds': true } );																										  
 });
 }}}
 
@@ -192,9 +193,22 @@ $('#map_canvas').gmap('get', 'markers');
 }}}
 
 {{{
+// Returns a marker with the id 'm_1'
+$('#map_canvas').gmap('get', 'markers > m_1');
+//or
+$('#map_canvas').gmap('get', 'markers')['m_1'];
+
+// Returns the first marker if not using id's
+$('#map_canvas').gmap('get', 'markers > 0');
+$('#map_canvas').gmap('get', 'markers')[0];
+}}}
+
+{{{
 // Get all services
 $('#map_canvas').gmap('get', 'services');
 // Get a specific service implementation
+$('#map_canvas').gmap('get', 'services > GeoCoder')
+// or
 $('#map_canvas').gmap('get', 'services').GeoCoder
 }}}
 
@@ -202,7 +216,11 @@ $('#map_canvas').gmap('get', 'services').GeoCoder
 // Get all overlays
 $('#map_canvas').gmap('get', 'overlays');
 // Get a specific overlay implementation, see the loadKML example
+$('#map_canvas').gmap('get', 'overlays > dog_feed_1');
+// or
 $('#map_canvas').gmap('get', 'overlays').dog_feed_1;
+// Polygons/Circles/etc are stored in an array
+var arrayOfPolygons = $('#map_canvas').gmap('get', 'overlays > Polygon');
 }}}
 
 {{{

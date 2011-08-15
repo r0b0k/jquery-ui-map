@@ -133,30 +133,23 @@ Create an autocomplete function with Google Gecoder. This example requires jQuer
 		/**
 		 * Autocomplete using Google Geocoder
 		 * @param panel:string/node/jquery
+		 * @param callback:function(ui) called whenever something is selected
 		 */
-		autocomplete: function(panel) {
+		autocomplete: function(panel, callback) {
 			var self = this;
 			$(this._unwrap(panel)).autocomplete({
 				source: function( request, response ) {
 					self.search({'address':request.term}, function(results, status) {
 						if ( status === 'OK' ) {
 							response( $.map( results, function(item) {
-								return { label: item.formatted_address, value: item.geometry.location }
+								return { label: item.formatted_address, value: item.formatted_address, position: item.geometry.location }
 							}));
 						}
 					});
 				},
 				minLength: 3,
-				select: function( event, ui ) { 
-					if ( !self.get('markers > search') ) {
-						self.addMarker({ 'id': 'search', 'position': ui.item.value, 'bounds':true }).click(function() {
-							self.openInfoWindow({'content':ui.item.label}, this);
-						});
-					} else {
-						self.get('markers > search').setPosition(ui.item.value);
-						self.get('map').panTo(ui.item.value);
-					}
-					ui.item.value = ui.item.label;
+				select: function(event, ui) { 
+					self._call(callback, ui);
 				},
 				open: function() { $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" ); },
 				close: function() { $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" ); }
@@ -171,7 +164,9 @@ Create an autocomplete function with Google Gecoder. This example requires jQuer
 Call the autocomplete like this
 
 {{{
-$('#map_canvas').gmap('autocomplete', 'locality');
+$('#map_canvas').gmap('autocomplete', 'locality', function(ui) {
+			// ui.item.position <-- selected position (google.maps.LatLng)
+		});
 }}}
 
 Remember to have an input element with id 'locality'

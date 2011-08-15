@@ -52,7 +52,7 @@
 			<script type="text/javascript">
 
 				$('#gmap-3').live("pageshow", function() {
-					//$('#map_canvas_2').gmap('refresh');
+					$('#map_canvas_1').gmap('refresh');
 					$('#map_canvas_1').gmap('getCurrentPosition', function(position, status) {
 						if ( status === 'OK' ) {
 							var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)

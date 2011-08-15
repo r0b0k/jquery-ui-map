@@ -112,7 +112,7 @@ Or do something during the widget initialization. This will geocode the address 
 			if ( this.options.address && this.options.callback ) {
 				this.search({'address': this.options.address}, function(results, status) {
 					if ( status === 'OK' ) {
-						$.ui.gmap._trigger(self.options.callback, results, status);
+						self._call(self.options.callback, results, status);
 					}
 				});
 			}

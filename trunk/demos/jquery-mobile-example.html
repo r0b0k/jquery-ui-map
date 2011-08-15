@@ -103,11 +103,11 @@
 					$('#map_canvas_2').gmap('watchPosition', function(position, status) {
 						if ( status === 'OK' ) {
 							var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-							var markers = $('#map_canvas_2').gmap('get', 'markers' );
-							if ( !markers['client'] ) {
+							var marker = $('#map_canvas_2').gmap('get', 'markers > client' );
+							if ( !marker ) {
 								$('#map_canvas_2').gmap('addMarker', { 'id': 'client', 'position': latlng, 'bounds': true });
 							} else {
-								markers['client'].setPosition(latlng);
+								marker.setPosition(latlng);
 								map.panTo(latlng);
 							}
 						}

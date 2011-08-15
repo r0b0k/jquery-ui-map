@@ -17,10 +17,7 @@
 		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
 		/*elevationPath: function(a, b) {
-			if ( !this.get('services').ElevationService ) {
-				this.get('services').ElevationService = new google.maps.ElevationService();
-			}
-			this.get('services').ElevationService.getElevationAlongPath(a, b);
+			this.get('services > ElevationService', new google.maps.ElevationService()).getElevationAlongPath(a, b);
 		},*/
 		
 		/**
@@ -29,10 +26,7 @@
 		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
 		/*elevationLocations: function(a, b) {
-			if ( !this.get('services').ElevationService ) {
-				this.get('services').ElevationService = new google.maps.ElevationService();
-			}
-			this.get('services').ElevationService.getElevationForLocations(a, b);
+			this.get('services > ElevationService', new google.maps.ElevationService()).getElevationForLocations(a, b);
 		},*/
 		
 		/* PLACES SERVICE */		
@@ -43,10 +37,7 @@
 		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
 		/*placesSearch: function(a, b) {
-			if ( !this.get('services').PlacesService ) {
-				this.get('services').PlacesService = new google.maps.places.PlacesService(this.get('map'));
-			}
-			this.get('services').PlacesService.search(a, b);
+			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).search(a, b);
 		},*/
 		
 		/**
@@ -55,10 +46,7 @@
 		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
 		/*placesDetails: function(a, b) {
-			if ( !this.get('services').PlacesService ) {
-				this.get('services').PlacesService = new google.maps.places.PlacesService(this.get('map'));
-			}
-			this.get('services').PlacesService.getDetails(a, b);
+			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).getDetails(a, b);
 		},*/
 		
 		/**
@@ -67,9 +55,7 @@
 		 * @param b:google.maps.places.AutocompleteOptions, http://code.google.com/apis/maps/documentation/javascript/reference.html#AutocompleteOptions
 		 */		
 		/*placesAutocomplete: function(a, b) {
-			if ( !this.get('services').Autocomplete ) {
-				this.get('services').Autocomplete = new google.maps.places.Autocomplete(this._unwrap(a));
-			}
+			this.get('services > Autocomplete', new google.maps.places.Autocomplete(this._unwrap(a)));
 		},*/
 		
 		/* DISTANCE MATRIX SERVICE */
@@ -80,10 +66,7 @@
 		 * @param b:function(result:google.maps.DistanceMatrixResponse, status: google.maps.DistanceMatrixStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixResponse
 		 */
 		/*displayDistanceMatrix: function(a, b) {
-			if ( !this.get('services').DistanceMatrixService ) {
-				this.get('services').DistanceMatrixService = new google.maps.DistanceMatrixService();
-			}
-			this.get('services').DistanceMatrixService.getDistanceMatrix(a, b);
+			this.get('services > DistanceMatrixService', new google.maps.DistanceMatrixService()).getDistanceMatrix(a, b);
 		},*/
 		
 		/* DIRECTIONS SERVICE */

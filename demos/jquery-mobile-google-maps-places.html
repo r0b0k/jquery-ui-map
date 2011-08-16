@@ -2,16 +2,16 @@
 <html> 
 	<head profile="http://dublincore.org/documents/dcq-html/">
 	
-		<title>jQuery mobile with Google maps - Google maps jQuery plugin</title>
-		<meta name="keywords" content="Google maps, jQuery, plugin, mobile, iphone, ipad, android, HTML5" />
-		<meta name="description" content="Examples with jQuery mobile, Google maps and HTML5" />
+		<title>jQuery mobile with Google maps places and autocomplete - Google maps jQuery plugin</title>
+		<meta name="keywords" content="Google maps, jQuery, plugin, mobile, iphone, ipad, android, HTML5, places" />
+		<meta name="description" content="Examples with jQuery mobile, Google maps and Google places" />
 		<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1"/>
 		<meta http-equiv="content-language" content="en"/>
 		
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
-		<meta name="DC.title" content="jQuery mobile with Google maps - Google maps jQuery plugin" />
-		<meta name="DC.subject" content="Google maps;jQuery;plugin;mobile;iphone;ipad;android;HTML5" />
-		<meta name="DC.description" content="Examples with jQuery mobile, Google maps and HTML5" />
+		<meta name="DC.title" content="jQuery mobile with Google maps places and autocomplete - Google maps jQuery plugin" />
+		<meta name="DC.subject" content="Google maps;jQuery;plugin;mobile;iphone;ipad;android;HTML5, places" />
+		<meta name="DC.description" content="Examples with jQuery mobile, Google maps and Google places" />
 		<meta name="DC.creator" content="Johan S&auml;ll Larsson" />
 		<meta name="DC.language" content="en"/>
 		
@@ -39,9 +39,8 @@
 						$('#map_canvas').gmap('placesSearch', { 'location': ui.item.position, 'radius': '5000'/*, 'name': ['store']*/ }, function(results, status) {
 							if ( status === 'OK' ) {
 								$.each(results, function(i, item) {
-									var content = '<div class="places-img"><img src="'+item.icon+'"/></div><div class="places-text"><h3>'+item.name+'</h3></div><div class="clear"></div>';
 									$('#map_canvas').gmap('addMarker', { 'id': item.id, /*'icon': item.icon,*/ 'position': item.geometry.location, 'bounds':true }).click(function() {
-										$('#map_canvas').gmap('openInfoWindow', {'content': content}, this);
+										$('#map_canvas').gmap('openInfoWindow', {'content': '<h4>'+item.name+'</h4>'}, this);
 									});
 								});
 							}
@@ -83,6 +82,7 @@
 						</div>
 					</div>
 				</div>
+				<p>This example is using Google geocode for the autocomplete function and Google Places for the results.<p>
 			</div>
 		</div>
 	

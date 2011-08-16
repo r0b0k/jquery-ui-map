@@ -10,6 +10,6 @@ body, #gmap-4, .page { height:100%; }
 h2 { font-size: 16px; overflow: hidden; white-space: nowrap; display: block; }
 .more { text-align: center; }
 .clear { clear:both; }
-#control { display:none; width:100%; background: #2a3333; }
+#control { width:100%; background: #2a3333; }
 #control div { margin: 0.5em; }
 #control input#places { width:95%; }

@@ -29,10 +29,18 @@
 		<script type="text/javascript">
 		//<![CDATA[	
 			$(function() {
-				var o = { 'center': '58.00, 12.00', 'zoom': 10, 'streetViewControl': false, 'zoomControl': false, 'panControl': false, 'mapTypeControl': false, 'mapTypeId': 'terrain' };
-				$('#map_canvas').gmap(o).bind('init', function(event, map) { 
-					$('#map_canvas').gmap('addControl', 'control', 1);
-					$('#map_canvas').gmap('autocomplete', 'places', function(ui) {
+			
+				function PlacesSearchControl(str) {
+					var el = document.createElement('DIV');
+					var wrap = document.createElement('DIV');
+					var input = document.createElement('INPUT');
+					el.appendChild(wrap);
+					wrap.appendChild(input);
+					$(el).attr('id', 'control');
+					$(input).addClass('ui-bar-c ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c ui-autocomplete-input');
+					$(input).attr('id', 'places');
+					$(input).val(str);
+					$('#map_canvas').gmap('autocomplete', input, function(ui) {
 						$('#map_canvas').gmap('clear', 'markers');
 						$('#map_canvas').gmap('set', 'bounds', null);
 						$.mobile.pageLoading();
@@ -47,18 +55,20 @@
 							$.mobile.pageLoading(true);
 						});
 					});
-					$('#control').show();
-				});
+					$(input).focus(function() {
+						if ( $(this).val() === str ) {
+							$(this).val('');
+						}
+					}).blur(function() {
+						if ( $(this).val() == '' ) {
+							$(this).val(str);
+						}
+					});
+					return el;
+				}
 				
-				var defaultValue = $('#places').val();
-				$('#places').focus(function() {
-					if ( $(this).val() === defaultValue ) {
-						$(this).val('');
-					}
-				}).blur(function() {
-					if ( $(this).val() == '' ) {
-						$(this).val(defaultValue);
-					}
+				$('#map_canvas').gmap({'center': '58.00, 12.00', 'zoom': 10, 'disableDefaultUI': true, 'mapTypeId': 'terrain'}).bind('init', function(event, map) { 
+					$('#map_canvas').gmap('addControl', new PlacesSearchControl('Search places...'), 1);
 				});
 				
 			});
@@ -76,11 +86,11 @@
 			<div data-role="content">	
 				<div class="ui-bar-c ui-corner-all ui-shadow" style="padding:1em;">
 					<div id="map_canvas" style="height:300px;"></div>
-					<div id="control">
+					<!--<div id="control">
 						<div>
 							<input id="places" class="ui-bar-c" type="text" value="Search places..." />
 						</div>
-					</div>
+					</div>-->
 				</div>
 				<p>This example is using Google geocode for the autocomplete function and Google Places for the results.<p>
 			</div>

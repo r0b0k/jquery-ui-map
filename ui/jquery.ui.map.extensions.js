@@ -72,15 +72,15 @@
 		 */
 		autocomplete: function(a, b) {
 			var self = this;
-			console.log('extensions work ok');
 			$(this._unwrap(a)).autocomplete({
 				source: function( request, response ) {
-					console.log('inside autocomplete');
 					self.search({'address':request.term}, function(results, status) {
 						if ( status === 'OK' ) {
 							response( $.map( results, function(item) {
 								return { label: item.formatted_address, value: item.formatted_address, position: item.geometry.location }
 							}));
+						} else if ( status === 'OVER_QUERY_LIMIT' ) {
+							alert('Google said it\'s too much!');
 						}
 					});
 				},

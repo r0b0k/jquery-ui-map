@@ -39,19 +39,26 @@
 				// Only for code formatting
 				SyntaxHighlighter.all();
 				$('#map_canvas').gmap({ 'center': '37.434538, -121.89970399999999', 'zoom': 10 }).bind('init', function() {
-					
 					$('#map_canvas').gmap('loadFusion', { 'query': { 'from': 297050 } } );
-					
 					// remove all markers
 					//$('#map_canvas').gmap('get', 'overlays > FusionTablesLayer').setMap(null);
-					
 					// Demonstration of query using older loadFusion version
 					//$('#map_canvas').gmap('loadFusion', { query: "SELECT * FROM 297050 WHERE ST_INTERSECTS(Address, CIRCLE(LATLNG(37.434538,-121.89970399999999),20000))"}, 297050);
-				
 				});
             });
 		</script>
-        
+        <!-- GA START -->
+		<script type="text/javascript">
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-17614686-5']);
+			_gaq.push(['_trackPageview']);
+			(function() {
+				var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+				ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+				var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+			})();
+		</script>
+		<!-- GA END -->
 	</head>
     <body>
 		
@@ -133,18 +140,11 @@
 					</span>
 				</div>
 			</div>
+			
 		<div>
-        <script type="text/javascript">
-			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-		</script>
-		<script type="text/javascript">
-			try {
-				var pageTracker = _gat._getTracker("UA-17614686-3");
-				pageTracker._trackPageview();
-			} catch(err) {}
-		</script>
+		
     </body>
+	
 </html>
 
 

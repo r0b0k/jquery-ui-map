@@ -29,11 +29,36 @@
 		<script type="text/javascript" src="../thirdparty/SyntaxHighlighter/shBrushJScript.js"></script>
 		<script type="text/javascript" src="../thirdparty/SyntaxHighlighter/shBrushXml.js"></script>
         <script type="text/javascript">
-				
-			$(function() {
-				
+			// Ignore all code here
+			String.prototype.format = function() {
+				var retval = this.toString();
+				for ( var i = 0; i < arguments.length; i++ ) {
+					retval = retval.replace('{'+i+'}', arguments[i]);
+				}
+				return retval;
+			};
+			$(function() {	
 				// Only for code formatting
 				SyntaxHighlighter.all();
+				var items = '';
+				parseRSS('http://groups.google.com/group/jquery-ui-map-discuss/feed/rss_v2_0_msgs.xml', function(result) {
+					for ( var i = 0; i < result.entries.length; i++ ) {
+						items += ('<li class="group-item"><a href="{0}">{1}</a></h3></li>').format(
+							result.entries[i].link,
+							result.entries[i].title
+						);
+					}
+					$('#results').html(items);
+					$('#google-groups').show();
+				});
+				function parseRSS(url, callback) {
+					$.getJSON('http://ajax.googleapis.com/ajax/services/feed/load?v=1.0&callback=?&q=' + encodeURIComponent(url), function(data) { callback(data.responseData.feed); });
+				}
+			});
+		</script>
+		<script type="text/javascript">
+				
+			$(function() {
 				
 				$('#map_canvas').gmap().bind('init', function(event, map) { 
 						
@@ -196,6 +221,17 @@
 				<li><a href="basic-example.html">Google maps and jQuery example</a></li>
 				<li><a href="multiple maps example.html">Multiple maps on a single page example</a></li>
 			</ul>
+			
+			<div id="google-groups" class="groups ui-corner-all">
+				<h2>Forum</h2>
+				<ul id="results"></ul>
+				<h2>Subscribe</h2>
+				<form class="subscribe" action="http://groups.google.com/group/jquery-ui-map-discuss/boxsubscribe">
+					<label for="email">E-mail:</label>
+					<input id="email" type="text" name="email" />
+					<input type="submit" name="sub" value="Subscribe" />
+				</form>
+			</div>
 			
 			<div id="ft" class="hidden">
 				Author: 

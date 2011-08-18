@@ -48,4 +48,7 @@ a.buttonize:active	{ top: 1px; }
 	/*-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=160, Color='#999999')";
 	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=160, Color='#999999');*/
 }
+
 .item { padding:1em; margin:0 0 2em; }
+
+.groups { display:none; }

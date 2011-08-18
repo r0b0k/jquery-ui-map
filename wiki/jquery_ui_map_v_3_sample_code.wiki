@@ -188,19 +188,21 @@ $('#map_canvas').gmap('destroy');
 == Get markers, services, and more ==
 
 {{{
-// Returns all markers
-$('#map_canvas').gmap('get', 'markers');
+// Returns all markers as an array
+var markers = $('#map_canvas').gmap('get', 'markers');
 }}}
+
+If you call the method addMarkers and set the id property the $('#map_canvas').gmap('get', 'markers') will return an associative array which means you cannot use .length to count the markers.
 
 {{{
 // Returns a marker with the id 'm_1'
-$('#map_canvas').gmap('get', 'markers > m_1');
+var marker = $('#map_canvas').gmap('get', 'markers > m_1');
 //or
-$('#map_canvas').gmap('get', 'markers')['m_1'];
+var marker = $('#map_canvas').gmap('get', 'markers')['m_1'];
 
 // Returns the first marker if not using id's
-$('#map_canvas').gmap('get', 'markers > 0');
-$('#map_canvas').gmap('get', 'markers')[0];
+var marker = $('#map_canvas').gmap('get', 'markers > 0');
+var marker = $('#map_canvas').gmap('get', 'markers')[0];
 }}}
 
 {{{

@@ -81,8 +81,10 @@
 			this.options.center = this._latLng(this.options.center);
 			var a = this.element;
 			var b = this.instances[this.id] = { map: new google.maps.Map( a[0], this.options ), markers: [], services: [], overlays: [] };
+			var c = this;
 			google.maps.event.addListenerOnce(b.map, 'bounds_changed', function() {
 				a.trigger('init', this);
+				a.trigger('1337', c);
 			});
 			return $(b.map);
 		},
@@ -282,7 +284,7 @@
 			if ( a instanceof google.maps.LatLng ) {
 				return a;
 			} else {
-				var b = a.replace(' ','').split(',');
+				var b = a.replace(/ /g,'').split(',');
 				return new google.maps.LatLng(b[0], b[1]);
 			}
 		},

@@ -10,6 +10,6 @@
 
 [http://docs.phonegap.com Documentation]
 
-[http://http://wiki.phonegap.com/w/page/16494772/FrontPage Wiki]
+[http://http://wiki.phonegap.com/w/page/16494772/FrontPage PhoneGap Wiki]
 
-[http://www.mobiledevelopersolutions.com *AppLaud* Eclipse Plugin for PhoneGap ]
+[http://www.mobiledevelopersolutions.com AppLaud Eclipse Plugin for PhoneGap ]

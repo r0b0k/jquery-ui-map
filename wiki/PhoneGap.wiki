@@ -1,0 +1,15 @@
+#summary One-sentence summary of this page.
+
+= PhoneGap =
+
+*PhoneGap* is an HTML5 mobile device app platform that allows you to author native applications with web technologies and get access to APIs and app stores. PhoneGap leverages web technologies developers already know best... HTML and JavaScript
+
+== Links ==
+
+[http://www.phonegap.com PhoneGap Home]
+
+[http://docs.phonegap.com Documentation]
+
+[http://http://wiki.phonegap.com/w/page/16494772/FrontPage Wiki]
+
+[http://www.mobiledevelopersolutions.com *AppLaud* Eclipse Plugin for PhoneGap ]

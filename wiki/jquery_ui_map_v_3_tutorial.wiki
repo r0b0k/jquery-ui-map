@@ -39,10 +39,11 @@ and add a DIV tag within the BODY section of your HTML document
 <div id="map_canvas" style="width:250px;height:250px"></div>
 }}}
 
-=== My map is rendered incorrectly! ===
-If you use Ajax the map can unfortunately render incorrect. To prevent this you can
+=== Help, my map is rendered incorrectly! ===
+If you use Ajax the map can unfortunately render incorrect. To prevent this you can:
 
-1. Refresh the map
+  # *1. Refresh the map*
+
 {{{
 <script type="text/javascript">
 	$('#directions_map').live("pageshow", function() {
@@ -54,7 +55,8 @@ If you use Ajax the map can unfortunately render incorrect. To prevent this you 
 </script>
 }}}
 
-2. Bind to PageShow
+  # *2. Show the map in the pageshow event*
+
 {{{
 <script type="text/javascript">
 	$('#directions_map').live("pageshow", function() {
@@ -63,7 +65,8 @@ If you use Ajax the map can unfortunately render incorrect. To prevent this you 
 </script>
 }}}
 
-3. Not use Ajax
+  # *3. Not use Ajax*
+
 {{{
 <script type="text/javascript">
 	$.mobile.ajaxEnabled = false;
@@ -75,6 +78,7 @@ or
 {{{
 <a data-ajax="false" href="/map.html">Go to my map</a>
 }}}
+
 
 = Advanced =
 

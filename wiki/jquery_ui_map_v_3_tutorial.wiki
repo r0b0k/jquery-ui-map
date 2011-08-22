@@ -39,17 +39,17 @@ and add a DIV tag within the BODY section of your HTML document
 <div id="map_canvas" style="width:250px;height:250px"></div>
 }}}
 
-=== Help, my map is rendered incorrectly! ===
+=== Help, my map is rendered incorrectly! (jQM) ===
 If you use Ajax the map can unfortunately render incorrect. To prevent this you can:
 
   * Refresh the map
 
 {{{
 <script type="text/javascript">
-	$('#directions_map').live("pageshow", function() {
+	$('#page_id').live("pageshow", function() {
 		$('#map_canvas_1').gmap('refresh');
 	});
-	$('#directions_map').live("pagecreate", function() {
+	$('#page_id').live("pagecreate", function() {
 		$('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278'});
 	});
 </script>
@@ -59,7 +59,7 @@ If you use Ajax the map can unfortunately render incorrect. To prevent this you 
 
 {{{
 <script type="text/javascript">
-	$('#directions_map').live("pageshow", function() {
+	$('#page_id').live("pageshow", function() {
 		$('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278'});
 	});
 </script>

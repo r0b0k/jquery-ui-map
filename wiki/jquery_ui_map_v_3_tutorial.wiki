@@ -39,6 +39,43 @@ and add a DIV tag within the BODY section of your HTML document
 <div id="map_canvas" style="width:250px;height:250px"></div>
 }}}
 
+=== My map is rendered incorrectly! ===
+If you use Ajax the map can unfortunately render incorrect. To prevent this you can
+
+1. Refresh the map
+{{{
+<script type="text/javascript">
+	$('#directions_map').live("pageshow", function() {
+		$('#map_canvas_1').gmap('refresh');
+	});
+	$('#directions_map').live("pagecreate", function() {
+		$('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278'});
+	});
+</script>
+}}}
+
+2. Bind to PageShow
+{{{
+<script type="text/javascript">
+	$('#directions_map').live("pageshow", function() {
+		$('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278'});
+	});
+</script>
+}}}
+
+3. Not use Ajax
+{{{
+<script type="text/javascript">
+	$.mobile.ajaxEnabled = false;
+</script>
+}}}
+
+or 
+
+{{{
+<a data-ajax="false" href="/map.html">Go to my map</a>
+}}}
+
 = Advanced =
 
 In v3 the plugin has been split up into 4 JavaScript files to better reflect the Google maps v.3 API:

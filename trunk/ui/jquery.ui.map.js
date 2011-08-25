@@ -50,6 +50,13 @@
 				$.Widget.prototype._setOption.apply(this, arguments);
 			};
 			map.setOptions(this.options);
+			// FIXME: Temp fix for bounds... 
+			if (!(a && b)) {
+				var c = map.getBounds();
+				if (c) {
+					map.panToBounds(c);
+				}
+			}
 		},
 		
 		/**

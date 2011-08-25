@@ -99,8 +99,15 @@
 			jQuery.extend(this.options, { 'center': map.getCenter(), 'mapTypeId': map.getMapTypeId(), 'zoom': map.getZoom() } );
 			if (a && b) {
 				this.options[a] = b;
-			}
+			} 
 			map.setOptions(this.options);
+			// FIXME: Temp fix for bounds... 
+			if (!(a && b)) {
+				var c = map.getBounds();
+				if (c) {
+					map.panToBounds(c);
+				}
+			}
 		},
 		
 		/**
@@ -250,7 +257,7 @@
 		 */
 		refresh: function() {
 			$(this.get('map')).triggerEvent('resize');
-			this._update();
+			this._u();
 		},
 		
 		/**

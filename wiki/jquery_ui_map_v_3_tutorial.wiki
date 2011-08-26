@@ -39,6 +39,8 @@ and add a DIV tag within the BODY section of your HTML document
 <div id="map_canvas" style="width:250px;height:250px"></div>
 }}}
 
+[http://jquery-ui-map.googlecode.com/svn/trunk/demos/google-maps-mobile-boilerplate.html View the boiler plate template ] or [http://code.google.com/p/jquery-ui-map/source/browse/trunk/demos/google-maps-mobile-boilerplate.html view source]
+
 === Help, my map is rendered incorrectly! (jQM) ===
 If you use Ajax the map can unfortunately render incorrect. To prevent this you can:
 

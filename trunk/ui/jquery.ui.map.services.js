@@ -84,12 +84,12 @@
 			var d = this;		
 			var e = this.get('services > DirectionsService', new google.maps.DirectionsService());
 			var f = this.get('services > DirectionsRenderer', new google.maps.DirectionsRenderer());
-			f.setOptions(b);
+			if ( b ) {
+				f.setOptions(b);
+			}
 			e.route(a, function(g, h) {
 				if ( h === 'OK' ) {
-					if ( b.panel ) {
-						f.setDirections(g);
-					}
+					f.setDirections(g);
 					f.setMap(d.get('map'));
 				} else {
 					f.setMap(null);

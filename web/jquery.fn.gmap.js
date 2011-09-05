@@ -40,7 +40,7 @@
 		 */
 		options: {
 			center: (google.maps) ? new google.maps.LatLng(0.0, 0.0) : null,
-			mapTypeId: (google.maps) ? google.maps.MapTypeId.ROADMAP : null,
+			mapTypeId: 'roadmap',
 			zoom: 5	
 		},
 		
@@ -199,7 +199,7 @@
 		findMarker: function(a, b, c, d) {
 			var e = this.get('markers');
 			for ( f in e ) {
-				var g = ( c && e[f][a] ) ? ( e[f][a].split(c).indexOf(b) > -1 ) : ( e[f][a] === b );
+				var g = ( c && e[f][a] ) ? ( $.inArray(b, e[f][a].split(c)) > -1 ) : ( e[f][a] === b );
 				this._call(d, e[f], g);
 			};
 		},

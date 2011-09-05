@@ -100,6 +100,14 @@
 		 */
 		placesSearch: function(a, b) {
 			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).search(a, b);
+		},
+		
+		clearDirections: function() {
+			var a = this.get('services > DirectionsRenderer');
+			if (a) {
+				a.setMap(null);
+				a.setPanel(null);
+			}
 		}
 		
 	

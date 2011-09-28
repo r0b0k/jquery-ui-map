@@ -351,7 +351,11 @@
 			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
 				google.maps.event.addListener(this[0], a, b );
 			} else {
-				this.bind(a, b, c);	
+				if (c) {
+					this.bind(a, b, c);
+				} else {
+					this.bind(a, b);
+				}	
 			}
 			return this;
 		}

@@ -315,24 +315,24 @@
 	
 	jQuery.fn.extend( {
 		
-		click: function(a) { 
-			return this.addEventListener('click', a);
+		click: function(a, b) { 
+			return this.addEventListener('click', a, b);
 		},
 		
 		rightclick: function(a) {
 			return this.addEventListener('rightclick', a);
 		},
 		
-		dblclick: function(a) {
-			return this.addEventListener('dblclick', a);
+		dblclick: function(a, b) {
+			return this.addEventListener('dblclick', a, b);
 		},
 		
-		mouseover: function(a) {
-			return this.addEventListener('mouseover', a);
+		mouseover: function(a, b) {
+			return this.addEventListener('mouseover', a, b);
 		},
 		
-		mouseout: function(a) {
-			return this.addEventListener('mouseout', a);
+		mouseout: function(a, b) {
+			return this.addEventListener('mouseout', a, b);
 		},
 		
 		drag: function(a) {
@@ -347,11 +347,11 @@
 			google.maps.event.trigger(this[0], a);		
 		},
 		
-		addEventListener: function(a, b) {
+		addEventListener: function(a, b, c) {
 			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
 				google.maps.event.addListener(this[0], a, b );
 			} else {
-				this.bind(a, b);	
+				this.bind(a, b, c);	
 			}
 			return this;
 		}

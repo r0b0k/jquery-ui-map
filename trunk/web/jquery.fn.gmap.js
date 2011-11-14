@@ -1,7 +1,7 @@
  /*!
  * jQuery FN Google Map 3.0-alpha
  * http://code.google.com/p/jquery-ui-map/
- * Copyright (c) 2010 - 2011 Johan Säll Larsson
+ * Copyright (c) 2010 - 2011 Johan SÃ¤ll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
  */
 ( function($) {

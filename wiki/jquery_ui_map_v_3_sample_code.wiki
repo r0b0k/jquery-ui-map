@@ -100,7 +100,7 @@ $('#map_canvas').gmap().bind('init', function() {
 {{{
 $('#map_canvas').gmap({'callback':function() {
 	var self = this;
-	self.addMarker'({ 'position':  '42.345573,-71.098326', 'bounds': true }).click(function() {
+	self.addMarker({ 'position':  '42.345573,-71.098326', 'bounds': true }).click(function() {
 		self.openInfoWindow({ 'content': 'TEXT_AND_HTML_IN_INFOWINDOW' }, this);
 	});                                                                                                                                                                                                                               
 }});

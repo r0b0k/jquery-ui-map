@@ -1,22 +1,15 @@
 = Dependencies =
 
-  * jquery.core 
-  * jquery.ui.core.js
-  * jquery.ui.widget.js
+  * jquery.core  
 
-  OR
-  
-  * jquery.core 
-  * jquery.mobile 
-
-= API version 3.0 =
+= API version 3.0-beta =
 
 == jquery.ui.map core ==
 
 ===Constructor===
 
 || *Constructor* || *Return value* || *Description* || 
-|| gmap(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOptions]) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map]) || Creates a new map. MapOptions is extended with an optional callback method, i.e. { 'callback':function() { } }, invoked after the map has been loaded || 
+|| gmap(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOptions]) || none || Creates a new map. MapOptions is extended with an optional callback method, i.e. { 'callback':function() { } }, invoked after the map has been loaded || 
 
 ===Methods===
 
@@ -24,10 +17,10 @@
 || addBounds([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound to the existing boundaries. ||
 || addControl(panel:jquery/node/string, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
 || addMarker(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions], callback?:function(map:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])  || Creates a marker on the map. MarkerOptions is extended with a bounds property ('bounds':boolean) to add boundaries  ||
-|| addInfoWindow(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions], callback?:function(infowindow:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindow InfoWindow]) || Creates an info window bound to the marker on the map. ||
-|| findMarker (property:string, value:string, delimiter:string/false, callback:function(isFound:boolean, marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])) || none || Find marker(s) by property ||
+|| find (type:string, object:{property/value/delimiter}, callback:function(isFound:boolean, object:object)) || none || Find e.g. marker(s) by property ||
+|| inViewport(marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || boolean || If a markers LatLng is visible in the viewport ||
 || get(name:string, obj?:object) || object || Returns object by name. The optional obj parameter is set if the name does not exist.  ||
-|| set(name:string, obj:object) || none || Stores an object by name ||
+|| set(name:string, obj:object) || object || Stores an object by name ||
 || openInfoWindow(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions], marker?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || none || Opens an info window bound to the marker on the map. ||
 || refresh || none || Refreshes the map (triggers a resize)  ||
 || clear(name:string) || none || Removes a property list by name, e.g. markers, services, overlays  ||
@@ -53,9 +46,9 @@
 ===Methods===
 
 || *Method* || *Return value* || *Description* ||
+|| addShape(shape:string, opts:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolylineOptions PolylineOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolygonOptions PolygonOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#CircleOptions CircleOptions]) || none || Adds an overlay, depending on the shape: 'Polygon', 'Polyline', 'Rectangle', 'Circle'. ||
 || loadKML(uniqueIdentifier:string, url:string, opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#KmlLayerOptions KmlLayerOptions] ) || none || Adds geographic markup to the map from a KML, KMZ or GeoRSS file that is hosted on a publicly accessible web server. To clear the markers generated from the loadKML method you need to get the service and set the map to null. ||
 || loadFusion(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions FusionTablesLayerOptions]) || none || Adds markers from Fusion table. ||
-|| loadPanoramio(opts:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PanoramioLayerOptions PanoramioLayerOptions]) || none || Adds a layer that displays data from Panoramio. ||
 
 == jquery.ui.map services ==
 
@@ -63,18 +56,18 @@
 
 || *Method* || *Return value* || *Description* ||
 || displayDirections(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest DirectionsRequest], opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions DirectionsRendererOptions], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult DirectionsResult], [http://code.google.com/apis/maps/documentation/javascript/reference.html#DirectionsStatus DirectionsStatus])) || none || Displays directions on the map and/or in a div panel. ||
-|| displayDistanceMatrix(request:[http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixRequest DistanceMatrixRequest], callback:function(result:[http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixResponse DistanceMatrixResponse], status:[http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixStatus DistanceMatrixStatus])) || none || Issues a distance matrix request. ||
 || displayStreetView(panel:jquery/string/node, opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]) || none || Displays the panorama for a given LatLng or panorama ID. || 
-|| elevationPath(request:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest PathElevationRequest], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult ElevationResult], status: [http://code.google.com/apis/maps/documentation/javascript/reference.html#ElevationStatus ElevationStatus])) || none || Makes an elevation request along a path, where the elevation data are returned as distance-based samples along that path. ||
-|| elevationLocations( request:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest PathElevationRequest], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult ElevationResult], status:[http://code.google.com/apis/maps/documentation/javascript/reference.html#ElevationStatus ElevationStatus])) || none || Makes an elevation request for a list of discrete locations. ||
-|| placesAutocomplete(panel:jQuery/node/string, opts?:[http://code.google.com/apis/maps/documentation/javascript/reference.html#AutocompleteOptions AutocompleteOptions]) || none || A service to predict the desired Place based on user input. The service is attached to an input field in the form of a drop-down list. The list of predictions is updated dynamically as text is typed into the input field. || 
-|| placesSearch(request:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceSearchRequest PlaceSearchRequest], callback:function(result:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult PlaceResult], status: [http://code.google.com/apis/maps/documentation/javascript/reference.html#PlacesServiceStatus PlacesServiceStatus])) || none || Retrieves a list of Places in a given area. The PlaceResultss passed to the callback are stripped-down versions of a full PlaceResult. A more detailed PlaceResult for each Place can be obtained by sending a Place Details request with the desired Place's reference value. ||
-|| placesDetails(request:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceDetailsRequest PlaceDetailsRequest], callback:function(result:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult PlaceResult], status: [http://code.google.com/apis/maps/documentation/javascript/reference.html#PlacesServiceStatus PlacesServiceStatus])) || none || Retrieves details about the Place identified by the given reference. ||
 || search(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult GeocoderResult], status:[http://code.google.com/apis/maps/documentation/javascript/reference.html#GeocoderStatus GeocoderStatus])) || none || Search addresses and latitude/longitude. ||
 
-== jquery.ui.map metadata ==
+== jquery.ui.map rdfa/microformat/microdata ==
 
 === Methods ===
 
 || *Method* || *Return value* || *Description* ||
-|| loadMetadata(type:string, namespace:string, callback:function(index:int, item:$(node), result:Array.string )) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+|| rdfa(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+|| microdata(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+|| microformat(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+
+== jquery.ui.extensions ==
+
+This is were you put your own extensions.

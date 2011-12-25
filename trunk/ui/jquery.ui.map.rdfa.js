@@ -1,5 +1,5 @@
  /*!
- * jQuery UI Google Map 3.0-alpha
+ * jQuery UI Google Map 3.0-beta
  * http://code.google.com/p/jquery-ui-map/
  * Copyright (c) 2010 - 2011 Johan Säll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
@@ -9,103 +9,86 @@
  */
 ( function($) {
 	
-	jQuery.fn.extend({
-		items: getItems
-	});
-	
-	function getItems(type, ns, callback) {
-		var selector = jQuery.map(splitTokens(ns), function(t) {
-			return '['+type+'~="'+t.replace(/"/g, '\\"')+'"]';
-		}).join(',') || '*';
-		return jQuery(selector, this).filter(callback);
-	}
-	
-	function splitTokens(s) {
-		if (s && /\S/.test(s))
-		  return s.replace(/^\s+|\s+$/g,'').split(/\s+/);
-		return [];
-	}
-	
-	function resolve(url) {
-		if (!url)
-			return '';
-		var img = document.createElement('img');
-		img.setAttribute('src', url);
-		return img.src;
-	}
-	
-	function populateItem(elm, list, prefix, property) {
-		
-		var tagName = elm.tagName.toUpperCase();
-		list.tagName = tagName;
-		list.src = null;
-		list.href = null;
-		switch ( tagName ) {
-			case 'AUDIO':
-			case 'EMBED':
-			case 'IFRAME':
-			case 'IMG':
-			case 'SOURCE':
-			case 'VIDEO':
-				list.src = resolve(elm.getAttribute('src'));
-			case 'A':
-			case 'AREA':
-			case 'LINK':
-				list.href = elm.getAttribute('href');
-		}
-		list.content = null;
-		if (elm.getAttribute('content')) {
-			list.content = elm.getAttribute('content');
-		} else if (elm.innerHTML) {
-			list.content = elm.innerHTML;
-		}
-		list.rel = elm.getAttribute('rel');
-
-	}
-	
-	function getItem(node, list) {
-		node.children().each( function() {
-			var property = $(this).attr('property');
-			if ( property ) {
-				if ( !list[property] ) {
-					list[property] = {};
-				}
-				populateItem(this, list[property], property);
-			}
-			getItem($(this), list);
-		});
-		return list;
-	}
-	
 	$.extend($.ui.gmap.prototype, {
 		
 		/**
-		 * Extracts meta data from the HTML 
-		 * @param namespace:String
-		 * @param callback:function(result:Array<String>, item:jQuery, iterator:int)
+		 * Extracts RDFa from the HTML by specified namespace 
+		 * @param ns:string
+		 * @param callback:function(microdata:object, element:jQuery object, iterator:int)
 		 */
 		rdfa: function(ns, callback) { 
-			
 			var self = this;
-			var prefix;
-			if ( ns.indexOf('http') > -1 ) {
-				prefix = ns.substring(ns.lastIndexOf('/')+1,ns.length);
-				prefix = prefix.replace('?','');
-				prefix = prefix.replace('#','');
-			} else if ( ns.indexOf(':') > -1 ) {
-				prefix = ns.split(':')[1];
-			} else {
-				prefix = ns;
-			}
-			prefix = prefix.toLowerCase();
-			var retval = [];
-			retval[prefix] = [];
-			
-			$(document).items('typeof', ns, function() { return (this.getAttribute('typeof') != null); }).each(function(i, node) {
-				getItem($(node), retval[prefix]);
-				self._call(callback, retval, $(node), i);
+			$('[typeof="{0}"]'.replace('{0}', ns)).each(function(i) {
+				callback(self._traverse($(this), {'@type': self._resolveType($(this).attr('typeof'))}), this, i);
 			});
-			
+		},
+		
+		/**
+		 * Traverse through all child nodes
+		 * @param $el:jQuery Object
+		 * @param obj:Object
+		 */
+		_traverse: function(node, obj) {
+			var self = this;
+			node.children().each( function() {
+				var $this = $(this), typeOf = self._resolveType($this.attr('typeof')), rel = self._resolveType($this.attr('rel')), property = self._resolveType($this.attr('property'));
+				if ( typeOf || rel || property ) {
+					if (rel) {
+						if ( $this.children().length > 0 ) {
+							obj[rel] = [];
+							self._traverse($this, obj[rel]);
+						} else {
+							obj[rel] = self._extract($this, true);
+						}
+					}
+					if (typeOf) {
+						obj.push({'@type': typeOf});
+						self._traverse($this, obj[obj.length-1]);
+					}
+					if ( property ) {
+						if ( obj[property] ) {
+							obj[property] = [obj[property]];
+							obj[property].push(self._extract($this, false));
+						} else {
+							obj[property] = self._extract($this, false);
+						}
+					}
+				} else {
+					self._traverse($this, obj);
+				}
+			});
+			return obj;
+		},
+		
+		/**
+		 * Extract the proper value based on element attribute
+		 * @param $el:jQuery object
+		 * @param isLink:bool
+		 */
+		_extract: function($el, isLink) {
+			if (isLink) {
+				if ( $el.attr('src') ) { return $el.attr('src'); }  
+				if ( $el.attr('href') ) { return $el.attr('href'); } 
+			}
+			if ( $el.attr('content') ) { return $el.attr('content'); }
+			if ( $el.text() ) { return $el.text(); }
+			return;
+		},
+		
+		/**
+		 * Removes any url or prefix
+		 * @param $el:jQuery Object
+		 * @param className:string
+		 */
+		_resolveType: function(type) {
+			if (type) {
+				if ( type.indexOf('http') > -1 ) {
+					type = type.substr(type.lastIndexOf('/')+1).replace('?','').replace('#','');
+				} else if ( type.indexOf(':') > -1 ) {
+					type = type.split(':')[1];
+				}
+			}
+			return type;
 		}
 	
 	});

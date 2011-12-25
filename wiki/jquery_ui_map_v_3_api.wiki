@@ -64,9 +64,9 @@
 === Methods ===
 
 || *Method* || *Return value* || *Description* ||
-|| rdfa(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
-|| microdata(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
-|| microformat(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Finds semantic attributes in the selected namespace. Semantic types currently supported: 'rdfa', 'microformat' and 'microdata'. ||
+|| rdfa(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Iterates through selected RDFa. ||
+|| microdata(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Iterates through selected microdata. ||
+|| microformat(namespace:string, callback:function(object:object, item:$(node), index:int)) || none || Iterates through selected microformat. ||
 
 == jquery.ui.extensions ==
 

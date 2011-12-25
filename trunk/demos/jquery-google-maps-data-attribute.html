@@ -1,18 +1,18 @@
 <!doctype html>
 <html lang="en">
    <head>
-		<title>Example with Google maps and jQuery - Google maps jQuery plugin</title>
+		<title>Example with jQuery data HTML5 attribute - Google maps jQuery plugin</title>
 		<meta charset="utf-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta http-equiv="content-language" content="en" />
 		<meta name="author" content="Johan Säll Larsson" />
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
-		<meta name="keywords" content="Google maps, jQuery, plugin" />
-		<meta name="description" content="An example how to use jQuery and Google maps v3 with Google maps jQuery plugin" />
+		<meta name="keywords" content="Google maps, jQuery, plugin, HTML5, Data" />
+		<meta name="description" content="An example how to use jQuery data HTML5 attribute with Google maps jQuery plugin" />
 		<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/" />
-		<meta name="DC.title" content="xample with Google maps and jQuery - Google maps jQuery plugin" />
-		<meta name="DC.subject" content="Google maps;jQuery;plugin" />
-		<meta name="DC.description" content="An example how to use jQuery and Google maps v3 with Google maps jQuery plugin" />
+		<meta name="DC.title" content="Example with jQuery data HTML5 attribute - Google maps jQuery plugin" />
+		<meta name="DC.subject" content="Google maps;jQuery;plugin;HTML5;Data" />
+		<meta name="DC.description" content="An example how to use jQuery data HTML5 attribute with Google maps jQuery plugin" />
 		<meta name="DC.creator" content="Johan Säll Larsson" />
 		<meta name="DC.language" content="en" />
 		<link type="text/css" rel="stylesheet" href="css/960/min/960.css" />
@@ -25,13 +25,33 @@
     <body>
 		<header class="dark">
 			<div class="container_16">
-				<h1><a href="/">Google maps jQuery plugin <span id="version"></span></a> basic example</h1>
+				<h1><a href="/">Google maps jQuery plugin <span id="version"></span></a> data HTML5 attribute</h1>
 			</div>
 		</header>
 		<div class="container_16">
 			<article class="grid_16">
 				<div class="item rounded dark">
 					<div id="map_canvas" class="map rounded"></div>
+				</div>
+				<p>This example shows a meta data mapping similar to the plugin jMapping.</p>
+				<div class="content rounded light shadow">
+					<ul>
+						<li data-gmapping='{"id":"m_1","latlng":{"lat":27.6648274,"lng":-81.51575350000002},"tags":"drupal"}'>
+							<p class="info-box">Florida DrupalCamp - Feb 11 2012</p>
+						</li>
+						<li data-gmapping='{"id":"m_2","latlng":{"lat":1.352083,"lng":103.81983600000001},"tags":"drupal"}'>
+							<p class="info-box">DrupalCamp Singapore - Mar 03 2012</p>					
+						</li>
+						<li data-gmapping='{"id":"m_3","latlng":{"lat":39.7391536,"lng":-104.9847034},"tags":"drupal"}'>
+							<p class="info-box">DrupalCon 2012 Denver - Mar 20 2012</p>				
+						</li>
+						<li data-gmapping='{"id":"m_4","latlng":{"lat":36.1658899,"lng":-86.7844432},"tags":"drupal"}'>
+							<p class="info-box">DrupalCamp Nashville - Apr 28 2012</p>				
+						</li>
+						<li data-gmapping='{"id":"m_5","latlng":{"lat":55.6760968,"lng":12.568337100000008},"tags":"drupal"}'>
+							<p class="info-box">DrupalCamp Copenhagen 5.0 - May 11 2012</p>				
+						</li>
+					</ul>
 				</div>
 				<div class="content rounded light shadow">
 					<h2>Using jquery with Google maps</h2>
@@ -43,35 +63,18 @@
 
 <pre class="prettyprint rounded">
 $('#map_canvas').gmap().bind('init', function(ev, map) {
-	$('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
-		$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-	});
+	$("[data-gmapping]").each(function(i,el) {
+		var data = $(el).data('gmapping');
+		$('#map_canvas').gmap('addMarker', {'id': data.id, 'tags':data.tags, 'position': new google.maps.LatLng(data.latlng.lat, data.latlng.lng), 'bounds':true }, function(map,marker) {
+			$(el).click(function() {
+				$(marker).triggerEvent('click');
+			});
+		}).click(function() {
+			$('#map_canvas').gmap('openInfoWindow', { 'content': $(el).find('.info-box').text() }, this);
+		});
+	});	
 });</pre>
 
-<pre class="prettyprint rounded">
-// In the callback you can use "this" to call a function (e.g. this.get('map') instead of $('#map_canvas').gmap('get', 'map'))
-$('#map_canvas').gmap({'callback': function() {
-	var self = this; // we can't use "this" inside the click function (that refers to the marker object in this example)
-	self.addMarker({'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
-		self.openInfoWindow({'content': 'Hello World!'}, this);
-	});
-}});</pre>
-
-<pre class="prettyprint rounded">
-$('#map_canvas').gmap({'some_option':'some_value'}); // Add the contructor
-// addMarker returns a jQuery wrapped google.maps.Marker object 
-var $marker = $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true});
-$marker.click(function() {
-	$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-});
-</pre>
-
-<pre class="prettyprint rounded">
-// If you dont add a constructor ($('#map_canvas').gmap({'some_option':'some_value'});) the plugin will auto initialize 
-$('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds': true}).click(function() {
-	$('#map_canvas').gmap('openInfoWindow', {'content': 'Hello World!'}, this);
-});
-</pre>
 					<p>There are many ways of writing this snippet, please refer to the <a href="http://code.google.com/p/jquery-ui-map/wiki/jquery_ui_map_v_3_sample_code">sample code</a> section in the wiki.</p>
 				</div>
 			</article>
@@ -81,7 +84,7 @@ $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds
 				<div class="grid_8">
 					<h2>More Google maps and jQuery examples</h2>
 					<ul>
-						<li class="sel buttonize"><a href="jquery-google-maps-basic-example.html">Google maps and jQuery basics</a></li>
+						<li><a href="jquery-google-maps-basic-example.html">Google maps and jQuery basics</a></li>
 						<li><a href="jquery-google-maps-geolocation.html">Google maps with geolocation</a></li>
 						<li><a href="jquery-google-maps-clustering.html">Using clusters with MarkerClusteredPlus</a></li>
 						<li><a href="jquery-google-maps-streetview.html">Microformats, Google streetview and jQuery dialog</a></li>
@@ -112,11 +115,18 @@ $('#map_canvas').gmap('addMarker', {'position': '57.7973333,12.0502107', 'bounds
 		<script type="text/javascript">
             $(function() { 
 				demo.add(function() {
-					$('#map_canvas').gmap({'center': '57.7973333,12.0502107', 'zoom': 10, 'disableDefaultUI':true, 'callback': function() {
+					$('#map_canvas').gmap({'disableDefaultUI':true, 'callback': function() {
 						var self = this;
-						self.addMarker({'position': this.get('map').getCenter() }).click(function() {
-							self.openInfoWindow({ 'content': 'Hello World!' }, this);
-						});	
+						$("[data-gmapping]").each(function(i,el) {
+							var data = $(el).data('gmapping');
+							self.addMarker({'id': data.id, 'tags':data.tags, 'position': new google.maps.LatLng(data.latlng.lat, data.latlng.lng), 'bounds':true }, function(map,marker) {
+								$(el).click(function() {
+									$(marker).triggerEvent('click');
+								});
+							}).click(function() {
+								self.openInfoWindow({ 'content': $(el).find('.info-box').text() }, this);
+							});
+						});						
 					}});
 				}).load();
 			});

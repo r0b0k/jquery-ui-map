@@ -570,6 +570,16 @@ Clear bounds set by the addMarker property, not the map.bounds
 $('#map_canvas').gmap('set', 'bounds', null);
 }}}
 
+== Chaining ==
+
+This doesn't work for shorthand code, or with any method returning an object, e.g. addMarker
+
+{{{
+$('#map_canvas').gmap('clear', 'markers').gmap('addMarker', {'position':'0.0,0.0'}).click(function() {
+	// Since addMarker returns a $(marker) the chaining will stop here. You can only chain events to the addMarker method
+});
+}}}
+
 == Rendering issues with e.g. mobile or UI tabs? ==
 
 Most often calling refresh will fix rendering issues, such as when the map is being positioned in the top left corner and not fully visible.

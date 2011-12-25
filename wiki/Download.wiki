@@ -1,18 +1,7 @@
-==Latest (3.0.alpha)==
-
-===With dependencies to jQuery UI or jQuery Mobile===
+==Latest (3.0.beta)==
 
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.full.min.js Full version] (core, jquery.ui.map.overlays.js and jquery.ui.map.services.js)
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.min.js Core] 
-  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.overlays.min.js Overlays]
-  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.services.min.js Services]
-
-[http://code.google.com/p/jquery-ui-map/wiki/jquery_ui_map_v_3_tutorial#Advanced Read about the contents of core, overlays and services]
-
-===Without dependencies to jQuery UI or jQuery Mobile===
-
-  * [http://jquery-ui-map.googlecode.com/svn/trunk/web/min/jquery.fn.gmap.full.min.js Full version] (core, jquery.ui.map.overlays.js and jquery.ui.map.services.js)
-  * [http://jquery-ui-map.googlecode.com/svn/trunk/web/min/jquery.fn.gmap.min.js Core] 
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.overlays.min.js Overlays]
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.services.min.js Services]
 

@@ -4,5 +4,8 @@
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.min.js Core] 
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.overlays.min.js Overlays]
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.services.min.js Services]
+  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.rdfa.min.js RDFa]
+  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.microdata.min.js Microdata]
+  * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.microformat.min.js Microformats]
 
 [http://code.google.com/p/jquery-ui-map/wiki/jquery_ui_map_v_3_tutorial#Advanced Read about the contents of core, overlays and services]

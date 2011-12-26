@@ -111,6 +111,30 @@
 				a.setMap(null);
 				a.setPanel(null);
 			}
+		},
+		
+		/**
+		 * Page through the markers. Very simple version.
+		 * @param prop:the marker property to show in display, defaults to title
+		 */
+		pagination: function(prop) {
+			var $el = $("<div id='pagination' class='pagination shadow gradient rounded clearfix'><div class='lt btn back-btn'></div><div class='lt display'></div><div class='rt btn fwd-btn'></div></div>");
+			var self = this, i = 0, prop = prop || 'title';
+			self.set('p_nav', function(a, b) {
+				if (a) {
+					i = i + b;
+					$el.find('.display').text(self.get('markers')[i][prop]);
+					self.get('map').panTo(self.get('markers')[i].getPosition());
+				}
+			});
+			self.get('p_nav')(true, 0);
+			$el.find('.back-btn').click(function() {
+				self.get('p_nav')((i > 0), -1, this);
+			});
+			$el.find('.fwd-btn').click(function() {
+				self.get('p_nav')((i < self.get('markers').length - 1), 1, this);
+			});
+			self.addControl($el, google.maps.ControlPosition.TOP_LEFT);			
 		}
 		
 		/**

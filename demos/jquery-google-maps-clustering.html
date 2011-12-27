@@ -25,7 +25,7 @@
     <body>
 		<header class="dark">
 			<div class="container_16">
-				<h1><a href="/">Google maps jQuery plugin <span id="version"></span></a> basic example</h1>
+				<h1><a href="/">Google maps jQuery plugin <span id="version"></span></a> clustering example</h1>
 			</div>
 		</header>
 		<div class="container_16">
@@ -110,7 +110,9 @@ $('#map_canvas').gmap({'zoom': 2, 'disableDefaultUI':true}).bind('init', functio
 						var lngSpan = northEast.lng() - southWest.lng();
 						var latSpan = northEast.lat() - southWest.lat();
 						for ( var i = 0; i < 1000; i++ ) {
-							$(this).gmap('addMarker', { 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } );
+							$(this).gmap('addMarker', { 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } ).click(function() {
+								$('#map_canvas').gmap('openInfoWindow', { content : 'Hello world!' }, this);
+							});
 						}
 						$(this).gmap('set', 'MarkerClusterer', new MarkerClusterer(map, $(this).gmap('get', 'markers')));
 					});

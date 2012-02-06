@@ -1,29 +1,33 @@
+#summary API
+
 = Dependencies =
 
   * jquery.core  
 
-= API version 3.0-beta =
+= API version 1.0 =
 
 == jquery.ui.map core ==
 
 ===Constructor===
 
 || *Constructor* || *Return value* || *Description* || 
-|| gmap(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MapOptions MapOptions]) || none || Creates a new map. MapOptions is extended with an optional callback method, i.e. { 'callback':function() { } }, invoked after the map has been loaded || 
+|| gmap(opts?:[http://msdn.microsoft.com/en-us/library/gg427603.aspx MapOptions]) || none || Creates a new map. MapOptions is extended with an optional callback method, i.e. { 'callback':function() { } }, invoked after the map has been loaded || 
 
 ===Methods===
 
 || *Method* || *Return value* || *Description* ||
-|| addBounds([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound to the existing boundaries. ||
-|| addControl(panel:jquery/node/string, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
-|| addMarker(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions], callback?:function(map:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])  || Creates a marker on the map. MarkerOptions is extended with a bounds property ('bounds':boolean) to add boundaries  ||
-|| find (type:string, object:{property/value/delimiter}, callback:function(isFound:boolean, object:object)) || none || Find e.g. marker(s) by property ||
+|| addBounds([http://msdn.microsoft.com/en-us/library/gg427612.aspx Location]) || none || Adds a bound to the existing boundaries. ||
+|| addControl(panel:jquery/node/string, position:int) || none || Creates a control from the given div panel on the map. ||
+|| addMarker(opts?:[http://msdn.microsoft.com/en-us/library/gg427629.aspx PushpinOptions], callback?:function(map:[http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], marker:[http://msdn.microsoft.com/en-us/library/gg427615.aspx Pushpin])) || $([http://msdn.microsoft.com/en-us/library/gg427615.aspx Pushpin])  || Creates a marker on the map. PushpinOptions is extended with a bounds property ('bounds':boolean) to add boundaries  ||
+|| find (type:string, object:{property/value/delimiter}, callback:function(object:object, isFound:boolean)) || none || Find e.g. marker(s) by property ||
 || inViewport(marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || boolean || If a markers LatLng is visible in the viewport ||
 || get(name:string, obj?:object) || object || Returns object by name. The optional obj parameter is set if the name does not exist.  ||
 || set(name:string, obj:object) || object || Stores an object by name ||
-|| openInfoWindow(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions], marker?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || none || Opens an info window bound to the marker on the map. ||
-|| refresh || none || Refreshes the map (triggers a resize)  ||
-|| clear(name:string) || none || Removes a property list by name, e.g. markers, services, overlays  ||
+|| addInfoWindow(opts:[http://msdn.microsoft.com/en-us/library/gg675210.aspx InfoboxOptions], marker:[http://msdn.microsoft.com/en-us/library/gg427615.aspx Pushpin]) || none || Opens an info box bound to the marker on the map. ||
+|| openInfoWindow(opts:[http://msdn.microsoft.com/en-us/library/gg675210.aspx InfoboxOptions], marker:[http://msdn.microsoft.com/en-us/library/gg427615.aspx Pushpin]) || none || Opens an info box bound to the marker on the map. ||
+|| load(key:string, options:object, isLoadedCallback:function) || none || Loads the specified registered module, making its functionality available. An optional function can be specified that is called when the module is loaded. The following Bing Maps modules are available: Microsoft.Maps.Directions, Microsoft.Maps.Traffic, Microsoft.Maps.VenueMaps ||
+|| register(key:string, url:string, options:object) || none || Registers a module with the map control. The name of the module is specified in key, the module script is defined in scriptUrl, and the options provides the location of a *.css file to load with the module. Once you have registered a module, you can make its functionality available by loading it using load. ||
+|| clear(name:string) || none || Removes a property list by name, e.g. markers, services, overlays ||
 || destroy() || none || Removes the map functionality. ||
 
 == Events ==
@@ -33,31 +37,29 @@
 || addEventListener(type:string, callback:function()) || none || Adds a Google event listener or binds a jQuery event||
 
 || *Event* || *Description* || *Supported elements* || 
-|| click || Adds a click event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
-|| rightclick || Adds a right click event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
-|| dblclick || Adds a double click event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
-|| mouseover || Adds a mouse over event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
-|| mouseout || Adds a mouse out event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
-|| drag || Adds a drag event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
-|| dragend || Adds a drag end event. || [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], [http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#marker Marker]||
+|| click || Adds a click event. || [http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], [http://msdn.microsoft.com/en-us/library/gg427615.aspx PushPin]||
+|| rightclick || Adds a right click event. || [http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], [http://msdn.microsoft.com/en-us/library/gg427615.aspx PushPin]||
+|| dblclick || Adds a double click event. || [http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], [http://msdn.microsoft.com/en-us/library/gg427615.aspx PushPin]||
+|| mouseover || Adds a mouse over event. || [http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], [http://msdn.microsoft.com/en-us/library/gg427615.aspx PushPin]||
+|| mouseout || Adds a mouse out event. || [http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], [http://msdn.microsoft.com/en-us/library/gg427615.aspx PushPin]||
+|| drag || Adds a drag event. || [http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], [http://msdn.microsoft.com/en-us/library/gg427615.aspx PushPin]||
+|| dragend || Adds a drag end event. || [http://msdn.microsoft.com/en-us/library/gg427609.aspx Map], [http://msdn.microsoft.com/en-us/library/gg427615.aspx PushPin]||
 
 == jquery.ui.map overlays ==
 
 ===Methods===
 
 || *Method* || *Return value* || *Description* ||
-|| addShape(shape:string, opts:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolylineOptions PolylineOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolygonOptions PolygonOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#CircleOptions CircleOptions]) || none || Adds an overlay, depending on the shape: 'Polygon', 'Polyline', 'Rectangle', 'Circle'. ||
-|| loadKML(uniqueIdentifier:string, url:string, opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#KmlLayerOptions KmlLayerOptions] ) || none || Adds geographic markup to the map from a KML, KMZ or GeoRSS file that is hosted on a publicly accessible web server. To clear the markers generated from the loadKML method you need to get the service and set the map to null. ||
-|| loadFusion(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions FusionTablesLayerOptions]) || none || Adds markers from Fusion table. ||
+|| addShape(shape:string, opts:[http://msdn.microsoft.com/en-us/library/gg427595.aspx PolylineOptions]/[http://msdn.microsoft.com/en-us/library/gg427596.aspx PolygonOptions]) || none || Adds an overlay, depending on the shape: 'Polygon', 'Polyline', 'Rectangle', 'Circle'. ||
 
 == jquery.ui.map services ==
 
 ===Methods===
 
 || *Method* || *Return value* || *Description* ||
-|| displayDirections(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRequest DirectionsRequest], opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions DirectionsRendererOptions], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult DirectionsResult], [http://code.google.com/apis/maps/documentation/javascript/reference.html#DirectionsStatus DirectionsStatus])) || none || Displays directions on the map and/or in a div panel. ||
-|| displayStreetView(panel:jquery/string/node, opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions StreetViewPanoramaOptions]) || none || Displays the panorama for a given LatLng or panorama ID. || 
-|| search(request:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderRequest GeocoderRequest], callback:function(result:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult GeocoderResult], status:[http://code.google.com/apis/maps/documentation/javascript/reference.html#GeocoderStatus GeocoderStatus])) || none || Search addresses and latitude/longitude. ||
+|| loadDirections(request:[http://msdn.microsoft.com/en-us/library/hh312839.aspx DirectionsRequest], callback:function(result:[http://msdn.microsoft.com/en-us/library/gg636957.aspx DirectionsResult], DirectionsStatus:OK/ERROR/ZERO_RESULTS)) || none || Returns directions. ||
+|| displayDirections(request:[http://msdn.microsoft.com/en-us/library/hh312839.aspx DirectionsRequest], opts:[http://msdn.microsoft.com/en-us/library/hh312832.aspx DirectionsRendererOptions]) || none || Displays directions on the map and/or in a div panel. ||
+|| search(request: {address: 'Stockholm', location: Microsoft.Maps.Location}, callback:function(result:[http://msdn.microsoft.com/en-us/library/ff701714.aspx GeocoderResult], status:DirectionsStatus:OK/ERROR/ZERO_RESULTS)) || none || Search addresses and latitude/longitude. ||
 
 == jquery.ui.map rdfa/microformat/microdata ==
 

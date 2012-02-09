@@ -29,10 +29,7 @@
 					h = $.data(this, b, new $[a][b](d, this));
 				}
 				if ( g ) {
-					var i = h[d].apply(h, f);
-					if (i != null) {
-						e = i;
-					}
+					e = h[d].apply(h, f);
 				}
 			});
 			return e;  
@@ -173,7 +170,7 @@
 			var d = this.get(a);
 			for ( e in d ) {
 				if ( d.hasOwnProperty(e) ) {
-					c(d[e], (( b.delimiter && d[e][b.property] ) ? ( d[e][b.property].split(b.delimiter).indexOf(b.value) > -1 ) : ( d[e][b.property] === b.value )));
+					c(d[e], (( b.delimiter && d[e][b.property] ) ? ( $.inArray(b.value, d[e][b.property].split(b.delimiter)) > -1 ) : ( d[e][b.property] === b.value )));
 				}
 			};
 		},

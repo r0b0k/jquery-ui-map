@@ -71,7 +71,7 @@
 								});
 							});
 							$('#submit').click(function() {
-								self.displayDirections({ 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, /*{ 'panel': document.getElementById('directions')}*/null, function(response, status) {
+								self.displayDirections({ 'origin': $('#from').val(), 'destination': $('#to').val(), 'travelMode': google.maps.DirectionsTravelMode.DRIVING }, { 'panel': document.getElementById('directions')}, function(response, status) {
 									( status === 'OK' ) ? $('#results').show() : $('#results').hide();
 								});
 								return false;

@@ -147,7 +147,7 @@
 		},
 		
 		_c: function(a) {
-			for ( b in a ) {
+			for ( var b in a ) {
 				if ( a.hasOwnProperty(b) ) {
 					if ( a[b] instanceof google.maps.MVCObject ) {
 						google.maps.event.clearInstanceListeners(a[b]);
@@ -168,7 +168,7 @@
 		 */
 		find: function(a, b, c) {
 			var d = this.get(a);
-			for ( e in d ) {
+			for ( var e in d ) {
 				if ( d.hasOwnProperty(e) ) {
 					c(d[e], (( b.delimiter && d[e][b.property] ) ? ( $.inArray(b.value, d[e][b.property].split(b.delimiter)) > -1 ) : ( d[e][b.property] === b.value )));
 				}
@@ -207,11 +207,14 @@
 		 * Triggers an InfoWindow to open
 		 * @param infoWindowOptions:google.maps.InfoWindowOptions
 		 * @param marker:google.maps.Marker (optional)
+		 * @param callback:function (optional)
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
 		 */
-		openInfoWindow: function(a, b) {
-			this.get('iw').setOptions(a);
-			this.get('iw').open(this.get('map'), this._unwrap(b)); 
+		openInfoWindow: function(a, b, c) {
+			var d = this.get('iw');
+			d.setOptions(a);
+			d.open(this.get('map'), this._unwrap(b)); 
+			this._call(c, d);
 		},
 				
 		/**
@@ -240,7 +243,7 @@
 			this.clear('markers');
 			this.clear('services');
 			this.clear('overlays');
-			for ( b in this._a ) {
+			for ( var b in this._a ) {
 				this._a[b] = null;
 			}
 		},

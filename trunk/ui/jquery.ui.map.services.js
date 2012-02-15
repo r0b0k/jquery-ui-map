@@ -1,5 +1,5 @@
  /*!
- * jQuery UI Google Map 3.0-beta
+ * jQuery UI Google Map 3.0-rc
  * http://code.google.com/p/jquery-ui-map/
  * Copyright (c) 2010 - 2012 Johan Säll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
@@ -20,21 +20,21 @@
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsRendererOptions
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#DirectionsResult
 		 */
-		displayDirections: function(a, b, c) {
-			var d = this;		
-			var e = this.get('services > DirectionsService', new google.maps.DirectionsService());
-			var f = this.get('services > DirectionsRenderer', new google.maps.DirectionsRenderer());
-			if ( b ) {
-				f.setOptions(b);
+		displayDirections: function(directionsRequest, directionsRendererOptions, callback) {
+			var self = this;		
+			var directionService = this.get('services > DirectionsService', new google.maps.DirectionsService());
+			var directionRenderer = this.get('services > DirectionsRenderer', new google.maps.DirectionsRenderer());
+			if ( directionsRendererOptions ) {
+				directionRenderer.setOptions(directionsRendererOptions);
 			}
-			e.route(a, function(g, h) {
-				if ( h === 'OK' ) {
-					f.setDirections(g);
-					f.setMap(d.get('map'));
+			directionService.route(directionsRequest, function(results, status) {
+				if ( status === 'OK' ) {
+					directionRenderer.setDirections(results);
+					directionRenderer.setMap(self.get('map'));
 				} else {
-					f.setMap(null);
+					directionRenderer.setMap(null);
 				}
-				d._call(c, g, h);
+				callback(results, status);
 			});
 		},
 		
@@ -44,8 +44,8 @@
 		 * @param streetViewPanoramaOptions:google.maps.StreetViewPanoramaOptions (optional) 
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#StreetViewPanoramaOptions
 		 */
-		displayStreetView: function(a, b) {
-			this.get('map').setStreetView(this.get('services > StreetViewPanorama', new google.maps.StreetViewPanorama(this._unwrap(a), b)));
+		displayStreetView: function(panel, streetViewPanoramaOptions) {
+			this.get('map').setStreetView(this.get('services > StreetViewPanorama', new google.maps.StreetViewPanorama(this._unwrap(panel), streetViewPanoramaOptions)));
 		},
 		
 		/**
@@ -54,8 +54,8 @@
 		 * @param callback:function(result:google.maps.GeocoderResult, status:google.maps.GeocoderStatus), 
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#GeocoderResult
 		 */
-		search: function(a, b) {
-			this.get('services > Geocoder', new google.maps.Geocoder()).geocode(a, b);
+		search: function(geocoderRequest, callback) {
+			this.get('services > Geocoder', new google.maps.Geocoder()).geocode(geocoderRequest, callback);
 		}
 	
 	});

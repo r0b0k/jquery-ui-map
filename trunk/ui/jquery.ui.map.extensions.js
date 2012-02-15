@@ -1,5 +1,5 @@
  /*!
- * jQuery UI Google Map 3.0-alpha
+ * jQuery UI Google Map 3.0-rc
  * http://code.google.com/p/jquery-ui-map/
  * Copyright (c) 2010 - 2011 Johan Säll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
@@ -16,20 +16,19 @@
 		 * @param callback:function(position, status)
 		 * @param geoPositionOptions:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
 		 */
-		getCurrentPosition: function(a, b) {
-			var c = this;
+		getCurrentPosition: function(callback, geoPositionOptions) {
 			if ( navigator.geolocation ) {
 				navigator.geolocation.getCurrentPosition ( 
-					function(d) {
-						c._call(a, d, "OK");
+					function(result) {
+						callback(result, 'OK');
 					}, 
 					function(error) {
-						c._call(a, null, error);
+						callback(null, error);
 					}, 
-					b 
+					geoPositionOptions 
 				);	
 			} else {
-				c._call(a, null, "NOT_SUPPORTED");
+				callback(null, 'NOT_SUPPORTED');
 			}
 		},
 		
@@ -39,20 +38,19 @@
 		 * @param callback:function(position, status)
 		 * @param geoPositionOptions:object, see https://developer.mozilla.org/en/XPCOM_Interface_Reference/nsIDOMGeoPositionOptions
 		 */
-		watchPosition: function(a, b) {
-			var c = this;
+		watchPosition: function(callback, geoPositionOptions) {
 			if ( navigator.geolocation ) {
 				this.set('watch', navigator.geolocation.watchPosition ( 
-					function(d) {
-						c._call(a, d, "OK");
+					function(result) {
+						callback(result, "OK");
 					}, 
 					function(error) {
-						c._call(a, null, error);
+						callback(null, error);
 					}, 
-					b 
+					geoPositionOptions 
 				));	
 			} else {
-				c._call(a, null, "NOT_SUPPORTED");
+				callback(null, "NOT_SUPPORTED");
 			}
 		},
 
@@ -70,9 +68,9 @@
 		 * @param panel:string/node/jquery
 		 * @param callback:function(results, status)
 		 */
-		autocomplete: function(a, b) {
+		autocomplete: function(panel, callback) {
 			var self = this;
-			$(this._unwrap(a)).autocomplete({
+			$(this._unwrap(panel)).autocomplete({
 				source: function( request, response ) {
 					self.search({'address':request.term}, function(results, status) {
 						if ( status === 'OK' ) {
@@ -86,7 +84,7 @@
 				},
 				minLength: 3,
 				select: function(event, ui) { 
-					self._call(b, ui);
+					self._call(callback, ui);
 				},
 				open: function() { $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" ); },
 				close: function() { $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" ); }
@@ -95,21 +93,21 @@
 		
 		/**
 		 * Retrieves a list of Places in a given area. The PlaceResultss passed to the callback are stripped-down versions of a full PlaceResult. A more detailed PlaceResult for each Place can be obtained by sending a Place Details request with the desired Place's reference value.
-		 * @param a:google.maps.places.PlaceSearchRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceSearchRequest
-		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
+		 * @param placeSearchRequest:google.maps.places.PlaceSearchRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceSearchRequest
+		 * @param callback:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
-		placesSearch: function(a, b) {
-			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).search(a, b);
+		placesSearch: function(placeSearchRequest, callback) {
+			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).search(placeSearchRequest, callback);
 		},
 		
 		/**
 		 * Clears any directions
 		 */
 		clearDirections: function() {
-			var a = this.get('services > DirectionsRenderer');
-			if (a) {
-				a.setMap(null);
-				a.setPanel(null);
+			var directionsRenderer = this.get('services > DirectionsRenderer');
+			if (directionsRenderer) {
+				directionsRenderer.setMap(null);
+				directionsRenderer.setPanel(null);
 			}
 		},
 		
@@ -141,69 +139,69 @@
 		 * A layer that displays data from Panoramio.
 		 * @param panoramioLayerOptions:google.maps.panoramio.PanoramioLayerOptions, http://code.google.com/apis/maps/documentation/javascript/reference.html#PanoramioLayerOptions
 		 */
-		/*loadPanoramio: function(a) {
+		/*loadPanoramio: function(panoramioLayerOptions) {
 			if ( !this.get('overlays').PanoramioLayer ) {
 				this.get('overlays').PanoramioLayer = new google.maps.panoramio.PanoramioLayer();
 			}
-			this.get('overlays').PanoramioLayer.setOptions(jQuery.extend({'map': this.get('map') }, a));
+			this.get('overlays').PanoramioLayer.setOptions(jQuery.extend({'map': this.get('map') }, panoramioLayerOptions));
 		},*/
 		
 		/**
 		 * Makes an elevation request along a path, where the elevation data are returned as distance-based samples along that path.
-		 * @param a:google.maps.PathElevationRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest
-		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
+		 * @param pathElevationRequest:google.maps.PathElevationRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest
+		 * @param callback:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
-		/*elevationPath: function(a, b) {
-			this.get('services > ElevationService', new google.maps.ElevationService()).getElevationAlongPath(a, b);
+		/*elevationPath: function(pathElevationRequest, callback) {
+			this.get('services > ElevationService', new google.maps.ElevationService()).getElevationAlongPath(pathElevationRequest, callback);
 		},*/
 		
 		/**
 		 * Makes an elevation request for a list of discrete locations.
-		 * @param a:google.maps.PathElevationRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest
-		 * @param b:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
+		 * @param pathElevationRequest:google.maps.PathElevationRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PathElevationRequest
+		 * @param callback:function(result:google.maps.ElevationResult, status:google.maps.ElevationStatus), http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ElevationResult
 		 */
-		/*elevationLocations: function(a, b) {
-			this.get('services > ElevationService', new google.maps.ElevationService()).getElevationForLocations(a, b);
+		/*elevationLocations: function(pathElevationRequest, callback) {
+			this.get('services > ElevationService', new google.maps.ElevationService()).getElevationForLocations(pathElevationRequest, callback);
 		},*/
 		
 		/* PLACES SERVICE */		
 		
 		/**
 		 * Retrieves a list of Places in a given area. The PlaceResultss passed to the callback are stripped-down versions of a full PlaceResult. A more detailed PlaceResult for each Place can be obtained by sending a Place Details request with the desired Place's reference value.
-		 * @param a:google.maps.places.PlaceSearchRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceSearchRequest
-		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
+		 * @param placeSearchRequest:google.maps.places.PlaceSearchRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceSearchRequest
+		 * @param callback:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
-		/*placesSearch: function(a, b) {
-			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).search(a, b);
+		/*placesSearch: function(placeSearchRequest, callback) {
+			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).search(placeSearchRequest, callback);
 		},*/
 		
 		/**
 		 * Retrieves details about the Place identified by the given reference.
-		 * @param a:google.maps.places.PlaceDetailsRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceDetailsRequest
-		 * @param b:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
+		 * @param placeDetailsRequest:google.maps.places.PlaceDetailsRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceDetailsRequest
+		 * @param callback:function(result:google.maps.places.PlaceResult, status:google.maps.places.PlacesServiceStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#PlaceResult
 		 */
-		/*placesDetails: function(a, b) {
-			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).getDetails(a, b);
+		/*placesDetails: function(placeDetailsRequest, callback) {
+			this.get('services > PlacesService', new google.maps.places.PlacesService(this.get('map'))).getDetails(placeDetailsRequest, callback);
 		},*/
 		
 		/**
 		 * A service to predict the desired Place based on user input. The service is attached to an <input> field in the form of a drop-down list. The list of predictions is updated dynamically as text is typed into the input field. 
-		 * @param a:jquery/node/string
-		 * @param b:google.maps.places.AutocompleteOptions, http://code.google.com/apis/maps/documentation/javascript/reference.html#AutocompleteOptions
+		 * @param panel:jquery/node/string
+		 * @param autocompleteOptions:google.maps.places.AutocompleteOptions, http://code.google.com/apis/maps/documentation/javascript/reference.html#AutocompleteOptions
 		 */		
-		/*placesAutocomplete: function(a, b) {
-			this.get('services > Autocomplete', new google.maps.places.Autocomplete(this._unwrap(a)));
+		/*placesAutocomplete: function(panel, autocompleteOptions) {
+			this.get('services > Autocomplete', new google.maps.places.Autocomplete(this._unwrap(panel)));
 		},*/
 		
 		/* DISTANCE MATRIX SERVICE */
 		
 		/**
 		 * Issues a distance matrix request.
-		 * @param a:google.maps.DistanceMatrixRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixRequest 
-		 * @param b:function(result:google.maps.DistanceMatrixResponse, status: google.maps.DistanceMatrixStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixResponse
+		 * @param distanceMatrixRequest:google.maps.DistanceMatrixRequest, http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixRequest 
+		 * @param callback:function(result:google.maps.DistanceMatrixResponse, status: google.maps.DistanceMatrixStatus), http://code.google.com/apis/maps/documentation/javascript/reference.html#DistanceMatrixResponse
 		 */
-		/*displayDistanceMatrix: function(a, b) {
-			this.get('services > DistanceMatrixService', new google.maps.DistanceMatrixService()).getDistanceMatrix(a, b);
+		/*displayDistanceMatrix: function(distanceMatrixRequest, callback) {
+			this.get('services > DistanceMatrixService', new google.maps.DistanceMatrixService()).getDistanceMatrix(distanceMatrixRequest, callback);
 		}*/
 	
 	});

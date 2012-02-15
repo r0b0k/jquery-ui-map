@@ -7,7 +7,6 @@
 ( function($) {
 	
 	/**
-	 * @param namespace:string
 	 * @param name:string
 	 * @param prototype:object
 	 */

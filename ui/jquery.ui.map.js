@@ -1,5 +1,5 @@
  /*!
- * jQuery FN Google Map 3.0-beta
+ * jQuery FN Google Map 3.0-rc
  * http://code.google.com/p/jquery-ui-map/
  * Copyright (c) 2010 - 2012 Johan Säll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
@@ -7,36 +7,54 @@
 ( function($) {
 	
 	/**
-	 * This is how you write unmaintainable code :) - the size is small though.
 	 * @param namespace:string
 	 * @param name:string
-	 * @param base:object
+	 * @param prototype:object
 	 */
-	$.a = function(a, b, c) {
-		$[a] = $[a] || {};
-		$[a][b] = function(a, b) {
+	$.a = function(name, prototype) {
+		
+		var namespace = name.split('.')[0];
+        name = name.split('.')[1];
+		
+		$[namespace] = $[namespace] || {};
+		$[namespace][name] = function(options, element) {
 			if ( arguments.length ) {
-				this._s(a, b);
+				this._setup(options, element);
 			}
 		};
-		$[a][b].prototype = c;
-		$.fn[b] = function(d) {
-			var e = this, f = Array.prototype.slice.call(arguments, 1), g = typeof d === 'string';
-			if ( g && d.substring(0, 1) === '_' ) { return e; }
+		
+		$[namespace][name].prototype = $.extend({
+			'namespace': namespace,
+			'pluginName': name
+        }, prototype);
+		
+		$.fn[name] = function(options) {
+			
+			var isMethodCall = typeof options === "string",
+				args = Array.prototype.slice.call(arguments, 1),
+				returnValue = this;
+			
+			if ( isMethodCall && options.substring(0, 1) === '_' ) { 
+				return returnValue; 
+			}
+
 			this.each(function() {
-				var h = $.data(this, b);
-				if ( !h ) {
-					h = $.data(this, b, new $[a][b](d, this));
+				var instance = $.data(this, name);
+				if (!instance) {
+					instance = $.data(this, name, new $[namespace][name](options, this));
 				}
-				if ( g ) {
-					e = h[d].apply(h, f);
+				if (isMethodCall) {
+					returnValue = instance[options].apply(instance, args);
 				}
 			});
-			return e;  
+			
+			return returnValue; 
+			
 		};
+		
 	};
 	
-	$.a("ui", "gmap", {
+	$.a('ui.gmap', {
 		
 		/**
 		 * Map options
@@ -53,22 +71,22 @@
 		 * @param options:object
 		 * @return object
 		 */
-		option: function(a, b) {
-			if (b) {
-				this.options[a] = b;
+		option: function(key, options) {
+			if (options) {
+				this.options[key] = options;
 				this.get('map').setOptions(this.options);
 			}
-			return this.options[a];
+			return this.options[key];
 		},
 		
 		/**
 		 * Setup plugin basics, 
-		 * @el is the jQuery element
-		 * @options is the 
+		 * @param options:object
+		 * @param element:node
 		 */
-		_s: function(a, b) {
-			this.el = $(b);
-			jQuery.extend(this.options, a);
+		_setup: function(options, element) {
+			this.el = element;
+			jQuery.extend(this.options, options);
 			this.options.center = this._latLng(this.options.center);
 			this._create();
 			if ( this._init ) { this._init(); }
@@ -78,28 +96,29 @@
 		 * Instanciate the Google Maps object
 		 */
 		_create: function() {
-			var a = this; 
-			a._a = { 'map': new google.maps.Map(a.el[0], a.options), 'markers': [], 'overlays': [], 'services': [], 'iw': new google.maps.InfoWindow };
-			google.maps.event.addListenerOnce(a._a.map, 'bounds_changed', function() { a.el.trigger('init', a._a.map); });
-			a._call(a.options.callback, a._a.map);
+			var self = this; 
+			self.instance = { 'map': new google.maps.Map(self.el, self.options), 'markers': [], 'overlays': [], 'services': [], 'iw': new google.maps.InfoWindow };
+			google.maps.event.addListenerOnce(self.instance.map, 'bounds_changed', function() { $(self.el).trigger('init', self.instance.map); });
+			self._call(self.options.callback, self.instance.map);
 		},
 		
 		/**
 		 * Adds a latitude longitude pair to the bounds.
 		 * @param position:google.maps.LatLng/string
 		 */
-		addBounds: function(a) {
-			this.get('bounds', new google.maps.LatLngBounds()).extend(this._latLng(a));
+		addBounds: function(position) {
+			this.get('bounds', new google.maps.LatLngBounds()).extend(this._latLng(position));
 			this.get('map').fitBounds(this.get('bounds'));
+			return this;
 		},
 		
 		/**
 		 * Helper function to check if a LatLng is within the viewport
 		 * @param marker:google.maps.Marker
 		 */
-		inViewport: function(a) {
-			var b = this.get('map').getBounds();
-			return (b) ? b.contains(a.getPosition()) : false;
+		inViewport: function(marker) {
+			var bounds = this.get('map').getBounds();
+			return (bounds) ? bounds.contains(marker.getPosition()) : false;
 		},
 		
 		/**
@@ -108,71 +127,76 @@
 		 * @param position:google.maps.ControlPosition	 
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition
 		 */
-		addControl: function(a, b) {
-			this.get('map').controls[b].push(this._unwrap(a));
+		addControl: function(panel, position) {
+			this.get('map').controls[position].push(this._unwrap(panel));
+			return this;
 		},
 		
 		/**
 		 * Adds a Marker to the map
 		 * @param markerOptions:google.maps.MarkerOptions
 		 * @param callback:function(map:google.maps.Map, marker:google.maps.Marker) (optional)
-		 * @param marker:function (optional)
+		 * @param extension:function (optional)
 		 * @return $(google.maps.Marker)
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
 		 */
-		addMarker: function(a, b, c) {
-			a.map = this.get('map');
-			a.position = this._latLng(a.position);
-			var d = new (c || google.maps.Marker)(a);
-			var f = this.get('markers');
-			if ( d.id ) {
-				f[d.id] = d;
+		addMarker: function(markerOptions, callback, extension) {
+			markerOptions.map = this.get('map');
+			markerOptions.position = this._latLng(markerOptions.position);
+			var marker = new (extension || google.maps.Marker)(markerOptions);
+			var markers = this.get('markers');
+			if ( marker.id ) {
+				markers[marker.id] = marker;
 			} else {
-				f.push(d);
+				markers.push(marker);
 			}
-			if ( d.bounds ) {
-				this.addBounds(d.getPosition());
+			if ( marker.bounds ) {
+				this.addBounds(marker.getPosition());
 			}
-			this._call(b, a.map, d);
-			return $(d);
+			this._call(callback, markerOptions.map, marker);
+			return $(marker);
 		},
 		
 		/**
 		 * Clears by type
-		 * @param type:string i.e. 'markers', 'overlays', 'services'
+		 * @param ctx:string	e.g. 'markers', 'overlays', 'services'
 		 */
-		clear: function(a) {
-			this._c(this.get(a));
-			this.set(a, []);
+		clear: function(ctx) {
+			this._c(this.get(ctx));
+			this.set(ctx, []);
+			return this;
 		},
 		
-		_c: function(a) {
-			for ( var b in a ) {
-				if ( a.hasOwnProperty(b) ) {
-					if ( a[b] instanceof google.maps.MVCObject ) {
-						google.maps.event.clearInstanceListeners(a[b]);
-						a[b].setMap(null);
-					} else if ( a[b] instanceof Array ) {
-						this._c(a[b]);
+		_c: function(obj) {
+			for ( var property in obj ) {
+				if ( obj.hasOwnProperty(property) ) {
+					if ( obj[property] instanceof google.maps.MVCObject ) {
+						google.maps.event.clearInstanceListeners(obj[property]);
+						if ( obj[property].setMap ) {
+							obj[property].setMap(null);
+						}
+					} else if ( obj[property] instanceof Array ) {
+						this._c(obj[property]);
 					}
-					a[b] = null;
+					obj[property] = null;
 				}
 			}
 		},
 		
 		/**
 		 * Returns the objects with a specific property and value, e.g. 'category', 'tags'
-		 * @param context:string	in what context, e.g. 'markers' 
+		 * @param ctx:string	in what context, e.g. 'markers' 
 		 * @param options:object	property:string	the property to search within, value:string, delimiter:string (optional)
 		 * @param callback:function(marker:google.maps.Marker, isFound:boolean)
 		 */
-		find: function(a, b, c) {
-			var d = this.get(a);
-			for ( var e in d ) {
-				if ( d.hasOwnProperty(e) ) {
-					c(d[e], (( b.delimiter && d[e][b.property] ) ? ( $.inArray(b.value, d[e][b.property].split(b.delimiter)) > -1 ) : ( d[e][b.property] === b.value )));
+		find: function(ctx, options, callback) {
+			var obj = this.get(ctx);
+			for ( var property in obj ) {
+				if ( obj.hasOwnProperty(property) ) {
+					callback(obj[property], (( options.delimiter && obj[property][options.property] ) ? ( $.inArray(options.value, obj[property][options.property].split(options.delimiter)) > -1 ) : ( obj[property][options.property] === options.value )));
 				}
 			};
+			return this;
 		},
 
 		/**
@@ -180,27 +204,27 @@
 		 * @param key:string
 		 * @param value:object(optional)
 		 */
-		get: function(a, b) {
-			var c = this._a;
-			if (!c[a]) {
-				if ( a.indexOf('>') > -1 ) {
-					var e = a.replace(/ /g, '').split('>');
+		get: function(key, value) {
+			var instance = this.instance;
+			if (!instance[key]) {
+				if ( key.indexOf('>') > -1 ) {
+					var e = key.replace(/ /g, '').split('>');
 					for ( var i = 0; i < e.length; i++ ) {
-						if ( !c[e[i]] ) {
-							if (b) {
-								c[e[i]] = ( (i + 1) < e.length ) ? [] : b;
+						if ( !instance[e[i]] ) {
+							if (value) {
+								instance[e[i]] = ( (i + 1) < e.length ) ? [] : value;
 							} else {
 								return null;
 							}
 						}
-						c = c[e[i]];
+						instance = instance[e[i]];
 					}
-					return c;
-				} else if ( b && !c[a] ) {
-					this.set(a, b);
+					return instance;
+				} else if ( value && !instance[key] ) {
+					this.set(key, value);
 				}
 			}
-			return c[a];
+			return instance[key];
 		},
 		
 		/**
@@ -210,11 +234,12 @@
 		 * @param callback:function (optional)
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
 		 */
-		openInfoWindow: function(a, b, c) {
-			var d = this.get('iw');
-			d.setOptions(a);
-			d.open(this.get('map'), this._unwrap(b)); 
-			this._call(c, d);
+		openInfoWindow: function(infoWindowOptions, marker, callback) {
+			var iw = this.get('iw');
+			iw.setOptions(infoWindowOptions);
+			iw.open(this.get('map'), this._unwrap(marker)); 
+			this._call(callback, iw);
+			return this;
 		},
 				
 		/**
@@ -222,18 +247,20 @@
 		 * @param key:string
 		 * @param value:object
 		 */
-		set: function(a, b) {
-			this._a[a] = b;
+		set: function(key, value) {
+			this.instance[key] = value;
+			return this;
 		},
 		
 		/**
 		 * Refreshes the map
 		 */
-		refresh: function(a) {
-			var b = this.get('map');
-			var c = b.getCenter();
-			$(b).triggerEvent('resize');
-			b.setCenter(c);
+		refresh: function() {
+			var map = this.get('map');
+			var latLng = map.getCenter();
+			$(map).triggerEvent('resize');
+			map.setCenter(latLng);
+			return this;
 		},
 		
 		/**
@@ -243,100 +270,112 @@
 			this.clear('markers');
 			this.clear('services');
 			this.clear('overlays');
-			for ( var b in this._a ) {
-				this._a[b] = null;
-			}
+			this._c(this.instance);
+			jQuery.removeData(this.el, this.name);
 		},
 		
 		/**
 		 * Helper method for calling a function
 		 * @param callback
 		 */
-		_call: function(a) {
-			if ( a && $.isFunction(a) ) {
-				a.apply(this, Array.prototype.slice.call(arguments, 1));
+		_call: function(callback) {
+			if ( callback && $.isFunction(callback) ) {
+				callback.apply(this, Array.prototype.slice.call(arguments, 1));
 			}
 		},
 		
 		/**
 		 * Helper method for google.maps.Latlng
-		 * @param callback
+		 * @param latLng:string/google.maps.LatLng
 		 */
-		_latLng: function(a) {
-			if (!a) {
-				return new google.maps.LatLng(0.0,0.0);
+		_latLng: function(latLng) {
+			if ( !latLng ) {
+				return new google.maps.LatLng(0.0, 0.0);
 			}
-			if ( a instanceof google.maps.LatLng ) {
-				return a;
+			if ( latLng instanceof google.maps.LatLng ) {
+				return latLng;
 			} else {
-				var b = a.replace(/ /g,'').split(',');
-				return new google.maps.LatLng(b[0],b[1]);
+				latLng = latLng.replace(/ /g,'').split(',');
+				return new google.maps.LatLng(latLng[0], latLng[1]);
 			}
 		},
 		
 		/**
 		 * Helper method for unwrapping jQuery/DOM/string elements
-		 * @param callback
+		 * @param obj:string/node/jQuery
 		 */
-		_unwrap: function(a) {
-			if ( !a ) {
+		_unwrap: function(obj) {
+			if ( !obj ) {
 				return null;
-			} else if ( a instanceof jQuery ) {
-				return a[0];
-			} else if ( a instanceof Object ) {
-				return a;
+			} else if ( obj instanceof jQuery ) {
+				return obj[0];
+			} else if ( obj instanceof Object ) {
+				return obj;
 			}
-			return $('#'+a)[0];
+			return $('#'+obj)[0];
 		}
 		
 	});
 	
 	jQuery.fn.extend( {
 		
-		click: function(a, b) { 
-			return this.addEventListener('click', a, b);
+		click: function(eventType, eventDataOrCallback) { 
+			return this.addEventListener('click', eventType, eventDataOrCallback);
 		},
 		
-		rightclick: function(a) {
-			return this.addEventListener('rightclick', a);
+		rightclick: function(eventType) {
+			return this.addEventListener('rightclick', eventType);
 		},
 		
-		dblclick: function(a, b) {
-			return this.addEventListener('dblclick', a, b);
+		dblclick: function(eventType, eventDataOrCallback) {
+			return this.addEventListener('dblclick', eventType, eventDataOrCallback);
 		},
 		
-		mouseover: function(a, b) {
-			return this.addEventListener('mouseover', a, b);
+		mouseover: function(eventType, eventDataOrCallback) {
+			return this.addEventListener('mouseover', eventType, eventDataOrCallback);
 		},
 		
-		mouseout: function(a, b) {
-			return this.addEventListener('mouseout', a, b);
+		mouseout: function(eventType, eventDataOrCallback) {
+			return this.addEventListener('mouseout', eventType, eventDataOrCallback);
 		},
 		
-		drag: function(a) {
-			return this.addEventListener('drag', a );
+		drag: function(eventType) {
+			return this.addEventListener('drag', eventType);
 		},
 		
-		dragend: function(a) {
-			return this.addEventListener('dragend', a );
+		dragend: function(eventType) {
+			return this.addEventListener('dragend', eventType);
 		},
 		
-		triggerEvent: function(a) {
-			google.maps.event.trigger(this[0], a);		
+		triggerEvent: function(eventType) {
+			google.maps.event.trigger(this[0], eventType);		
 		},
 		
-		addEventListener: function(a, b, c) {
+		addEventListener: function(eventType, eventDataOrCallback, eventCallback) {
 			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
-				google.maps.event.addListener(this[0], a, b );
+				google.maps.event.addListener(this[0], eventType, eventDataOrCallback);
 			} else {
-				if (c) {
-					this.bind(a, b, c);
+				if (eventCallback) {
+					this.bind(eventType, eventDataOrCallback, eventCallback);
 				} else {
-					this.bind(a, b);
-				}	
+					this.bind(eventType, eventDataOrCallback);
+				} 
 			}
 			return this;
 		}
+		  
+		/*removeEventListener: function(eventType) {
+			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
+				if (eventType) {
+					google.maps.event.clearListeners(this[0], eventType);
+				} else {
+					google.maps.event.clearInstanceListeners(this[0]);
+				}
+			} else {
+				this.unbind(eventType);
+			}
+			return this;
+		}*/
 		
 	});
 	

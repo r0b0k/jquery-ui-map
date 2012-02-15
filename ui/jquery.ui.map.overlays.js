@@ -1,5 +1,5 @@
  /*!
- * jQuery UI Google Map 3.0-beta
+ * jQuery UI Google Map 3.0-rc
  * http://code.google.com/p/jquery-ui-map/
  * Copyright (c) 2010 - 2012 Johan Säll Larsson
  * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
@@ -13,12 +13,12 @@
 		
 		/**
 		 * Adds a shape to the map
-		 * @param type:string Polygon, Polyline, Rectangle, Circle
-		 * @param options:object
+		 * @param shapeType:string Polygon, Polyline, Rectangle, Circle
+		 * @param shapeOptions:object
 		 * @return object
 		 */
-		addShape: function(a, b) {
-			return $(this.get('overlays > ' + a, []).push(new google.maps[a](jQuery.extend({'map': this.get('map')}, b))));
+		addShape: function(shapeType, shapeOptions) {
+			return $(this.get('overlays > ' + shapeType, []).push(new google.maps[shapeType](jQuery.extend({'map': this.get('map')}, shapeOptions))));
 		},
 		
 		/**
@@ -26,8 +26,8 @@
 		 * @param fusionTableOptions:google.maps.FusionTablesLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions
 		 * @param fusionTableId:int
 		 */
-		loadFusion: function(a, b) {
-			( (!b) ? this.get('overlays > FusionTablesLayer', new google.maps.FusionTablesLayer()) : this.get('overlays > FusionTablesLayer', new google.maps.FusionTablesLayer(b, a)) ).setOptions(jQuery.extend({'map': this.get('map') }, a));
+		loadFusion: function(fusionTableOptions, fusionTableId) {
+			( (!fusionTableId) ? this.get('overlays > FusionTablesLayer', new google.maps.FusionTablesLayer()) : this.get('overlays > FusionTablesLayer', new google.maps.FusionTablesLayer(fusionTableId, fusionTableOptions)) ).setOptions(jQuery.extend({'map': this.get('map') }, fusionTableOptions));
 		},
 		
 		/**
@@ -36,8 +36,8 @@
 		 * @param url:String - URL to feed
 		 * @param kmlLayerOptions:google.maps.KmlLayerOptions, http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#KmlLayerOptions
 		 */
-		loadKML: function(a, b, c) {
-			this.get('overlays > ' + a, new google.maps.KmlLayer(b, jQuery.extend({'map': this.get('map')}, c)));
+		loadKML: function(uid, url, kmlLayerOptions) {
+			this.get('overlays > ' + uid, new google.maps.KmlLayer(url, jQuery.extend({'map': this.get('map')}, kmlLayerOptions)));
 		}
 	
 	});

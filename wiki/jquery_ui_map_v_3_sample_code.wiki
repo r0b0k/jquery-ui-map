@@ -87,6 +87,11 @@ $('#map_canvas').gmap('addMarker', { /*id:'m_1',*/ 'position': '42.345573,-71.09
 
 == Example InfoWindow ==
 
+Close any open InfoWindow
+{{{
+$('#map_canvas').gmap('closeInfoWindow');
+}}}
+
 Showing an InfoWindow on a click event
 
 {{{
@@ -245,7 +250,7 @@ Find an object by searching a single property with multiple values.
 {{{
 $('#map_canvas').gmap().bind('init', function() { 
 	$('#map_canvas').gmap('addMarker', { 'tags':'foo, bar, baz', 'position': '42.345573,-71.098326', 'bounds':true });
-	$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': 'foo', 'delimiter': ', '}, function(marker, isFound) {
+	$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': ['foo', 'bar'], 'operator': 'AND'}, function(marker, isFound) {
 		if ( isFound ) {
 			marker.setVisible(true);
 		} else {
@@ -258,7 +263,7 @@ $('#map_canvas').gmap().bind('init', function() {
 {{{
 $('#map_canvas').gmap({'callback':function() {
 	this.addMarker({ 'tags':'foo, bar, baz', 'position': '42.345573,-71.098326', 'bounds':true });
-	this.find('markers', { 'property': 'tags', 'value': 'foo', 'delimiter': ', '}, function(marker, isFound) {
+	this.find('markers', { 'property': 'tags', 'value': ['foo', 'bar'], 'operator': 'AND'}, function(marker, isFound) {
 		if ( isFound ) {
 			marker.setVisible(true);
 		} else {
@@ -270,7 +275,7 @@ $('#map_canvas').gmap({'callback':function() {
 
 {{{
 $('#map_canvas').gmap('addMarker', { 'tags':'foo, bar, baz', 'position': '42.345573,-71.098326', 'bounds':true });
-$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': 'foo', 'delimiter': ', '}, function(marker, isFound) {
+$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': ['foo', 'bar'], 'operator': 'AND'}, function(marker, isFound) {
 	if ( isFound ) {
 		marker.setVisible(true);
 	} else {

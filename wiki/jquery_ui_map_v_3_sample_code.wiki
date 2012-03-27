@@ -1,6 +1,6 @@
 #summary Sample code
 
-= Version 3.0-beta =
+= Version 3.0-rc =
 
 == Example constructor call ==
 

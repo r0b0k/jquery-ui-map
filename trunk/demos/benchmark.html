@@ -42,7 +42,7 @@
 					$('#map_canvas').gmap({ 'callback': function() {
 						demo.timeStart('test_1', 'Add '+amountOfMarkersToSpawn+' markers using the plugin');
 						for ( var i = 0; i < amountOfMarkersToSpawn; i++ ) {
-							this.addMarker( { 'a': 'a', 'position': new google.maps.LatLng((Math.random()*100), (Math.random()*100)), 'bounds': false, 'visible': false } );
+							this.addMarker( { 'a': ['a','b','c'], 'position': new google.maps.LatLng((Math.random()*100), (Math.random()*100)), 'bounds': false, 'visible': false } );
 						}
 						demo.timeEnd('test_1');
 					}});
@@ -58,8 +58,8 @@
 				});
 				
 				demo.add(function() {
-					demo.timeStart('test_3', 'Find a marker by property using the plugin');
-					$('#map_canvas').gmap('find', 'markers', {'property': 'a', 'value': 'a'}, function(marker, isFound) {
+					demo.timeStart('test_3', 'Find a marker by property (array) using the plugin');
+					$('#map_canvas').gmap('find', 'markers', {'property': 'a', 'value': ['a','b','c'] }, function(marker, isFound) {
 						if ( isFound ) {
 							marker.setVisible(false);
 						}
@@ -68,7 +68,7 @@
 				});
 				
 				demo.add(function() {
-					demo.timeStart('test_4', 'Find a marker by property using ordinary js');
+					demo.timeStart('test_4', 'Find a marker by property (string) using ordinary js');
 					for ( var i = 0; i < markers.length; i++ ) {
 						if ( markers[i].a === 'a' ) {
 							markers[i].setVisible(false);
@@ -92,6 +92,7 @@
 					}
 					demo.timeEnd('test_6');
 				});
+				
 				
 				demo.load();
 				demo.report('#results');

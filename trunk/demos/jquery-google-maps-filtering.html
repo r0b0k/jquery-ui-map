@@ -25,7 +25,7 @@
     <body>
 		<header class="dark">
 			<div class="container_16">
-				<h1><a href="/">Google maps jQuery plugin  <span id="version"></span></a> basic example</h1>
+				<h1><a href="/">Google maps jQuery plugin  <span id="version"></span></a> filter by property</h1>
 			</div>
 		</header>
 		<div class="container_16">
@@ -33,10 +33,11 @@
 				<div class="item rounded dark">
 					<div id="map_canvas" class="map rounded"></div>
 				</div>
-				<div id="tags-control" class="item gradient rounded shadow" style="margin:5px;padding:5px 5px 5px 10px;">
+				<div id="radios" class="item gradient rounded shadow" style="margin:5px;padding:5px 5px 5px 10px;"></div>
+				<!--<div id="tags-control" class="item gradient rounded shadow" style="margin:5px;padding:5px 5px 5px 10px;">
 					<label style="color:#555;font-size:12px; font-weight:bold;" for="tags">Filter by tag</label>
 					<select id="tags" style="outline:none;"></select>
-				</div>
+				</div>-->
 				<div class="content rounded light shadow">
 					<h2>Using jquery with Google maps</h2>
 					<p>Download <a href="http://jquery.com/">jQuery 1.4.X or higher</a> or use <a href="http://code.google.com/intl/sv-SE/apis/libraries/devguide.html">Googles</a> or <a href="http://www.asp.net/ajaxlibrary/cdn.ashx">Microsofts</a>  <abbr title="Content delivery network"><a href="http://en.wikipedia.org/wiki/Content_delivery_network">CDN</a></abbr>.</p>
@@ -54,11 +55,11 @@ $('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278' }).bind('init', 
 	});
 });</pre>
 
-<p>The find method is 1-n, meaning it can find a single value within a array</p>
+<p>The find method is n-n, meaning it can find a multiple value within a array. If you need both values (bar and boz) to be included add the property 'operator':'AND'</p>
 <pre class="prettyprint rounded">
 $('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278' }).bind('init', function () {
 	$('#map_canvas').gmap('addMarker', { 'foo': 'bar,baz,boz', 'position': '59.3426606750, 18.0736160278' });
-	$('#map_canvas').gmap('find', 'markers', { 'property': 'foo', 'value': 'bar', 'delimiter': ',' }, function(marker, found) {
+	$('#map_canvas').gmap('find', 'markers', { 'property': 'foo', 'value': ['bar','boz'] }, function(marker, found) {
 		marker.setVisible(found);
 	});
 });</pre>
@@ -109,44 +110,67 @@ $('#map_canvas').gmap('inViewport', $('#map_canvas').gmap('get', 'marker > some_
             $(function() { 
 				demo.add(function() {			
 					$('#map_canvas').gmap({'disableDefaultUI':true}).bind('init', function(evt, map) { 
-						$('#map_canvas').gmap('addControl', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
+						//$('#map_canvas').gmap('addControl', 'tags-control', google.maps.ControlPosition.TOP_LEFT);
+						$('#map_canvas').gmap('addControl', 'radios', google.maps.ControlPosition.TOP_LEFT);
 						var southWest = map.getBounds().getSouthWest();
 						var northEast = map.getBounds().getNorthEast();
 						var lngSpan = northEast.lng() - southWest.lng();
 						var latSpan = northEast.lat() - southWest.lat();
 						var images = ['http://google-maps-icons.googlecode.com/files/friends.png', 'http://google-maps-icons.googlecode.com/files/home.png', 'http://google-maps-icons.googlecode.com/files/girlfriend.png', 'http://google-maps-icons.googlecode.com/files/dates.png', 'http://google-maps-icons.googlecode.com/files/realestate.png', 'http://google-maps-icons.googlecode.com/files/apartment.png', 'http://google-maps-icons.googlecode.com/files/family.png'];
 						var tags = ['jQuery', 'Google maps', 'Plugin', 'SEO', 'Java', 'PHP', 'C#', 'Ruby', 'JavaScript', 'HTML'];
-						$('#tags').append('<option value="all">All</option>');
+						//$('#tags').append('<option value="all">All</option>');
 						$.each(tags, function(i, tag) {
-							$('#tags').append(('<option value="{0}">{1}</option>').format(tag, tag));
+							//$('#tags').append(('<option value="{0}">{1}</option>').format(tag, tag));
+							$('#radios').append(('<label style="margin-right:5px;display:block;"><input type="checkbox" style="margin-right:3px" value="{0}"/>{1}</label>').format(tag, tag));
 						});
 						for ( i = 0; i < 100; i++ ) {
 							var temp = [];
 							for ( j = 0; j < Math.random()*5; j++ ) {
 								temp.push(tags[Math.floor(Math.random()*10)]);
 							}
-							$('#map_canvas').gmap('addMarker', { 'id': ('m_{0}').format(i), 'icon': images[(Math.floor(Math.random()*7))], 'tags':temp.toString(), 'bound':true, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } ).click(function() {
+							$('#map_canvas').gmap('addMarker', { 'icon': images[(Math.floor(Math.random()*7))], 'tags':temp, 'bound':true, 'position': new google.maps.LatLng(southWest.lat() + latSpan * Math.random(), southWest.lng() + lngSpan * Math.random()) } ).click(function() {
 								var visibleInViewport = ( $('#map_canvas').gmap('inViewport', $(this)[0]) ) ? 'I\'m visible in the viewport.' : 'I\'m sad and hidden.';
-								$('#map_canvas').gmap('openInfoWindow', { 'content': $(this)[0].tags.replace(/,/g, ', ') + '<br/>' +visibleInViewport }, this);
+								$('#map_canvas').gmap('openInfoWindow', { 'content': $(this)[0].tags + '<br/>' +visibleInViewport }, this);
 							});
 						}
-						$("#tags").change(function() {
-							$('#map_canvas').gmap('get', 'iw').close();
+						$('input:checkbox').click(function() {
+							$('#map_canvas').gmap('closeInfoWindow');
 							$('#map_canvas').gmap('set', 'bounds', null);
-							if ( $(this).val() == 'all' ) {
-								$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': $(this).val() }, function(marker, found) {
-									marker.setVisible(true); 
-									$('#map_canvas').gmap('addBounds', marker.position);	
+							var filters = [];
+							$('input:checkbox:checked').each(function(i, checkbox) {
+								filters.push($(checkbox).val());
+							});
+							if ( filters.length > 0 ) {
+								$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': filters, 'operator': 'OR' }, function(marker, found) {
+									if (found) {
+										$('#map_canvas').gmap('addBounds', marker.position);
+									}
+									marker.setVisible(found); 
 								});
 							} else {
-								$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': $(this).val(), 'delimiter': ',' }, function(marker, found) {
+								$.each($('#map_canvas').gmap('get', 'markers'), function(i, marker) {
+									$('#map_canvas').gmap('addBounds', marker.position);
+									marker.setVisible(true); 
+								});
+							}
+						});
+						
+						/*$("#tags").change(function() {
+							$('#map_canvas').gmap('closeInfoWindow');
+							$('#map_canvas').gmap('set', 'bounds', null);
+							if ( $(this).val() == 'all' ) {
+								$.each($('#map_canvas').gmap('get', 'markers'), function(i, marker) {
+									marker.setVisible(true); 
+								});
+							} else {
+								$('#map_canvas').gmap('find', 'markers', { 'property': 'tags', 'value': $(this).val() }, function(marker, found) {
 									if (found) {
 										$('#map_canvas').gmap('addBounds', marker.position);
 									}
 									marker.setVisible(found); 
 								});
 							}
-						});
+						});*/
 					});
 				}).load();
 			});

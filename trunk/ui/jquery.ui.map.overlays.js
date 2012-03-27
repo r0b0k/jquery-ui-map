@@ -18,7 +18,9 @@
 		 * @return object
 		 */
 		addShape: function(shapeType, shapeOptions) {
-			return $(this.get('overlays > ' + shapeType, []).push(new google.maps[shapeType](jQuery.extend({'map': this.get('map')}, shapeOptions))));
+			var shape = new google.maps[shapeType](jQuery.extend({'map': this.get('map')}, shapeOptions));
+			this.get('overlays > ' + shapeType, []).push(shape);
+			return $(shape);
 		},
 		
 		/**

@@ -73,7 +73,8 @@
 		option: function(key, options) {
 			if (options) {
 				this.options[key] = options;
-				this.get('map').setOptions(this.options);
+				this.get('map').set(key, options);
+				return this;
 			}
 			return this.options[key];
 		},
@@ -85,8 +86,8 @@
 		 */
 		_setup: function(options, element) {
 			this.el = element;
-			jQuery.extend(this.options, options);
-			this.options.center = this._latLng(this.options.center);
+			options = options || {};
+			jQuery.extend(this.options, options, { 'center': this._latLng(options.center) });
 			this._create();
 			if ( this._init ) { this._init(); }
 		},
@@ -95,8 +96,8 @@
 		 * Instanciate the Google Maps object
 		 */
 		_create: function() {
-			var self = this; 
-			self.instance = { 'map': new google.maps.Map(self.el, self.options), 'markers': [], 'overlays': [], 'services': [], 'iw': new google.maps.InfoWindow };
+			var self = this;
+			this.instance = { 'map': new google.maps.Map(self.el, self.options), 'markers': [], 'overlays': [], 'services': [] };
 			google.maps.event.addListenerOnce(self.instance.map, 'bounds_changed', function() { $(self.el).trigger('init', self.instance.map); });
 			self._call(self.options.callback, self.instance.map);
 		},
@@ -106,8 +107,9 @@
 		 * @param position:google.maps.LatLng/string
 		 */
 		addBounds: function(position) {
-			this.get('bounds', new google.maps.LatLngBounds()).extend(this._latLng(position));
-			this.get('map').fitBounds(this.get('bounds'));
+			var bounds = this.get('bounds', new google.maps.LatLngBounds());
+			bounds.extend(this._latLng(position));
+			this.get('map').fitBounds(bounds);
 			return this;
 		},
 		
@@ -135,14 +137,13 @@
 		 * Adds a Marker to the map
 		 * @param markerOptions:google.maps.MarkerOptions
 		 * @param callback:function(map:google.maps.Map, marker:google.maps.Marker) (optional)
-		 * @param extension:function (optional)
 		 * @return $(google.maps.Marker)
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions
 		 */
-		addMarker: function(markerOptions, callback, extension) {
+		addMarker: function(markerOptions, callback) {
 			markerOptions.map = this.get('map');
 			markerOptions.position = this._latLng(markerOptions.position);
-			var marker = new (extension || google.maps.Marker)(markerOptions);
+			var marker = new (markerOptions.marker || google.maps.Marker)(markerOptions);
 			var markers = this.get('markers');
 			if ( marker.id ) {
 				markers[marker.id] = marker;
@@ -185,19 +186,31 @@
 		/**
 		 * Returns the objects with a specific property and value, e.g. 'category', 'tags'
 		 * @param ctx:string	in what context, e.g. 'markers' 
-		 * @param options:object	property:string	the property to search within, value:string, delimiter:string (optional)
+		 * @param options:object	property:string	the property to search within, value:string, operator:string (optional) (AND/OR)
 		 * @param callback:function(marker:google.maps.Marker, isFound:boolean)
 		 */
 		find: function(ctx, options, callback) {
 			var obj = this.get(ctx);
+			options.value = $.isArray(options.value) ? options.value : [options.value];
 			for ( var property in obj ) {
 				if ( obj.hasOwnProperty(property) ) {
-					callback(obj[property], (( options.delimiter && obj[property][options.property] ) ? ( $.inArray(options.value, obj[property][options.property].split(options.delimiter)) > -1 ) : ( obj[property][options.property] === options.value )));
+					var isFound = false;
+					for ( var value in options.value ) {
+						if ( $.inArray(options.value[value], obj[property][options.property]) > -1 ) {
+							isFound = true;
+						} else {
+							if ( options.operator && options.operator === 'AND' ) {
+								isFound = false;
+								break;
+							}
+						}
+					}
+					callback(obj[property], isFound);
 				}
-			};
+			}
 			return this;
 		},
-
+		
 		/**
 		 * Returns an instance property by key. Has the ability to set an object if the property does not exist
 		 * @param key:string
@@ -205,7 +218,7 @@
 		 */
 		get: function(key, value) {
 			var instance = this.instance;
-			if (!instance[key]) {
+			if ( !instance[key] ) {
 				if ( key.indexOf('>') > -1 ) {
 					var e = key.replace(/ /g, '').split('>');
 					for ( var i = 0; i < e.length; i++ ) {
@@ -234,10 +247,20 @@
 		 * @see http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions
 		 */
 		openInfoWindow: function(infoWindowOptions, marker, callback) {
-			var iw = this.get('iw');
+			var iw = this.get('iw', infoWindowOptions.infoWindow || new google.maps.InfoWindow);
 			iw.setOptions(infoWindowOptions);
 			iw.open(this.get('map'), this._unwrap(marker)); 
 			this._call(callback, iw);
+			return this;
+		},
+		
+		/**
+		 * Triggers an InfoWindow to close
+		 */
+		closeInfoWindow: function() {
+			if ( this.get('iw') != null ) {
+				this.get('iw').close();
+			}
 			return this;
 		},
 				
@@ -266,10 +289,7 @@
 		 * Destroys the plugin.
 		 */
 		destroy: function() {
-			this.clear('markers');
-			this.clear('services');
-			this.clear('overlays');
-			this._c(this.instance);
+			this.clear('markers').clear('services').clear('overlays')._c(this.instance);
 			jQuery.removeData(this.el, this.name);
 		},
 		
@@ -304,50 +324,16 @@
 		 * @param obj:string/node/jQuery
 		 */
 		_unwrap: function(obj) {
-			if ( !obj ) {
-				return null;
-			} else if ( obj instanceof jQuery ) {
-				return obj[0];
-			} else if ( obj instanceof Object ) {
-				return obj;
-			}
-			return $('#'+obj)[0];
+			return (!obj) ? null : ( (obj instanceof jQuery) ? obj[0] : ((obj instanceof Object) ? obj : $('#'+obj)[0]) )
 		}
 		
 	});
 	
 	jQuery.fn.extend( {
 		
-		click: function(eventType, eventDataOrCallback) { 
-			return this.addEventListener('click', eventType, eventDataOrCallback);
-		},
-		
-		rightclick: function(eventType) {
-			return this.addEventListener('rightclick', eventType);
-		},
-		
-		dblclick: function(eventType, eventDataOrCallback) {
-			return this.addEventListener('dblclick', eventType, eventDataOrCallback);
-		},
-		
-		mouseover: function(eventType, eventDataOrCallback) {
-			return this.addEventListener('mouseover', eventType, eventDataOrCallback);
-		},
-		
-		mouseout: function(eventType, eventDataOrCallback) {
-			return this.addEventListener('mouseout', eventType, eventDataOrCallback);
-		},
-		
-		drag: function(eventType) {
-			return this.addEventListener('drag', eventType);
-		},
-		
-		dragend: function(eventType) {
-			return this.addEventListener('dragend', eventType);
-		},
-		
 		triggerEvent: function(eventType) {
-			google.maps.event.trigger(this[0], eventType);		
+			google.maps.event.trigger(this[0], eventType);
+			return this;
 		},
 		
 		addEventListener: function(eventType, eventDataOrCallback, eventCallback) {
@@ -376,6 +362,12 @@
 			return this;
 		}*/
 		
+	});
+	
+	jQuery.each(('click rightclick dblclick mouseover mouseout drag dragend').split(' '), function(i, name) {
+		jQuery.fn[name] = function(a, b) {
+			return this.addEventListener(name, a, b);
+		}
 	});
 	
 } (jQuery) );

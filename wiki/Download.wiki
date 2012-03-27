@@ -1,4 +1,4 @@
-==Latest (3.0.beta)==
+==Latest (3.0.rc1)==
 
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.full.min.js Full version] (core, jquery.ui.map.overlays.js and jquery.ui.map.services.js)
   * [http://jquery-ui-map.googlecode.com/svn/trunk/ui/min/jquery.ui.map.min.js Core] 

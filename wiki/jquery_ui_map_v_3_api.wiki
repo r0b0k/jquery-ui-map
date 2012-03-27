@@ -19,11 +19,12 @@
 || addBounds([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#LatLng LatLng]) || none || Adds a bound to the existing boundaries. ||
 || addControl(panel:jquery/node/string, position:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#ControlPosition ControlPosition]) || none || Creates a control from the given div panel on the map. ||
 || addMarker(opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#MarkerOptions MarkerOptions], callback?:function(map:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Map Map], marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])) || $([http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker])  || Creates a marker on the map. MarkerOptions is extended with a bounds property ('bounds':boolean) to add boundaries  ||
-|| find (type:string, object:{property/value/delimiter}, callback:function(object:object,isFound:boolean)) || none || Find e.g. marker(s) by property ||
+|| find (type:string, object:{property/value/operator}, callback:function(object:object,isFound:boolean)) || none || Find e.g. marker(s) by property. The value can be either an array or a string. The operator can be either 'AND' or 'OR', default is 'OR' meaning that if one value in an array is enough to fulfill the condition ||
 || inViewport(marker:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || boolean || If a markers LatLng is visible in the viewport ||
 || get(name:string, obj?:object) || object || Returns object by name. The optional obj parameter is set if the name does not exist.  ||
 || set(name:string, obj:object) || object || Stores an object by name ||
 || openInfoWindow(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#InfoWindowOptions InfoWindowOptions], marker?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#Marker Marker]) || none || Opens an info window bound to the marker on the map. ||
+|| closeInfoWindow() || none || Closes any open info windows. ||
 || refresh || none || Refreshes the map (triggers a resize)  ||
 || clear(name:string) || none || Removes a property list by name, e.g. markers, services, overlays  ||
 || destroy() || none || Removes the map functionality. ||

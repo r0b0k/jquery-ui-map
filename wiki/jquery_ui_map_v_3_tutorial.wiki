@@ -50,7 +50,7 @@ If you use Ajax the map can unfortunately render incorrect. To prevent this you 
 	$('#page_id').live("pageshow", function() {
 		$('#map_canvas').gmap('refresh');
 	});
-	$('#page_id').live("pagecreate", function() {
+	$('#page_id').live("pageinit", function() {
 		$('#map_canvas').gmap({'center': '59.3426606750, 18.0736160278'});
 	});
 </script>
@@ -150,10 +150,10 @@ If you would like to modify existing methods you can do that too. Let's say you 
 } (jQuery) );
 }}}
 
-However to use the MarkerWithLabel you just need to add a third parameter in the addMarker method (That goes for any extended google.maps.Marker)
+However to use the MarkerWithLabel you just need to add a the property 'marker' in the addMarker method (That goes for any extended google.maps.Marker)
 
 {{{
-$('#map_canvas').gmap('addMarker', { 'position': '58.3426606750, 18.0736160278' }, function() {}, MarkerWithLabel);
+$('#map_canvas').gmap('addMarker', { 'position': '58.3426606750, 18.0736160278', 'marker': MarkerWithLabel }, function() {});
 }}}
 
 Or do something during the widget initialization. This will geocode the address option property and call the option callback property. 

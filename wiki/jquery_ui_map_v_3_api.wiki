@@ -4,7 +4,7 @@
 
   * jquery.core  
 
-= API version 3.0-beta =
+= API version 3.0-rc =
 
 == jquery.ui.map core ==
 

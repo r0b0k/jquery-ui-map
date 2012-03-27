@@ -49,7 +49,7 @@
 ===Methods===
 
 || *Method* || *Return value* || *Description* ||
-|| addShape(shape:string, opts:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolylineOptions PolylineOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolygonOptions PolygonOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#CircleOptions CircleOptions]) || none || Adds an overlay, depending on the shape: 'Polygon', 'Polyline', 'Rectangle', 'Circle'. ||
+|| addShape(shape:string, opts:[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolylineOptions PolylineOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#PolygonOptions PolygonOptions]/[http://code.google.com/apis/maps/documentation/javascript/reference.html#CircleOptions CircleOptions]) || $(shape) || Adds an overlay, depending on the shape: 'Polygon', 'Polyline', 'Rectangle', 'Circle'. ||
 || loadKML(uniqueIdentifier:string, url:string, opts?:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#KmlLayerOptions KmlLayerOptions] ) || none || Adds geographic markup to the map from a KML, KMZ or GeoRSS file that is hosted on a publicly accessible web server. To clear the markers generated from the loadKML method you need to get the service and set the map to null. ||
 || loadFusion(opts:[http://code.google.com/intl/sv-SE/apis/maps/documentation/javascript/reference.html#FusionTablesLayerOptions FusionTablesLayerOptions]) || none || Adds markers from Fusion table. ||
 

@@ -43,7 +43,10 @@
 					instance = $.data(this, name, new $[namespace][name](options, this));
 				}
 				if (isMethodCall) {
-					returnValue = instance[options].apply(instance, args);
+					var value = instance[options].apply(instance, args);
+					if ( options === 'get' || value != null ) {
+						returnValue = value;
+					}
 				}
 			});
 			
@@ -74,7 +77,7 @@
 			if (options) {
 				this.options[key] = options;
 				this.get('map').set(key, options);
-				return this;
+				return;
 			}
 			return this.options[key];
 		},
@@ -110,7 +113,6 @@
 			var bounds = this.get('bounds', new google.maps.LatLngBounds());
 			bounds.extend(this._latLng(position));
 			this.get('map').fitBounds(bounds);
-			return this;
 		},
 		
 		/**
@@ -130,7 +132,6 @@
 		 */
 		addControl: function(panel, position) {
 			this.get('map').controls[position].push(this._unwrap(panel));
-			return this;
 		},
 		
 		/**
@@ -164,7 +165,6 @@
 		clear: function(ctx) {
 			this._c(this.get(ctx));
 			this.set(ctx, []);
-			return this;
 		},
 		
 		_c: function(obj) {
@@ -208,7 +208,6 @@
 					callback(obj[property], isFound);
 				}
 			}
-			return this;
 		},
 		
 		/**
@@ -251,7 +250,6 @@
 			iw.setOptions(infoWindowOptions);
 			iw.open(this.get('map'), this._unwrap(marker)); 
 			this._call(callback, iw);
-			return this;
 		},
 		
 		/**
@@ -261,7 +259,6 @@
 			if ( this.get('iw') != null ) {
 				this.get('iw').close();
 			}
-			return this;
 		},
 				
 		/**
@@ -271,7 +268,6 @@
 		 */
 		set: function(key, value) {
 			this.instance[key] = value;
-			return this;
 		},
 		
 		/**
@@ -282,14 +278,16 @@
 			var latLng = map.getCenter();
 			$(map).triggerEvent('resize');
 			map.setCenter(latLng);
-			return this;
 		},
 		
 		/**
 		 * Destroys the plugin.
 		 */
 		destroy: function() {
-			this.clear('markers').clear('services').clear('overlays')._c(this.instance);
+			this.clear('markers');
+			this.clear('services')
+			this.clear('overlays')
+			this._c(this.instance);
 			jQuery.removeData(this.el, this.name);
 		},
 		
@@ -347,9 +345,9 @@
 				} 
 			}
 			return this;
-		}
+		},
 		  
-		/*removeEventListener: function(eventType) {
+		removeEventListener: function(eventType) {
 			if ( google.maps && this[0] instanceof google.maps.MVCObject ) {
 				if (eventType) {
 					google.maps.event.clearListeners(this[0], eventType);
@@ -360,7 +358,7 @@
 				this.unbind(eventType);
 			}
 			return this;
-		}*/
+		}
 		
 	});
 	
